@@ -1,3 +1,6 @@
+import '../../learning/elements/rq-feedback';
+import '../../learning/elements/rq-predict';
+import '../../learning/elements/rq-stepper';
 import {
   createLessonSession,
   type PredictionCommitDetail,
