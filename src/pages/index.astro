@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
+---
+
+<BaseLayout
+  title="ROOT Quest — Interactive ROOT and HEP learning"
+  description="Learn ROOT and HEP analysis by manipulating events, making cuts, reading distributions, and connecting the result to real ROOT code."
+>
+  <section class="hero">
+    <p class="eyebrow">Interactive ROOT + HEP learning</p>
+    <h1>See the event. Find the signal.</h1>
+    <p class="lede">
+      Learn analysis by changing the data first. Inspect events, make selections,
+      observe distributions, predict what happens next, then connect the result
+      to ROOT code.
+    </p>
+    <a class="button-link" href={higgsHref}>Enter Higgs Hunt</a>
+  </section>
+
+  <ol class="learning-loop" aria-label="ROOT Quest learning loop">
+    <li><strong>Manipulate</strong><br />Change a real analysis choice.</li>
+    <li><strong>Observe</strong><br />See its consequence immediately.</li>
+    <li><strong>Predict</strong><br />Commit to what should happen next.</li>
+    <li><strong>Code</strong><br />Express the idea in ROOT.</li>
+  </ol>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Higgs Hunt — ROOT Quest"
+  description="The first ROOT Quest learning experience: move from particles and events to cuts, histograms, a Higgs-like mass excess, and ROOT code."
+>
+  <header class="lesson-header">
+    <p class="eyebrow">First vertical slice</p>
+    <h1>Higgs Hunt</h1>
+    <p class="lede">
+      Start with individual collision events. End by understanding why selections,
+      distributions, and ROOT are useful when one event becomes thousands.
+    </p>
+    <span class="status">Prototype shell · Act 1 is next</span>
+  </header>
+
+  <section aria-labelledby="journey-title">
+    <h2 id="journey-title">The learning journey</h2>
+    <ol class="lesson-grid">
+      <li class="panel"><span class="stage-number">01</span><h3>See</h3><p>Inspect reconstructed particles inside one event.</p></li>
+      <li class="panel"><span class="stage-number">02</span><h3>Choose</h3><p>Keep or reject a few events and explain why.</p></li>
+      <li class="panel"><span class="stage-number">03</span><h3>Cut</h3><p>Turn those decisions into rules applied to many events.</p></li>
+      <li class="panel"><span class="stage-number">04</span><h3>Plot</h3><p>Move from individual events to a distribution.</p></li>
+      <li class="panel"><span class="stage-number">05</span><h3>Discover</h3><p>Look for structure without truth labels telling you the answer.</p></li>
+      <li class="panel"><span class="stage-number">06</span><h3>ROOT</h3><p>See the ROOT analysis that describes what you already did.</p></li>
+    </ol>
+  </section>
+</BaseLayout>
