@@ -33,6 +33,48 @@ if (root) {
     session.update((current) => ({ ...current, completed: [...current.completed, stage] }));
   };
 
+  const renderSelectionVisuals = (state: PracticeState) => {
+    const visualization = root.querySelector<HTMLElement>('[data-selection-visualization]');
+    if (!visualization) return;
+
+    const snapshot = deriveSelection(state.threshold);
+
+    visualization.querySelectorAll<HTMLOutputElement>('[data-live-threshold]').forEach((output) => {
+      output.value = `${state.threshold} GeV`;
+    });
+
+    visualization.querySelectorAll<HTMLElement>('[data-selection-event]').forEach((event) => {
+      event.dataset.selected = Number(event.dataset.pt) >= state.threshold ? 'true' : 'false';
+    });
+
+    visualization.querySelectorAll<SVGElement>('[data-histogram-bar]').forEach((bar) => {
+      bar.dataset.selected = Number(bar.dataset.binMin) >= state.threshold ? 'true' : 'false';
+    });
+
+    const plotStart = 30;
+    const plotWidth = 300;
+    const cutX = plotStart + ((state.threshold - 20) / 50) * plotWidth;
+    const rejectedRegion = visualization.querySelector<SVGRectElement>('[data-rejected-region]');
+    const cutLine = visualization.querySelector<SVGLineElement>('[data-cut-line]');
+    const cutLabel = visualization.querySelector<SVGTextElement>('[data-cut-label]');
+
+    rejectedRegion?.setAttribute('width', String(Math.max(0, cutX - plotStart)));
+    cutLine?.setAttribute('x1', String(cutX));
+    cutLine?.setAttribute('x2', String(cutX));
+    cutLabel?.setAttribute('x', String(Math.min(cutX + 4, 300)));
+    if (cutLabel) cutLabel.textContent = `${state.threshold} GeV`;
+
+    const summary = visualization.querySelector<HTMLElement>('[data-visual-summary]');
+    if (summary) {
+      summary.textContent = `At ${state.threshold} GeV, ${snapshot.signalKept} of ${snapshot.signalTotal} signal and ${snapshot.backgroundKept} of ${snapshot.backgroundTotal} background examples remain.`;
+    }
+
+    const histogramDescription = visualization.querySelector<SVGDescElement>('[data-histogram-description]');
+    if (histogramDescription) {
+      histogramDescription.textContent = `Photon transverse momentum distribution. The rejected region extends below ${state.threshold} GeV. ${snapshot.signalKept} signal and ${snapshot.backgroundKept} background examples remain.`;
+    }
+  };
+
   const announceSelection = (panel: HTMLElement, state: PracticeState) => {
     const snapshot = deriveSelection(state.threshold);
     const signal = panel.querySelector<HTMLProgressElement>('[data-signal-progress]');
@@ -58,6 +100,8 @@ if (root) {
   };
 
   const render = (state: PracticeState) => {
+    if (mode === 'manipulate') renderSelectionVisuals(state);
+
     stagePanels.forEach((panel) => {
       const stage = Number(panel.dataset.stagePanel);
       panel.hidden = stage !== state.stage;

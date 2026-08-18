@@ -4,6 +4,11 @@ import {
   practiceModes,
   type PracticeModeDefinition,
 } from '../../lessons/practice-doors/content';
+import {
+  buildSelectionHistogram,
+  selectionEventEnergy,
+  selectionEvents,
+} from '../../lessons/practice-doors/model';
 
 export function getStaticPaths() {
   return Object.entries(practiceModes).map(([mode, data]) => ({ params: { mode }, props: { data } }));
@@ -13,6 +18,7 @@ const { data } = Astro.props as { data: PracticeModeDefinition };
 const mode = Astro.params.mode as keyof typeof practiceModes;
 const homeHref = import.meta.env.BASE_URL;
 const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
+const histogramBins = buildSelectionHistogram();
 ---
 
 <BaseLayout
@@ -56,6 +62,124 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
         </li>
       ))}
     </ol>
+
+    {mode === 'manipulate' && (
+      <section
+        class="selection-visualization"
+        data-selection-visualization
+        aria-label="Live selection views"
+      >
+        <article class="visual-card event-view" aria-labelledby="event-view-heading">
+          <header class="visual-card-header">
+            <div>
+              <p class="section-label">Events</p>
+              <h2 id="event-view-heading">3D sample</h2>
+            </div>
+            <span class="visual-unit">E (GeV)</span>
+          </header>
+
+          <div
+            class="event-space"
+            role="img"
+            aria-label="Twelve event objects. Signal uses spheres, background uses diamonds, and rejected objects fade as the photon pT cut increases."
+          >
+            <div class="event-space-inner" aria-hidden="true">
+              {selectionEvents.map((event) => (
+                <span
+                  class="selection-event"
+                  data-selection-event
+                  data-kind={event.kind}
+                  data-pt={event.pt}
+                  data-selected="true"
+                  style={`--event-x:${event.x}%;--event-y:${event.y}%;--event-z:${event.z}px;--event-scale:${0.72 + event.pt / 120}`}
+                >
+                  <span class="event-glyph"></span>
+                  <span class="event-energy">{selectionEventEnergy(event)}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div class="visual-legend" aria-hidden="true">
+            <span><i class="legend-shape legend-shape--signal"></i> Signal</span>
+            <span><i class="legend-shape legend-shape--background"></i> Background</span>
+          </div>
+          <p class="visual-note">One object = one example. Position is only layout.</p>
+        </article>
+
+        <article class="visual-card histogram-view" aria-labelledby="pt-histogram-heading">
+          <header class="visual-card-header">
+            <div>
+              <p class="section-label">Distribution</p>
+              <h2 id="pt-histogram-heading">Photon pT</h2>
+            </div>
+            <output class="cut-output" data-live-threshold>20 GeV</output>
+          </header>
+
+          <svg class="selection-histogram" viewBox="0 0 360 220" role="img" aria-labelledby="pt-histogram-title pt-histogram-description">
+            <title id="pt-histogram-title">Signal and background photon transverse momentum histogram</title>
+            <desc id="pt-histogram-description" data-histogram-description>
+              Photon transverse momentum distribution. All five signal and seven background examples remain at the 20 GeV threshold.
+            </desc>
+
+            <rect class="histogram-rejected" data-rejected-region x="30" y="24" width="0" height="146" rx="4"></rect>
+            <line class="histogram-axis" x1="30" y1="170" x2="330" y2="170"></line>
+            <line class="histogram-axis histogram-axis--y" x1="30" y1="24" x2="30" y2="170"></line>
+
+            {histogramBins.map((bin, index) => {
+              const signalHeight = bin.signal * 54;
+              const backgroundHeight = bin.background * 54;
+              const x = 30 + index * 30;
+              return (
+                <g>
+                  <rect
+                    class="histogram-bar histogram-bar--signal"
+                    data-histogram-bar
+                    data-bin-min={bin.min}
+                    data-selected="true"
+                    x={x + 5}
+                    y={170 - signalHeight}
+                    width="9"
+                    height={signalHeight}
+                    rx="2"
+                  ></rect>
+                  <rect
+                    class="histogram-bar histogram-bar--background"
+                    data-histogram-bar
+                    data-bin-min={bin.min}
+                    data-selected="true"
+                    x={x + 16}
+                    y={170 - backgroundHeight}
+                    width="9"
+                    height={backgroundHeight}
+                    rx="2"
+                  ></rect>
+                </g>
+              );
+            })}
+
+            <line class="histogram-cut" data-cut-line x1="30" y1="22" x2="30" y2="174"></line>
+            <text class="histogram-cut-label" data-cut-label x="34" y="18">20 GeV</text>
+
+            <text class="histogram-label" x="26" y="174" text-anchor="end">0</text>
+            <text class="histogram-label" x="26" y="118" text-anchor="end">1</text>
+            <text class="histogram-label" x="26" y="64" text-anchor="end">2</text>
+            <text class="histogram-label" x="30" y="194" text-anchor="middle">20</text>
+            <text class="histogram-label" x="150" y="194" text-anchor="middle">40</text>
+            <text class="histogram-label" x="270" y="194" text-anchor="middle">60</text>
+            <text class="histogram-axis-title" x="180" y="214" text-anchor="middle">pT (GeV)</text>
+          </svg>
+
+          <div class="visual-legend" aria-hidden="true">
+            <span><i class="legend-bar legend-bar--signal"></i> Signal</span>
+            <span><i class="legend-bar legend-bar--background"></i> Background</span>
+          </div>
+          <p class="visually-hidden" data-visual-summary>
+            At 20 GeV, 5 of 5 signal and 7 of 7 background examples remain.
+          </p>
+        </article>
+      </section>
+    )}
 
     <div class="practice-stage-stack">
       {data.stages.map((stage, index) => {
@@ -161,6 +285,7 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
 <style>
   .practice {
     max-width: 62rem;
+    --background-sample: #bd6a23;
   }
 
   .practice-header {
@@ -229,6 +354,242 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
   .practice-path small {
     margin-top: 0.2rem;
     color: var(--muted);
+  }
+
+  .selection-visualization {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .visual-card {
+    min-width: 0;
+    padding: clamp(0.65rem, 2vw, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .visual-card-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .visual-card-header .section-label {
+    margin: 0 0 0.15rem;
+    font-size: 0.68rem;
+  }
+
+  .visual-card-header h2 {
+    margin: 0;
+    font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+  }
+
+  .visual-unit,
+  .cut-output {
+    flex: none;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .event-space {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+    border-radius: 0.7rem;
+    background: var(--bg);
+    perspective: 34rem;
+  }
+
+  .event-space::after {
+    content: '';
+    position: absolute;
+    inset: 18% 10%;
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    border-radius: 50%;
+    transform: rotateX(62deg) translateZ(-3rem);
+    opacity: 0.7;
+  }
+
+  .event-space-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(7deg) rotateY(-8deg);
+  }
+
+  .selection-event {
+    position: absolute;
+    left: var(--event-x);
+    top: var(--event-y);
+    display: grid;
+    place-items: center;
+    width: 0;
+    height: 0;
+    transform: translate3d(-50%, -50%, var(--event-z));
+    transform-style: preserve-3d;
+    transition: opacity 160ms ease, filter 160ms ease;
+  }
+
+  .event-glyph {
+    display: block;
+    width: 0.75rem;
+    aspect-ratio: 1;
+    background: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent-strong) 75%, var(--border));
+    border-radius: 50%;
+    box-shadow:
+      inset -0.12rem -0.14rem 0.22rem color-mix(in srgb, var(--accent-strong) 45%, transparent),
+      0 0.16rem 0.3rem color-mix(in srgb, var(--text) 18%, transparent);
+    transform: scale(var(--event-scale));
+  }
+
+  .selection-event[data-kind='background'] .event-glyph {
+    background: transparent;
+    border: 2px solid var(--background-sample);
+    border-radius: 0.15rem;
+    box-shadow: 0 0.16rem 0.3rem color-mix(in srgb, var(--text) 14%, transparent);
+    transform: rotate(45deg) scale(var(--event-scale));
+  }
+
+  .event-energy {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.42rem;
+    color: var(--text);
+    font-size: clamp(0.48rem, 1.5vw, 0.62rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .selection-event[data-selected='false'] {
+    opacity: 0.14;
+    filter: grayscale(1);
+  }
+
+  .selection-event[data-selected='false'] .event-energy {
+    visibility: hidden;
+  }
+
+  .selection-histogram {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+    border-radius: 0.7rem;
+    background: var(--bg);
+  }
+
+  .histogram-axis {
+    stroke: var(--muted);
+    stroke-width: 1.2;
+  }
+
+  .histogram-axis--y {
+    opacity: 0.55;
+  }
+
+  .histogram-rejected {
+    fill: color-mix(in srgb, var(--muted) 9%, transparent);
+  }
+
+  .histogram-bar {
+    transition: opacity 160ms ease;
+  }
+
+  .histogram-bar--signal {
+    fill: var(--accent);
+  }
+
+  .histogram-bar--background {
+    fill: transparent;
+    stroke: var(--background-sample);
+    stroke-width: 2;
+  }
+
+  .histogram-bar[data-selected='false'] {
+    opacity: 0.16;
+  }
+
+  .histogram-cut {
+    stroke: var(--accent-strong);
+    stroke-width: 2;
+    stroke-dasharray: 5 4;
+  }
+
+  .histogram-cut-label,
+  .histogram-axis-title,
+  .histogram-label {
+    fill: var(--muted);
+    font-family: inherit;
+    font-size: 10px;
+  }
+
+  .histogram-cut-label {
+    fill: var(--accent-strong);
+    font-weight: 750;
+  }
+
+  .histogram-axis-title {
+    font-size: 11px;
+  }
+
+  .visual-legend {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0.55rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
+  .visual-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .legend-shape,
+  .legend-bar {
+    display: inline-block;
+    width: 0.62rem;
+    aspect-ratio: 1;
+  }
+
+  .legend-shape--signal,
+  .legend-bar--signal {
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .legend-shape--background {
+    border: 2px solid var(--background-sample);
+    border-radius: 0.1rem;
+    transform: rotate(45deg);
+  }
+
+  .legend-bar--signal {
+    border-radius: 0.1rem;
+  }
+
+  .legend-bar--background {
+    border: 2px solid var(--background-sample);
+    border-radius: 0.1rem;
+  }
+
+  .visual-note {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+    font-size: 0.68rem;
+    line-height: 1.35;
   }
 
   .practice-stage,
@@ -425,9 +786,25 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
     .evidence-panel {
       grid-template-columns: 1fr;
     }
+
+    .selection-visualization {
+      gap: 0.5rem;
+    }
+
+    .visual-card {
+      padding: 0.55rem;
+    }
+
+    .visual-note {
+      display: none;
+    }
   }
 
   @media (prefers-color-scheme: dark) {
+    .practice {
+      --background-sample: #e7a15f;
+    }
+
     .rq-button--primary {
       color: #101418;
       background: #a9c1ff;
