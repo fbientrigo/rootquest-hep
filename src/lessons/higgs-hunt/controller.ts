@@ -47,18 +47,37 @@ const codeFeedback = byId<RQFeedbackElement>('root-feedback');
 const thresholdInput = byId<HTMLInputElement>('photon-pt-cut');
 const binInput = byId<HTMLInputElement>('mass-bin-count');
 
+const objectButton = (id: string) =>
+  document.querySelector<HTMLButtonElement>(`[data-object-id="${id}"]`);
+
+const objectVisual = (id: string) =>
+  document.querySelector<SVGGElement>(`[data-object-visual="${id}"]`);
+
+function showSelectionInstruction(): void {
+  selectionFeedback.hidden = false;
+  selectionFeedback.dataset.state = 'instruction';
+  const content = document.createElement('p');
+  content.textContent = 'Select two objects and compare their detector signatures.';
+  selectionFeedback.replaceChildren(content);
+}
+
 function renderSelection(selectedIds: string[]): void {
   const selection = objectSelectionState(selectedIds);
 
   for (const object of HUNT_OBJECTS) {
     const selected = selectedIds.includes(object.id);
-    const button = byId<HTMLButtonElement>(`select-${object.id}`);
-    button.setAttribute('aria-pressed', String(selected));
-    const visual = document.querySelector<SVGElement>(`[data-object-visual="${object.id}"]`);
-    if (visual) visual.dataset.selected = String(selected);
+    objectButton(object.id)?.setAttribute('aria-pressed', String(selected));
+
+    const visual = objectVisual(object.id);
+    if (visual) {
+      visual.dataset.selected = String(selected);
+      visual.setAttribute('aria-pressed', String(selected));
+    }
   }
 
-  if (selection.correct) {
+  if (selection.selectedCount === 0) {
+    showSelectionInstruction();
+  } else if (selection.correct) {
     selectionFeedback.show({
       kind: 'success',
       heading: 'A diphoton candidate',
@@ -70,19 +89,20 @@ function renderSelection(selectedIds: string[]): void {
       heading: 'Compare the shapes',
       message: 'The broad spray is jet-like. Look for the two compact deposits that point back toward the collision.',
     });
-  } else if (selection.selectedCount === 1) {
+  } else {
     selectionFeedback.show({
       kind: 'observation',
       heading: 'One photon-like object found',
       message: 'Find its compact partner so the event can form a two-photon candidate.',
     });
-  } else {
-    selectionFeedback.show({
-      kind: 'hint',
-      heading: 'Inspect the event',
-      message: 'Select the two compact deposits. You can change your choice without penalty.',
-    });
   }
+}
+
+function toggleObject(id: string): void {
+  session.update((state) => ({
+    ...state,
+    selectedObjectIds: toggleObjectSelection(state.selectedObjectIds, id),
+  }));
 }
 
 function renderCutPlot(threshold: number): void {
@@ -209,13 +229,27 @@ function focusActiveStage(): void {
 document.querySelectorAll<HTMLButtonElement>('[data-object-id]').forEach((button) => {
   button.addEventListener('click', () => {
     const id = button.dataset.objectId;
-    if (!id) return;
-    session.update((state) => ({
-      ...state,
-      selectedObjectIds: toggleObjectSelection(state.selectedObjectIds, id),
-    }));
+    if (id) toggleObject(id);
   }, { signal });
 });
+
+for (const object of HUNT_OBJECTS) {
+  const visual = objectVisual(object.id);
+  if (!visual) continue;
+
+  const signature = object.kind === 'photon' ? 'compact deposit' : 'broad spray';
+  visual.setAttribute('role', 'button');
+  visual.setAttribute('tabindex', '0');
+  visual.setAttribute('aria-label', `${object.label}, ${object.energy} GeV, ${signature}`);
+  visual.setAttribute('aria-pressed', 'false');
+
+  visual.addEventListener('click', () => toggleObject(object.id), { signal });
+  visual.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    toggleObject(object.id);
+  }, { signal });
+}
 
 prediction.addEventListener('rq-prediction-commit', (event) => {
   const { value } = (event as CustomEvent<PredictionCommitDetail>).detail;
