@@ -44,6 +44,19 @@ Penalize choices only when the feedback teaches something, such as throwing away
 
 Do not reward arbitrary clicking or speed. Points are subordinate to the physics.
 
+### Evidence anchors
+
+The landing surfaces a small rotating set of research references. These are not decorative endorsements: each one records a product constraint that future agents and contributors should preserve unless stronger evidence replaces it.
+
+| Evidence | Short finding surfaced in the product | Product effect |
+| --- | --- | --- |
+| Li, Hew & Du (2024), meta-analysis of gamification and intrinsic motivation. DOI: `10.1007/s11423-023-10337-7` | “an overall significant but small effect size favoring gamified learning” | Keep game mechanics subordinate to useful reasoning. Prefer visible progress, autonomy and feedback over XP, badges or leaderboards. |
+| Sinha & Kapur (2021), meta-analysis of problem solving before instruction / Productive Failure. DOI: `10.3102/00346543211019105` | “a significant, moderate effect in favor of PS-I” | Let the learner act, attempt or predict before giving the explanatory model or ROOT syntax. |
+| Cai et al. (2023), meta-analysis of feedback in technology-rich learning environments. DOI: `10.1016/j.edurev.2023.100521` | “The effect of explanation feedback was the strongest” | Feedback should state what changed and why, not merely mark an answer correct or incorrect. |
+| Carpenter, Pan & Butler (2022), review of spacing and retrieval practice. DOI: `10.1038/s44159-022-00089-1` | “effective learning strategies are underused by learners” | Use short committed decisions and later recall instead of relying on passive exposure. |
+
+Keep quotes short and linked to the original source. The interface may rotate them automatically, but reduced-motion users must retain manual control and the learning experience must not depend on the rotation.
+
 ## Training and discovery
 
 Training mode may expose truth information to teach efficiency, rejection, purity and trade-offs.

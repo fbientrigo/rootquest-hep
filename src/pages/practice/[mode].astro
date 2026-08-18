@@ -1,0 +1,436 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  practiceModes,
+  type PracticeModeDefinition,
+} from '../../lessons/practice-doors/content';
+
+export function getStaticPaths() {
+  return Object.entries(practiceModes).map(([mode, data]) => ({ params: { mode }, props: { data } }));
+}
+
+const { data } = Astro.props as { data: PracticeModeDefinition };
+const mode = Astro.params.mode as keyof typeof practiceModes;
+const homeHref = import.meta.env.BASE_URL;
+const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
+---
+
+<BaseLayout
+  title={`${data.name} — ROOT Quest`}
+  description={data.description}
+>
+  <div class="practice" data-practice-root data-practice-mode={mode}>
+    <header class="practice-header">
+      <a class="practice-back" href={homeHref}>← Learning doors</a>
+      <p class="eyebrow">{data.action}</p>
+      <h1>{data.name}</h1>
+      <p class="lede">{data.description}</p>
+    </header>
+
+    {mode === 'observe' && (
+      <section class="evidence-panel" aria-labelledby="event-record-heading">
+        <div>
+          <p class="section-label">Evidence</p>
+          <h2 id="event-record-heading">Three compact event records</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th scope="col">Event</th><th scope="col">Photons</th><th scope="col">|η|max</th><th scope="col">mγγ</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">A</th><td>2</td><td>1.2</td><td>125 GeV</td></tr>
+              <tr><th scope="row">B</th><td>2</td><td>2.8</td><td>131 GeV</td></tr>
+              <tr><th scope="row">C</th><td>1</td><td>0.9</td><td>124 GeV</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <ol class="practice-path" aria-label={`${data.name} progression`}>
+      {data.stages.map((stage, index) => (
+        <li data-stage-marker={index + 1} data-state={index === 0 ? 'current' : 'locked'}>
+          <span class="path-index">0{index + 1}</span>
+          <span><strong>{stage.title}</strong><small data-stage-status>{index === 0 ? 'Current' : 'Locked'}</small></span>
+        </li>
+      ))}
+    </ol>
+
+    <div class="practice-stage-stack">
+      {data.stages.map((stage, index) => {
+        const stageNumber = index + 1;
+        return (
+          <section
+            class="practice-stage"
+            data-stage-panel={stageNumber}
+            hidden={stageNumber !== 1}
+            aria-labelledby={`stage-${stageNumber}-heading`}
+          >
+            <p class="section-label">Challenge {stageNumber} of 3</p>
+            <h2 id={`stage-${stageNumber}-heading`} tabindex="-1">{stage.title}</h2>
+            <p class="stage-prompt">{stage.prompt}</p>
+
+            {stage.kind === 'selection' ? (
+              <div class="selection-challenge">
+                <label for={`threshold-${stageNumber}`}>
+                  Photon pT threshold: <output data-threshold-output for={`threshold-${stageNumber}`}>20 GeV</output>
+                </label>
+                <input
+                  id={`threshold-${stageNumber}`}
+                  data-threshold
+                  data-stage={stageNumber}
+                  type="range"
+                  min="20"
+                  max="60"
+                  step="5"
+                  value="20"
+                />
+                <p class="target"><strong>Target</strong> {stage.goal}</p>
+                <div class="retention-grid">
+                  <label>
+                    <span>Signal kept <output data-signal-output>5 / 5</output></span>
+                    <progress data-signal-progress max="5" value="5">5 of 5</progress>
+                  </label>
+                  <label>
+                    <span>Background kept <output data-background-output>7 / 7</output></span>
+                    <progress data-background-progress max="7" value="7">7 of 7</progress>
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <form
+                class="choice-challenge"
+                data-answer-form
+                data-stage={stageNumber}
+                data-success={stage.success}
+                data-miss={stage.miss}
+              >
+                <fieldset>
+                  <legend class="visually-hidden">Choose one answer</legend>
+                  {stage.options?.map((option) => (
+                    <label>
+                      <input type="radio" name="answer" value={option.value} required />
+                      <span>{option.label}</span>
+                    </label>
+                  ))}
+                </fieldset>
+                <button class="rq-button rq-button--primary" type="submit">Commit answer</button>
+              </form>
+            )}
+
+            <p
+              class="practice-feedback"
+              data-feedback
+              data-kind="observation"
+              role={stage.kind === 'choice' ? 'status' : undefined}
+              aria-live={stage.kind === 'selection' ? 'off' : undefined}
+            >
+              {stage.kind === 'selection'
+                ? 'Move the threshold and watch both parts of the sample respond.'
+                : 'Commit before revealing the consequence.'}
+            </p>
+
+            {stage.reveal && (
+              <pre class="code-reveal" data-reveal hidden><code>{stage.reveal}</code></pre>
+            )}
+          </section>
+        );
+      })}
+    </div>
+
+    <div class="practice-actions">
+      <button class="rq-button rq-button--primary" type="button" data-continue disabled>Unlock next challenge</button>
+      <section class="practice-complete" data-completion hidden aria-labelledby="complete-heading">
+        <p class="section-label">Path complete</p>
+        <h2 id="complete-heading">Three decisions, one mental model.</h2>
+        <p>The guided Higgs Hunt combines these mechanics into a longer analysis.</p>
+        <div class="completion-links">
+          <a class="button-link" href={higgsHref}>Enter Higgs Hunt</a>
+          <a href={homeHref}>Choose another door</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../lessons/practice-doors/controller';
+</script>
+
+<style>
+  .practice {
+    max-width: 62rem;
+  }
+
+  .practice-header {
+    max-width: 48rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .practice-back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--muted);
+  }
+
+  .practice-header h1 {
+    max-width: none;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .practice-path {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0 0 1rem;
+    list-style: none;
+  }
+
+  .practice-path li {
+    display: flex;
+    gap: 0.7rem;
+    min-height: 4.5rem;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    background: var(--surface);
+  }
+
+  .practice-path li[data-state='locked'] {
+    color: var(--muted);
+    background: transparent;
+  }
+
+  .practice-path li[data-state='current'] {
+    border-color: var(--accent);
+  }
+
+  .practice-path li[data-state='complete'] {
+    border-style: dashed;
+  }
+
+  .path-index,
+  .section-label {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8rem;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .practice-path strong,
+  .practice-path small {
+    display: block;
+  }
+
+  .practice-path small {
+    margin-top: 0.2rem;
+    color: var(--muted);
+  }
+
+  .practice-stage,
+  .evidence-panel,
+  .practice-complete {
+    padding: clamp(1rem, 3vw, 1.6rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .practice-stage h2,
+  .evidence-panel h2,
+  .practice-complete h2 {
+    margin-block: 0.2rem 0.7rem;
+  }
+
+  .stage-prompt {
+    max-width: 48rem;
+  }
+
+  .selection-challenge {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .selection-challenge > label {
+    font-weight: 700;
+  }
+
+  .selection-challenge input[type='range'] {
+    width: 100%;
+    min-height: 2.75rem;
+    accent-color: var(--accent);
+  }
+
+  .target {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .retention-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .retention-grid label {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .retention-grid span {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .retention-grid progress {
+    width: 100%;
+    min-height: 0.8rem;
+    accent-color: var(--accent);
+  }
+
+  .choice-challenge {
+    margin-top: 1.5rem;
+  }
+
+  .choice-challenge fieldset {
+    display: grid;
+    gap: 0.65rem;
+    padding: 0;
+    margin: 0 0 1rem;
+    border: 0;
+  }
+
+  .choice-challenge label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.8rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    cursor: pointer;
+  }
+
+  .choice-challenge label:has(input:checked) {
+    border-color: var(--accent);
+  }
+
+  .choice-challenge input {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+  }
+
+  .rq-button {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .rq-button--primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: white;
+  }
+
+  .rq-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+  }
+
+  .practice-feedback {
+    min-height: 3rem;
+    margin: 1.25rem 0 0;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .practice-feedback[data-kind='success'] {
+    font-weight: 700;
+  }
+
+  .code-reveal {
+    overflow-x: auto;
+    margin: 1rem 0 0;
+    padding: 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    background: var(--bg);
+  }
+
+  .practice-actions {
+    margin-top: 1rem;
+  }
+
+  .practice-complete {
+    margin-top: 1rem;
+  }
+
+  .completion-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .evidence-panel {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.3fr);
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 0.55rem;
+    border-bottom: 1px solid var(--border);
+    text-align: start;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 42rem) {
+    .practice-path,
+    .retention-grid,
+    .evidence-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .rq-button--primary {
+      color: #101418;
+      background: #a9c1ff;
+    }
+  }
+</style>

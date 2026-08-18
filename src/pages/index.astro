@@ -2,6 +2,61 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
+const practiceBase = `${import.meta.env.BASE_URL}practice/`;
+
+const doors = [
+  {
+    action: 'Manipulate',
+    name: 'Selection Lab',
+    description: 'Change a real analysis choice.',
+    href: `${practiceBase}manipulate/`,
+  },
+  {
+    action: 'Observe',
+    name: 'Event Detective',
+    description: 'See its consequence immediately.',
+    href: `${practiceBase}observe/`,
+  },
+  {
+    action: 'Predict',
+    name: 'Prediction Trials',
+    description: 'Commit to what should happen next.',
+    href: `${practiceBase}predict/`,
+  },
+  {
+    action: 'Code',
+    name: 'ROOT Builder',
+    description: 'Express the idea in ROOT.',
+    href: `${practiceBase}code/`,
+  },
+];
+
+const researchBasis = [
+  {
+    quote: '“an overall significant but small effect size favoring gamified learning”',
+    source: 'Li, Hew & Du (2024) · gamification meta-analysis',
+    href: 'https://doi.org/10.1007/s11423-023-10337-7',
+    effect: 'Effect here: game mechanics stay subordinate to reasoning. Progress and feedback matter more than an XP layer.',
+  },
+  {
+    quote: '“a significant, moderate effect in favor of PS-I”',
+    source: 'Sinha & Kapur (2021) · Productive Failure meta-analysis',
+    href: 'https://doi.org/10.3102/00346543211019105',
+    effect: 'Effect here: act or predict before the explanation or ROOT syntax is revealed.',
+  },
+  {
+    quote: '“The effect of explanation feedback was the strongest”',
+    source: 'Cai et al. (2023) · feedback in technology-rich learning',
+    href: 'https://doi.org/10.1016/j.edurev.2023.100521',
+    effect: 'Effect here: feedback states what changed and why, not only whether an answer was correct.',
+  },
+  {
+    quote: '“effective learning strategies are underused by learners”',
+    source: 'Carpenter, Pan & Butler (2022) · spacing and retrieval practice review',
+    href: 'https://doi.org/10.1038/s44159-022-00089-1',
+    effect: 'Effect here: short challenges require a committed decision or recall instead of passive exposure.',
+  },
+];
 ---
 
 <BaseLayout
@@ -20,9 +75,211 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
   </section>
 
   <ol class="learning-loop" aria-label="ROOT Quest learning loop">
-    <li><strong>Manipulate</strong><br />Change a real analysis choice.</li>
-    <li><strong>Observe</strong><br />See its consequence immediately.</li>
-    <li><strong>Predict</strong><br />Commit to what should happen next.</li>
-    <li><strong>Code</strong><br />Express the idea in ROOT.</li>
+    {doors.map((door) => (
+      <li>
+        <a class="learning-door" href={door.href} aria-label={`${door.action} — ${door.name}`}>
+          <span class="door-action">{door.action}</span>
+          <span class="door-name">{door.name}</span>
+          <span class="door-description">{door.description}</span>
+          <span class="door-enter" aria-hidden="true">Enter →</span>
+        </a>
+      </li>
+    ))}
   </ol>
+
+  <aside class="research-basis" aria-labelledby="research-basis-heading" data-research-basis>
+    <div class="research-basis-header">
+      <div>
+        <p class="eyebrow">Research basis</p>
+        <h2 id="research-basis-heading">Why the interaction works this way</h2>
+      </div>
+      <button class="research-next" type="button" data-research-next hidden>Next reference</button>
+    </div>
+
+    <div class="research-rotation" aria-live="off">
+      {researchBasis.map((item, index) => (
+        <figure class="research-item" data-research-item hidden={index !== 0}>
+          <blockquote>{item.quote}</blockquote>
+          <figcaption>
+            <a href={item.href}>{item.source}</a>
+          </figcaption>
+          <p>{item.effect}</p>
+        </figure>
+      ))}
+    </div>
+  </aside>
 </BaseLayout>
+
+<script>
+  const basis = document.querySelector<HTMLElement>('[data-research-basis]');
+  const items = basis ? [...basis.querySelectorAll<HTMLElement>('[data-research-item]')] : [];
+  const next = basis?.querySelector<HTMLButtonElement>('[data-research-next]');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let active = 0;
+  let timer: number | undefined;
+
+  const show = (index: number) => {
+    active = index % items.length;
+    items.forEach((item, itemIndex) => {
+      item.hidden = itemIndex !== active;
+    });
+  };
+
+  const advance = () => {
+    if (items.length > 1) show(active + 1);
+  };
+
+  if (next && items.length > 1) {
+    next.hidden = false;
+    next.addEventListener('click', advance);
+  }
+
+  if (basis && items.length > 1 && !reduceMotion) {
+    const start = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(advance, 9000);
+    };
+    const stop = () => window.clearInterval(timer);
+
+    start();
+    basis.addEventListener('mouseenter', stop);
+    basis.addEventListener('mouseleave', start);
+    basis.addEventListener('focusin', stop);
+    basis.addEventListener('focusout', start);
+  }
+</script>
+
+<style>
+  .learning-loop li {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .learning-door {
+    position: relative;
+    display: grid;
+    min-height: 8.6rem;
+    padding: 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .door-action,
+  .door-name {
+    grid-area: 1 / 1;
+    align-self: start;
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+
+  .door-name {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  .door-description {
+    align-self: end;
+    max-width: 16rem;
+    padding-right: 2.5rem;
+  }
+
+  .door-enter {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    color: var(--muted);
+    opacity: 0;
+  }
+
+  .learning-door:hover .door-action,
+  .learning-door:focus-visible .door-action {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+
+  .learning-door:hover .door-name,
+  .learning-door:focus-visible .door-name,
+  .learning-door:hover .door-enter,
+  .learning-door:focus-visible .door-enter {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .learning-door:hover,
+  .learning-door:focus-visible {
+    background: color-mix(in srgb, var(--surface) 92%, var(--accent) 8%);
+  }
+
+  .door-action,
+  .door-name,
+  .door-enter,
+  .learning-door {
+    transition: opacity 150ms ease, transform 150ms ease, background 150ms ease;
+  }
+
+  .research-basis {
+    margin-block: clamp(3rem, 7vw, 6rem) 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .research-basis-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .research-basis h2 {
+    margin-block: 0;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+  }
+
+  .research-next {
+    min-height: 2.6rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.55rem;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .research-item {
+    max-width: 54rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .research-item blockquote {
+    margin: 0;
+    font-size: clamp(1.2rem, 3vw, 1.65rem);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  .research-item figcaption,
+  .research-item p {
+    margin-top: 0.65rem;
+  }
+
+  .research-item p {
+    color: var(--muted);
+  }
+
+  @media (max-width: 34rem) {
+    .research-basis-header {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .door-action,
+    .door-name,
+    .door-enter,
+    .learning-door {
+      transition: none;
+    }
+  }
+</style>
