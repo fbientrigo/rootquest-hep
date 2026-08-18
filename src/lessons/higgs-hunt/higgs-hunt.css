@@ -1,0 +1,603 @@
+.hunt-intro {
+  max-width: 52rem;
+  margin-bottom: 2rem;
+}
+
+.hunt-intro h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+}
+
+.hunt-shell {
+  --surface: #0d1b2b;
+  --text: #f3f7fb;
+  --muted: #a9bacb;
+  --border: #28455f;
+  --accent: #63d8ff;
+  --accent-strong: #9be8ff;
+  --signal: #63d8ff;
+  --background-event: #ffb65c;
+  --discovery: #ff6fae;
+  position: relative;
+  overflow: hidden;
+  min-height: 48rem;
+  border: 1px solid #28455f;
+  border-radius: clamp(1rem, 3vw, 1.6rem);
+  background:
+    radial-gradient(circle at 8% 2%, rgb(37 126 158 / 18%), transparent 28rem),
+    #07111f;
+  color: var(--text);
+  box-shadow: 0 1.8rem 5rem rgb(7 17 31 / 20%);
+}
+
+.hunt-progress {
+  display: grid;
+  grid-template-columns: auto minmax(8rem, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hunt-progress progress {
+  width: 100%;
+  height: 0.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: #14273a;
+  color: var(--accent);
+  accent-color: var(--accent);
+}
+
+.hunt-progress progress::-webkit-progress-bar {
+  border-radius: 999px;
+  background: #14273a;
+}
+
+.hunt-progress progress::-webkit-progress-value,
+.hunt-progress progress::-moz-progress-bar {
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.sample-label {
+  font-weight: 500;
+}
+
+.hunt-stage-viewport {
+  padding: clamp(1.25rem, 4vw, 3.25rem);
+}
+
+.hunt-stage[hidden] {
+  display: none !important;
+}
+
+.stage-copy {
+  max-width: 48rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.stage-kicker {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stage-copy h2 {
+  max-width: 22ch;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+}
+
+.stage-copy h2:focus {
+  outline: none;
+}
+
+.stage-copy h2:focus-visible {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.35rem;
+}
+
+.stage-copy > p:last-child {
+  max-width: 48rem;
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.stage-copy code {
+  padding: 0.12rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: #101f30;
+  color: var(--accent-strong);
+}
+
+.event-workspace,
+.rule-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(17rem, 0.75fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: start;
+}
+
+.event-display,
+.cut-visual,
+.mass-histogram,
+.code-card,
+.rule-table {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: rgb(13 27 43 / 88%);
+}
+
+.event-display {
+  margin: 0;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.event-display svg {
+  display: block;
+  width: 100%;
+  max-height: 27rem;
+}
+
+.event-display figcaption {
+  max-width: 58ch;
+  margin: 0.5rem auto 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.detector-ring,
+.detector-axis {
+  fill: none;
+  stroke: #23435d;
+}
+
+.detector-ring {
+  stroke-width: 2;
+  stroke-dasharray: 3 7;
+}
+
+.detector-ring--outer {
+  stroke: #315a78;
+}
+
+.detector-ring--inner {
+  stroke-dasharray: none;
+  opacity: 0.75;
+}
+
+.detector-axis {
+  stroke-width: 1;
+  opacity: 0.45;
+}
+
+.collision-point {
+  fill: var(--discovery);
+  stroke: #ffd2e6;
+  stroke-width: 3;
+}
+
+.event-object {
+  color: var(--muted);
+  opacity: 0.58;
+}
+
+.event-object line {
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-dasharray: 9 8;
+}
+
+.event-object rect,
+.event-object circle {
+  fill: currentColor;
+}
+
+.event-object path {
+  fill: currentColor;
+  opacity: 0.28;
+  stroke: currentColor;
+  stroke-width: 3;
+}
+
+.event-object text {
+  fill: var(--text);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.event-object[data-selected='true'] {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.event-object--jet[data-selected='true'] {
+  color: var(--background-event);
+}
+
+.object-panel h3 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+.object-buttons {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.object-buttons button {
+  display: flex;
+  align-items: center;
+  min-height: 4.5rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: #0c1928;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.object-buttons button::before {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.8rem;
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+  content: '';
+}
+
+.object-buttons button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: #10283a;
+}
+
+.object-buttons button[aria-pressed='true']::before {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.object-buttons strong,
+.object-buttons small {
+  display: block;
+}
+
+.object-buttons small {
+  margin-top: 0.15rem;
+  color: var(--muted);
+}
+
+.hunt-shell rq-feedback {
+  margin-top: 1rem;
+  background: #0d1b2b;
+}
+
+.rule-workspace {
+  align-items: stretch;
+}
+
+.rule-table {
+  overflow: hidden;
+}
+
+.rule-table th,
+.rule-table td {
+  border-color: var(--border);
+}
+
+.rule-table tbody th {
+  color: var(--accent);
+}
+
+.hunt-shell rq-predict {
+  margin: 0;
+  border-color: var(--border);
+  background: #0d1b2b;
+}
+
+.hunt-shell .rq-button--primary {
+  color: #06101b;
+}
+
+.hunt-shell .rq-options label:hover {
+  background: #122b3d;
+}
+
+.cut-workspace,
+.plot-workspace,
+.root-workspace {
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+.cut-visual {
+  padding: 1rem clamp(0.75rem, 2vw, 1.5rem) 1.25rem;
+}
+
+.cut-visual svg,
+.mass-histogram {
+  display: block;
+  width: 100%;
+}
+
+.plot-axis {
+  stroke: #7390a8;
+  stroke-width: 2;
+}
+
+.axis-label {
+  fill: var(--muted);
+  font-size: 0.86rem;
+}
+
+[data-cut-events] .cut-event--signal {
+  fill: var(--signal);
+}
+
+[data-cut-events] .cut-event--background {
+  fill: var(--background-event);
+}
+
+[data-cut-events] .cut-event--removed {
+  fill: transparent;
+  stroke-width: 2;
+  opacity: 0.36;
+}
+
+[data-cut-events] .cut-event--removed.cut-event--signal {
+  stroke: var(--signal);
+}
+
+[data-cut-events] .cut-event--removed.cut-event--background {
+  stroke: var(--background-event);
+}
+
+[data-cut-events] text {
+  fill: var(--muted);
+  font-size: 0.76rem;
+}
+
+.cut-marker {
+  color: var(--discovery);
+  transition: transform 180ms ease-out;
+}
+
+.cut-marker line {
+  stroke: currentColor;
+  stroke-width: 3;
+}
+
+.cut-marker text {
+  fill: currentColor;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.range-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.range-label output {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.cut-visual input[type='range'],
+.plot-controls input[type='range'] {
+  width: 100%;
+  min-height: 2.75rem;
+  accent-color: var(--accent);
+}
+
+.metric-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.metric {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: #0d1b2b;
+}
+
+.metric span,
+.metric strong {
+  display: block;
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.metric strong {
+  margin-top: 0.15rem;
+  font-size: clamp(1.45rem, 4vw, 2.2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric--signal strong {
+  color: var(--signal);
+}
+
+.metric--background strong {
+  color: var(--background-event);
+}
+
+.mass-histogram {
+  background: #0d1b2b;
+}
+
+.mass-window {
+  fill: var(--discovery);
+  opacity: 0.12;
+}
+
+[data-mass-bars] rect {
+  fill: var(--accent);
+}
+
+[data-mass-bars] rect[data-peak='true'] {
+  fill: var(--discovery);
+}
+
+[data-mass-bars] text {
+  fill: var(--muted);
+  font-size: 0.72rem;
+}
+
+.plot-controls {
+  margin-top: 1rem;
+}
+
+.plot-controls p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+.stage-copy--final {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.stage-copy--final h2 {
+  margin-inline: auto;
+}
+
+.code-card {
+  overflow: hidden;
+}
+
+.code-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  padding: 0.55rem 0.8rem 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.copy-button {
+  min-height: 2.4rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: #12283b;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.code-card pre {
+  margin: 0;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  overflow-x: auto;
+  color: #dff7ff;
+  font-size: clamp(0.78rem, 2vw, 0.95rem);
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.hunt-navigation {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  padding: 0 clamp(1.25rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 2rem);
+}
+
+.hunt-navigation[hidden] {
+  display: none;
+}
+
+.hunt-navigation button[hidden] {
+  display: none;
+}
+
+.hunt-navigation .hunt-next {
+  min-width: 8rem;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #06101b;
+}
+
+.hunt-navigation .hunt-next:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+.teaching-data-note {
+  max-width: 58rem;
+  margin: 1rem auto 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cut-marker {
+    transition: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  .hunt-shell {
+    min-height: auto;
+  }
+
+  .hunt-progress {
+    grid-template-columns: 1fr auto;
+  }
+
+  .hunt-progress progress {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .sample-label {
+    text-align: end;
+  }
+
+  .event-workspace,
+  .rule-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .event-display svg {
+    max-height: 21rem;
+  }
+}
+
+@media (max-width: 32rem) {
+  .metric-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .hunt-navigation {
+    justify-content: stretch;
+  }
+
+  .hunt-navigation button:not([hidden]) {
+    flex: 1;
+  }
+}

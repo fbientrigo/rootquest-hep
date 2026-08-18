@@ -42,7 +42,7 @@ The objective is not to teach every ROOT API. It is to build the mental model be
 Requirements: Node.js 24 and npm.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -53,11 +53,21 @@ npm run build
 npm run preview
 ```
 
+Interaction checks:
+
+```bash
+npm run test:unit
+npm run test:e2e
+```
+
 ## Project structure
 
 - `src/pages/` — site routes and lesson narrative shells.
 - `src/layouts/` — the minimal shared page shell.
 - `src/styles/` — shared native CSS.
+- `src/learning/` — portable session mechanics and accessible teaching primitives.
+- `src/lessons/` — lesson-specific state, derivations, visuals and controllers.
+- `tests/` — pure logic and cross-browser interaction checks.
 - `docs/` — product, pedagogy, MVP and engineering sources.
 - `STACK_CONTRACT.md` — authoritative technical constraints.
 

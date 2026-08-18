@@ -80,8 +80,11 @@ Support current evergreen desktop and mobile browsers, with particular attention
 
 ## Verification
 
-Current bootstrap gate:
+Current gates:
 
 - production Astro build succeeds.
+- pure runtime and lesson-model tests run with Node's built-in test runner;
+- critical learning interactions run in Chromium, Firefox and WebKit with Playwright;
+- the browser suite includes an axe WCAG smoke check and a keyboard-only path.
 
-When the first real interactive learning flow lands, add browser-level and accessibility smoke coverage rather than building a large test stack in advance.
+`@playwright/test` and `@axe-core/playwright` are development-only verification dependencies. They are not shipped to learners.

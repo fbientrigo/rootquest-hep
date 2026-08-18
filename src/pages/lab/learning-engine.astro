@@ -1,0 +1,456 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Learning Engine Lab — ROOT Quest"
+  description="Three small probes that validate ROOT Quest's portable learning runtime and accessible teaching primitives."
+>
+  <header class="lab-header">
+    <p class="eyebrow">Internal foundation lab</p>
+    <h1>Three ways to learn from one small engine</h1>
+    <p class="lede">
+      These probes test continuous manipulation, linked hierarchy views, and
+      sequential data transformations. The examples are synthetic on purpose:
+      the engine coordinates learning mechanics, while each lesson owns its meaning.
+    </p>
+  </header>
+
+  <section class="lab-probe" id="histogram-probe" aria-labelledby="histogram-heading">
+    <header class="probe-header">
+      <p class="probe-number">Probe A</p>
+      <h2 id="histogram-heading">Change a distribution</h2>
+      <p>
+        Move the controls and watch the same small dataset be selected and grouped.
+      </p>
+    </header>
+
+    <fieldset class="control-grid">
+      <legend class="visually-hidden">Histogram controls</legend>
+      <label for="bin-count">
+        Number of bins: <output id="bin-count-value" for="bin-count">5</output>
+      </label>
+      <input id="bin-count" type="range" min="4" max="12" step="1" value="5" />
+
+      <label for="threshold">
+        Keep values at or above: <output id="threshold-value" for="threshold">0.0</output>
+      </label>
+      <input id="threshold" type="range" min="0" max="6" step="0.5" value="0" />
+
+      <button class="rq-button" id="histogram-reset" type="button">Reset histogram</button>
+    </fieldset>
+
+    <div class="histogram-layout">
+      <svg
+        id="histogram-svg"
+        class="histogram"
+        viewBox="0 0 600 220"
+        role="img"
+        aria-labelledby="histogram-title histogram-description"
+      >
+        <title id="histogram-title">Histogram of the selected synthetic values</title>
+        <desc id="histogram-description">Five bins containing all twenty values.</desc>
+        <line x1="34" y1="184" x2="584" y2="184" class="histogram-axis"></line>
+        <g data-histogram-bars>
+          <text x="300" y="100" text-anchor="middle">Interactive bars load when JavaScript is available.</text>
+        </g>
+      </svg>
+
+      <div>
+        <p id="histogram-summary">20 of 20 values remain in 5 bins.</p>
+        <details>
+          <summary>Read the bin counts</summary>
+          <ol id="histogram-bin-list"></ol>
+        </details>
+      </div>
+    </div>
+
+    <rq-feedback id="histogram-feedback" aria-live="off">
+      <p>Changing bins changes the grouping. Changing the threshold changes which values enter the grouping.</p>
+    </rq-feedback>
+
+    <rq-predict id="histogram-prediction" answer-name="prediction">
+      <form>
+        <fieldset>
+          <legend>Predict before moving the bin control again: what will more bins do?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="prediction" value="narrower" required /> Create more, narrower intervals</label>
+            <label><input type="radio" name="prediction" value="more-data" /> Create more data values</label>
+            <label><input type="radio" name="prediction" value="unchanged" /> Leave the bars unchanged</label>
+          </div>
+        </fieldset>
+        <button class="rq-button rq-button--primary" type="submit">Commit prediction</button>
+      </form>
+      <rq-feedback data-prediction-feedback hidden></rq-feedback>
+    </rq-predict>
+  </section>
+
+  <section class="lab-probe" id="tree-probe" aria-labelledby="tree-heading">
+    <header class="probe-header">
+      <p class="probe-number">Probe B</p>
+      <h2 id="tree-heading">Connect structure to values</h2>
+      <p>
+        Expand a ROOT-like hierarchy and select a branch. The adjacent view is a
+        second representation of the same lesson state.
+      </p>
+    </header>
+
+    <div class="tree-layout">
+      <section class="tree-browser" aria-labelledby="tree-browser-heading">
+        <h3 id="tree-browser-heading" class="visually-hidden">Synthetic ROOT object hierarchy</h3>
+        <details open>
+          <summary><strong>TFile</strong> · demo.root</summary>
+          <div class="tree-level">
+            <details open>
+              <summary><strong>TTree</strong> · Events</summary>
+              <div class="tree-level branch-list">
+                <button type="button" data-branch-id="photon-pt" aria-pressed="true">photon_pt</button>
+                <button type="button" data-branch-id="photon-eta" aria-pressed="false">photon_eta</button>
+                <button type="button" data-branch-id="event-weight" aria-pressed="false">event_weight</button>
+              </div>
+            </details>
+          </div>
+        </details>
+      </section>
+
+      <article class="branch-view" aria-labelledby="branch-name">
+        <p class="view-label">Selected branch</p>
+        <h3 id="branch-name">photon_pt</h3>
+        <dl class="branch-metadata">
+          <div><dt>Stored type</dt><dd id="branch-type">vector&lt;float&gt;</dd></div>
+          <div><dt>Unit</dt><dd id="branch-unit">GeV</dd></div>
+        </dl>
+        <h4>Example entry values</h4>
+        <ol id="branch-values"></ol>
+        <rq-feedback id="branch-feedback">
+          <p>Select a branch to connect its place in the hierarchy to the values it stores.</p>
+        </rq-feedback>
+      </article>
+    </div>
+  </section>
+
+  <section class="lab-probe" id="trace-probe" aria-labelledby="trace-heading">
+    <header class="probe-header">
+      <p class="probe-number">Probe C</p>
+      <h2 id="trace-heading">Trace a filtering pipeline</h2>
+      <p>
+        Follow six events through two filters. Each frame reports what entered,
+        what was removed, and what remains.
+      </p>
+    </header>
+
+    <details class="source-data">
+      <summary>Inspect the six input events</summary>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th scope="col">Event</th><th scope="col">Photon count</th><th scope="col">Leading photon pT</th><th scope="col">Mass</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">E1</th><td>2</td><td>48 GeV</td><td>122 GeV</td></tr>
+            <tr><th scope="row">E2</th><td>1</td><td>60 GeV</td><td>109 GeV</td></tr>
+            <tr><th scope="row">E3</th><td>2</td><td>31 GeV</td><td>117 GeV</td></tr>
+            <tr><th scope="row">E4</th><td>2</td><td>42 GeV</td><td>125 GeV</td></tr>
+            <tr><th scope="row">E5</th><td>3</td><td>70 GeV</td><td>138 GeV</td></tr>
+            <tr><th scope="row">E6</th><td>2</td><td>55 GeV</td><td>127 GeV</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <rq-predict id="trace-prediction" answer-name="prediction">
+      <form>
+        <fieldset>
+          <legend>Which events will remain after requiring exactly two photons?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="prediction" value="e1-e3-e4-e6" required /> E1, E3, E4, and E6</label>
+            <label><input type="radio" name="prediction" value="e1-e4-e6" /> E1, E4, and E6</label>
+            <label><input type="radio" name="prediction" value="e2-e5" /> E2 and E5</label>
+          </div>
+        </fieldset>
+        <button class="rq-button rq-button--primary" type="submit">Commit prediction</button>
+      </form>
+      <rq-feedback data-prediction-feedback hidden></rq-feedback>
+    </rq-predict>
+
+    <rq-stepper id="filter-stepper" aria-label="Filter pipeline steps">
+      <div class="rq-stepper-controls">
+        <button type="button" data-stepper-action="previous">Previous</button>
+        <output data-stepper-status>Step 1 of 4: Input events</output>
+        <button type="button" data-stepper-action="next">Next</button>
+        <button type="button" data-stepper-action="reset">Reset trace</button>
+      </div>
+    </rq-stepper>
+
+    <div class="trace-stage" aria-describedby="trace-summary">
+      <h3 id="trace-frame-title">Input events</h3>
+      <p id="trace-rule">No filter has run yet.</p>
+      <ul id="trace-events" class="event-cards"></ul>
+      <p id="trace-summary">Six events enter and six remain.</p>
+      <div id="trace-distribution" class="trace-distribution" hidden>
+        <h4>Surviving mass values</h4>
+        <output id="trace-masses"></output>
+      </div>
+    </div>
+
+    <rq-feedback id="trace-feedback">
+      <p>Commit a prediction, then advance to compare it with the first filter.</p>
+    </rq-feedback>
+  </section>
+
+  <section class="mechanics-note" aria-labelledby="mechanics-heading">
+    <h2 id="mechanics-heading">Why these mechanics exist</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">Mechanic</th><th scope="col">Learner dynamic</th><th scope="col">Learning result</th></tr></thead>
+        <tbody>
+          <tr><td>Move ranges and commit a prediction</td><td>Compare immediate changes, then test a hypothesis</td><td>Separate sample selection from histogram grouping</td></tr>
+          <tr><td>Select a branch in a hierarchy</td><td>Move between structure, metadata, and values</td><td>Relate a branch to per-entry data</td></tr>
+          <tr><td>Predict and step through filters</td><td>Compare entering, removed, and surviving events</td><td>See a pipeline as sequential dataset transformations</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../lessons/learning-engine-lab/controller';
+</script>
+
+<style is:global>
+  .lab-header {
+    max-width: 58rem;
+    margin-bottom: 3rem;
+  }
+
+  .lab-probe,
+  .mechanics-note {
+    margin-block: 2rem;
+    padding: clamp(1rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .probe-header {
+    max-width: 50rem;
+  }
+
+  .probe-header h2,
+  .mechanics-note h2 {
+    margin-block: 0.25rem 0.6rem;
+  }
+
+  .probe-number,
+  .view-label {
+    margin: 0;
+    color: var(--accent-strong);
+    font-size: 0.82rem;
+    font-weight: 750;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: minmax(11rem, 18rem) minmax(12rem, 1fr);
+    gap: 0.7rem 1rem;
+    align-items: center;
+    margin-block: 1.5rem;
+    padding: 0;
+    border: 0;
+  }
+
+  .control-grid label {
+    font-weight: 700;
+  }
+
+  .control-grid input[type='range'] {
+    width: 100%;
+    min-height: 2.75rem;
+    accent-color: var(--accent);
+  }
+
+  .control-grid button {
+    grid-column: 1;
+  }
+
+  .histogram-layout,
+  .tree-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(15rem, 0.8fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .histogram {
+    width: 100%;
+    min-height: 14rem;
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    background: color-mix(in srgb, var(--surface) 95%, var(--accent) 5%);
+  }
+
+  .histogram-axis {
+    stroke: var(--text);
+    stroke-width: 2;
+  }
+
+  [data-histogram-bars] rect {
+    fill: var(--accent);
+  }
+
+  [data-histogram-bars] text {
+    fill: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .tree-browser,
+  .branch-view,
+  .trace-stage {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+  }
+
+  .tree-browser summary,
+  .source-data summary {
+    min-height: 2.75rem;
+    padding-block: 0.55rem;
+    cursor: pointer;
+  }
+
+  .tree-level {
+    margin-inline-start: 1rem;
+    padding-inline-start: 0.85rem;
+    border-inline-start: 2px solid var(--border);
+  }
+
+  .branch-list {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 0.5rem;
+  }
+
+  .branch-list button {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .branch-list button[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--surface) 82%, var(--accent) 18%);
+    font-weight: 750;
+  }
+
+  .branch-metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .branch-metadata div {
+    padding: 0.65rem;
+    border-radius: 0.5rem;
+    background: var(--bg);
+  }
+
+  .branch-metadata dt {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .branch-metadata dd {
+    margin: 0.15rem 0 0;
+    font-weight: 700;
+  }
+
+  .source-data {
+    margin-block: 1rem;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 0.65rem;
+    border-bottom: 1px solid var(--border);
+    text-align: start;
+  }
+
+  .trace-stage {
+    margin-top: 1rem;
+  }
+
+  .event-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.65rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .event-card {
+    padding: 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: 0.65rem;
+    background: var(--surface);
+  }
+
+  .event-card[data-status='removed-now'] {
+    border-style: dashed;
+    border-color: #a64b13;
+  }
+
+  .event-card[data-status='removed-before'] {
+    opacity: 0.62;
+  }
+
+  .event-card[data-status='removed-before'] > strong {
+    text-decoration: line-through;
+  }
+
+  .event-status {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+
+  .trace-distribution {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-inline-start: 0.3rem solid var(--accent);
+    background: var(--bg);
+  }
+
+  .mechanics-note {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 46rem) {
+    .control-grid,
+    .histogram-layout,
+    .tree-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .control-grid button {
+      grid-column: auto;
+    }
+  }
+</style>

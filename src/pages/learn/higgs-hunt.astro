@@ -1,30 +1,260 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import '../../lessons/higgs-hunt/higgs-hunt.css';
 ---
 
 <BaseLayout
   title="Higgs Hunt — ROOT Quest"
-  description="The first ROOT Quest learning experience: move from particles and events to cuts, histograms, a Higgs-like mass excess, and ROOT code."
+  description="Build a diphoton selection visually, discover a mass structure, and recognize the equivalent ROOT analysis."
 >
-  <header class="lesson-header">
-    <p class="eyebrow">First vertical slice</p>
+  <header class="hunt-intro">
+    <p class="eyebrow">ROOT Quest · Main experience</p>
     <h1>Higgs Hunt</h1>
     <p class="lede">
-      Start with individual collision events. End by understanding why selections,
-      distributions, and ROOT are useful when one event becomes thousands.
+      Begin with one collision. End with the ROOT analysis you already understand.
     </p>
-    <span class="status">Prototype shell · Act 1 is next</span>
   </header>
 
-  <section aria-labelledby="journey-title">
-    <h2 id="journey-title">The learning journey</h2>
-    <ol class="lesson-grid">
-      <li class="panel"><span class="stage-number">01</span><h3>See</h3><p>Inspect reconstructed particles inside one event.</p></li>
-      <li class="panel"><span class="stage-number">02</span><h3>Choose</h3><p>Keep or reject a few events and explain why.</p></li>
-      <li class="panel"><span class="stage-number">03</span><h3>Cut</h3><p>Turn those decisions into rules applied to many events.</p></li>
-      <li class="panel"><span class="stage-number">04</span><h3>Plot</h3><p>Move from individual events to a distribution.</p></li>
-      <li class="panel"><span class="stage-number">05</span><h3>Discover</h3><p>Look for structure without truth labels telling you the answer.</p></li>
-      <li class="panel"><span class="stage-number">06</span><h3>ROOT</h3><p>See the ROOT analysis that describes what you already did.</p></li>
-    </ol>
-  </section>
+  <article class="hunt-shell" aria-labelledby="hunt-stage-title">
+    <header class="hunt-progress">
+      <span id="hunt-stage-label">1 of 5 · See</span>
+      <progress id="hunt-progress" max="5" value="1" aria-label="Higgs Hunt progress">1 of 5</progress>
+      <span class="sample-label">Fixed synthetic sample</span>
+    </header>
+
+    <div class="hunt-stage-viewport">
+      <section class="hunt-stage" data-hunt-stage="0" aria-labelledby="hunt-stage-title">
+        <header class="stage-copy">
+          <p class="stage-kicker">One collision</p>
+          <h2 id="hunt-stage-title" tabindex="-1">Find the two photons</h2>
+          <p>
+            Select the reconstructed objects that could form a diphoton candidate.
+            You can always change your choice.
+          </p>
+        </header>
+
+        <div class="event-workspace">
+          <figure class="event-display">
+            <svg viewBox="0 0 520 400" role="img" aria-labelledby="event-title event-description">
+              <title id="event-title">Conceptual transverse view of one collision event</title>
+              <desc id="event-description">Two photon-like energy deposits and one broad jet emerge from the collision point.</desc>
+              <circle class="detector-ring detector-ring--outer" cx="260" cy="200" r="166"></circle>
+              <circle class="detector-ring" cx="260" cy="200" r="118"></circle>
+              <circle class="detector-ring detector-ring--inner" cx="260" cy="200" r="55"></circle>
+              <line class="detector-axis" x1="74" y1="200" x2="446" y2="200"></line>
+              <line class="detector-axis" x1="260" y1="14" x2="260" y2="386"></line>
+
+              <g class="event-object event-object--photon" data-object-visual="photon-1">
+                <line x1="260" y1="200" x2="402" y2="117"></line>
+                <rect x="394" y="103" width="28" height="28" rx="6"></rect>
+                <text x="430" y="102">A</text>
+              </g>
+              <g class="event-object event-object--photon" data-object-visual="photon-2">
+                <line x1="260" y1="200" x2="116" y2="292"></line>
+                <rect x="97" y="282" width="28" height="28" rx="6"></rect>
+                <text x="84" y="328">B</text>
+              </g>
+              <g class="event-object event-object--jet" data-object-visual="jet-1">
+                <path d="M260 200 L309 42 L364 72 Z"></path>
+                <circle cx="325" cy="65" r="16"></circle>
+                <text x="370" y="67">C</text>
+              </g>
+              <circle class="collision-point" cx="260" cy="200" r="8"></circle>
+            </svg>
+            <figcaption>
+              Simplified teaching view—not a detector display. Photons end as compact
+              calorimeter deposits; the jet is broader.
+            </figcaption>
+          </figure>
+
+          <div class="object-panel">
+            <h3>Choose a pair</h3>
+            <div class="object-buttons" aria-label="Reconstructed objects">
+              <button type="button" data-object-id="photon-1" aria-pressed="false">
+                <span><strong>Object A</strong><small>48 GeV · compact deposit</small></span>
+              </button>
+              <button type="button" data-object-id="photon-2" aria-pressed="false">
+                <span><strong>Object B</strong><small>42 GeV · compact deposit</small></span>
+              </button>
+              <button type="button" data-object-id="jet-1" aria-pressed="false">
+                <span><strong>Object C</strong><small>36 GeV · broad spray</small></span>
+              </button>
+            </div>
+            <rq-feedback id="object-feedback">
+              <p>Select two objects and compare their detector signatures.</p>
+            </rq-feedback>
+          </div>
+        </div>
+      </section>
+
+      <section class="hunt-stage" data-hunt-stage="1" aria-labelledby="rule-stage-title" hidden>
+        <header class="stage-copy">
+          <p class="stage-kicker">From eye to rule</p>
+          <h2 id="rule-stage-title" tabindex="-1">Predict what the first filter keeps</h2>
+          <p>
+            Manual inspection does not scale. The rule below applies the same decision
+            to every event: <code>photon_n == 2</code>.
+          </p>
+        </header>
+
+        <div class="rule-workspace">
+          <div class="table-scroll">
+            <table class="rule-table">
+              <thead>
+                <tr><th scope="col">Event</th><th scope="col">Photons</th><th scope="col">Leading pT</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">A</th><td>2</td><td>48 GeV</td></tr>
+                <tr><th scope="row">B</th><td>1</td><td>60 GeV</td></tr>
+                <tr><th scope="row">C</th><td>2</td><td>34 GeV</td></tr>
+                <tr><th scope="row">D</th><td>3</td><td>55 GeV</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <rq-predict id="rule-prediction" answer-name="prediction">
+            <form>
+              <fieldset>
+                <legend>Which events survive this rule?</legend>
+                <div class="rq-options">
+                  <label><input type="radio" name="prediction" value="a-c" required /> A and C</label>
+                  <label><input type="radio" name="prediction" value="a-d" /> A and D</label>
+                  <label><input type="radio" name="prediction" value="b-d" /> B and D</label>
+                </div>
+              </fieldset>
+              <button class="rq-button rq-button--primary" type="submit">Commit prediction</button>
+            </form>
+            <rq-feedback data-prediction-feedback hidden></rq-feedback>
+          </rq-predict>
+        </div>
+      </section>
+
+      <section class="hunt-stage" data-hunt-stage="2" aria-labelledby="cut-stage-title" hidden>
+        <header class="stage-copy">
+          <p class="stage-kicker">One rule, many events</p>
+          <h2 id="cut-stage-title" tabindex="-1">Move the cut and watch the trade-off</h2>
+          <p>
+            Tightening a transverse-momentum cut removes background—but it can also
+            discard useful signal.
+          </p>
+        </header>
+
+        <div class="cut-workspace">
+          <div class="cut-visual">
+            <svg id="cut-svg" viewBox="0 0 720 230" role="img" aria-labelledby="cut-title cut-description">
+              <title id="cut-title">Leading photon transverse-momentum distribution</title>
+              <desc id="cut-description">Events are shown along a transverse-momentum axis with a movable threshold.</desc>
+              <line class="plot-axis" x1="46" y1="184" x2="688" y2="184"></line>
+              <g data-cut-events></g>
+              <g class="cut-marker" data-cut-marker>
+                <line y1="30" y2="184"></line>
+                <text y="22" text-anchor="middle"></text>
+              </g>
+              <text class="axis-label" x="367" y="220" text-anchor="middle">leading photon pT [GeV]</text>
+            </svg>
+
+            <label class="range-label" for="photon-pt-cut">
+              Minimum leading photon pT
+              <output id="photon-pt-value" for="photon-pt-cut">35 GeV</output>
+            </label>
+            <input id="photon-pt-cut" type="range" min="25" max="60" step="1" value="35" />
+          </div>
+
+          <div class="metric-pair" aria-label="Training metrics">
+            <article class="metric metric--signal">
+              <span>Signal kept</span>
+              <strong id="signal-efficiency">90%</strong>
+            </article>
+            <article class="metric metric--background">
+              <span>Background removed</span>
+              <strong id="background-rejection">55%</strong>
+            </article>
+          </div>
+
+          <rq-feedback id="cut-feedback" aria-live="off">
+            <p>The line is the cut. Events to its left are removed from the sample.</p>
+          </rq-feedback>
+        </div>
+      </section>
+
+      <section class="hunt-stage" data-hunt-stage="3" aria-labelledby="plot-stage-title" hidden>
+        <header class="stage-copy">
+          <p class="stage-kicker">Events become a distribution</p>
+          <h2 id="plot-stage-title" tabindex="-1">Look for structure, not individual rows</h2>
+          <p>
+            The labels are gone. Each selected event contributes one diphoton-mass
+            value to the histogram.
+          </p>
+        </header>
+
+        <div class="plot-workspace">
+          <svg id="mass-histogram" class="mass-histogram" viewBox="0 0 720 330" role="img" aria-labelledby="mass-title mass-description">
+            <title id="mass-title">Diphoton mass histogram after selection</title>
+            <desc id="mass-description">A histogram of selected synthetic events between 100 and 160 GeV.</desc>
+            <rect class="mass-window" x="281" y="30" width="65" height="236" rx="6"></rect>
+            <line class="plot-axis" x1="52" y1="266" x2="686" y2="266"></line>
+            <g data-mass-bars></g>
+            <text class="axis-label" x="369" y="310" text-anchor="middle">diphoton mass [GeV]</text>
+          </svg>
+
+          <div class="plot-controls">
+            <label class="range-label" for="mass-bin-count">
+              Histogram bins
+              <output id="mass-bin-value" for="mass-bin-count">12</output>
+            </label>
+            <input id="mass-bin-count" type="range" min="6" max="16" step="1" value="12" />
+            <p id="mass-summary">Selected events are grouped into 12 mass intervals.</p>
+          </div>
+
+          <rq-feedback id="mass-feedback" aria-live="off">
+            <p>The shaded region is near 125 GeV. Change the bins: the events stay fixed while their grouping changes.</p>
+          </rq-feedback>
+        </div>
+      </section>
+
+      <section class="hunt-stage" data-hunt-stage="4" aria-labelledby="root-stage-title" hidden>
+        <header class="stage-copy stage-copy--final">
+          <p class="stage-kicker">Meaning becomes syntax</p>
+          <h2 id="root-stage-title" tabindex="-1">You already built this ROOT analysis</h2>
+          <p>
+            The code is not a new idea. It is a compact record of the selections and
+            histogram you just manipulated.
+          </p>
+        </header>
+
+        <div class="root-workspace">
+          <div class="code-card">
+            <header>
+              <span>ROOT · RDataFrame</span>
+              <button class="copy-button" id="copy-root-code" type="button">Copy code</button>
+            </header>
+            <pre><code id="root-code"></code></pre>
+          </div>
+
+          <rq-feedback id="root-feedback">
+            <p><strong>Selection → distribution → code.</strong> ROOT formalizes decisions whose consequences you have already seen.</p>
+          </rq-feedback>
+        </div>
+      </section>
+    </div>
+
+    <rq-stepper id="hunt-stepper" aria-label="Higgs Hunt stages">
+      <output class="visually-hidden" data-stepper-status>Stage 1 of 5: See</output>
+      <div class="hunt-navigation">
+        <button type="button" data-stepper-action="previous" hidden>Back</button>
+        <button class="hunt-next" type="button" data-stepper-action="next" disabled>Continue</button>
+        <button type="button" data-stepper-action="reset" hidden>Start again</button>
+      </div>
+    </rq-stepper>
+  </article>
+
+  <p class="teaching-data-note">
+    This experience uses a small fixed synthetic sample to expose cause and effect;
+    it is not experimental data or a statistical claim.
+  </p>
 </BaseLayout>
+
+<script>
+  import '../../lessons/higgs-hunt/controller';
+</script>
