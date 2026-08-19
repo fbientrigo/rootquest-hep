@@ -56,16 +56,59 @@ const objectButton = (id: string) =>
 const objectVisual = (id: string) =>
   document.querySelector<SVGGElement>(`[data-object-visual="${id}"]`);
 
+function prepareDirectManipulation(): void {
+  const stageCopy = document.querySelector<HTMLElement>(
+    '[data-hunt-stage="0"] .stage-copy > p:last-child',
+  );
+  if (stageCopy) {
+    stageCopy.textContent =
+      'Start with one object: tap A, B, or C directly in the event. Each touch highlights it and reveals what you found. Leave both photon-like objects selected.';
+  }
+
+  const panelTitle = document.querySelector<HTMLElement>('.object-panel h3');
+  if (panelTitle) panelTitle.textContent = 'Inspect the event';
+
+  const duplicateControls = document.querySelector<HTMLElement>('.object-buttons');
+  if (duplicateControls) duplicateControls.hidden = true;
+
+  for (const object of HUNT_OBJECTS) {
+    const visual = objectVisual(object.id);
+    if (!visual) continue;
+
+    visual.style.touchAction = 'manipulation';
+
+    const marks = Array.from(
+      visual.querySelectorAll<SVGGeometryElement>('line, path, rect, circle'),
+    );
+
+    for (const mark of marks) {
+      const hitTarget = mark.cloneNode(false) as SVGGeometryElement;
+      hitTarget.removeAttribute('class');
+      hitTarget.setAttribute('aria-hidden', 'true');
+      hitTarget.setAttribute('focusable', 'false');
+      hitTarget.setAttribute('fill', 'transparent');
+      hitTarget.setAttribute('stroke', 'transparent');
+      hitTarget.setAttribute('stroke-width', '28');
+      hitTarget.setAttribute('pointer-events', 'all');
+      hitTarget.dataset.hitTarget = 'true';
+      visual.insertBefore(hitTarget, visual.firstChild);
+    }
+  }
+}
+
 function showSelectionInstruction(): void {
   selectionFeedback.hidden = false;
   selectionFeedback.dataset.state = 'instruction';
   const content = document.createElement('p');
-  content.textContent = 'Select two objects and compare their detector signatures.';
+  content.textContent = 'Touch one object in the event to inspect it.';
   selectionFeedback.replaceChildren(content);
 }
 
 function renderSelection(selectedIds: string[]): void {
   const selection = objectSelectionState(selectedIds);
+  const inspected = HUNT_OBJECTS.find(
+    (object) => object.id === selectedIds[selectedIds.length - 1],
+  );
 
   for (const object of HUNT_OBJECTS) {
     const selected = selectedIds.includes(object.id);
@@ -84,19 +127,23 @@ function renderSelection(selectedIds: string[]): void {
     selectionFeedback.show({
       kind: 'success',
       heading: 'A diphoton candidate',
-      message: 'The two narrow electromagnetic deposits are photon-like. Their combined properties can now describe the event.',
+      message: 'Objects A and B stay highlighted: two compact photon-like deposits now describe one candidate event.',
     });
-  } else if (selection.includesJet) {
+  } else if (selection.includesJet && selection.selectedCount === 2) {
     selectionFeedback.show({
       kind: 'misconception',
       heading: 'Compare the shapes',
-      message: 'The broad spray is jet-like. Look for the two compact deposits that point back toward the collision.',
+      message: 'One selected object is a broad jet-like spray. Touch it again to deselect it, then inspect the remaining compact deposit.',
     });
-  } else {
+  } else if (inspected) {
+    const signature = inspected.kind === 'photon' ? 'compact deposit' : 'broad spray';
+    const kind = inspected.kind === 'photon' ? 'photon-like' : 'jet-like';
+    const eta = inspected.eta >= 0 ? `+${inspected.eta}` : String(inspected.eta);
+
     selectionFeedback.show({
-      kind: 'observation',
-      heading: 'One photon-like object found',
-      message: 'Find its compact partner so the event can form a two-photon candidate.',
+      kind: inspected.kind === 'photon' ? 'observation' : 'misconception',
+      heading: `${inspected.label} selected`,
+      message: `${inspected.energy} GeV · η ${eta} · ${signature}. This object is ${kind}. Inspect another object and compare what changes.`,
     });
   }
 }
@@ -228,6 +275,8 @@ function focusActiveStage(): void {
     document.querySelector<HTMLElement>('[data-hunt-stage]:not([hidden]) h2')?.focus();
   });
 }
+
+prepareDirectManipulation();
 
 document.querySelectorAll<HTMLButtonElement>('[data-object-id]').forEach((button) => {
   button.addEventListener('click', () => {
