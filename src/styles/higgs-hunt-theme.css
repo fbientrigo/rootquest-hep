@@ -1,0 +1,178 @@
+.hunt-shell {
+  color-scheme: inherit;
+}
+
+:root[data-theme='dark'] .hunt-shell {
+  --surface: #162124;
+  --surface-soft: #1b292c;
+  --text: #e7efee;
+  --muted: #9baaad;
+  --border: #344447;
+  --accent: #69a9bf;
+  --accent-strong: #91c8d8;
+  --signal: #78ad94;
+  --background-event: #d58a68;
+  --discovery: #b58aa4;
+  background: #0f1719;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 22%);
+}
+
+:root[data-theme='dark'] .hunt-progress {
+  background: rgb(22 33 36 / 94%);
+}
+
+:root[data-theme='dark'] .hunt-progress progress,
+:root[data-theme='dark'] .hunt-progress progress::-webkit-progress-bar {
+  background: #2a393c;
+}
+
+:root[data-theme='dark'] .stage-copy code {
+  border-color: #344447;
+  background: #111b1d;
+  color: var(--accent-strong);
+}
+
+:root[data-theme='dark'] .event-display svg {
+  border-color: #344447;
+  background: radial-gradient(circle at 50% 49%, #1c292c 0, #162124 60%, #10191b 100%);
+}
+
+:root[data-theme='dark'] .detector-ring,
+:root[data-theme='dark'] .detector-axis {
+  stroke: #526467;
+}
+
+:root[data-theme='dark'] .detector-ring--outer {
+  stroke: #6b8083;
+}
+
+:root[data-theme='dark'] .collision-point,
+:root[data-theme='dark'] .event-object rect,
+:root[data-theme='dark'] .event-object circle {
+  stroke: #162124;
+}
+
+:root[data-theme='dark'] .event-object {
+  color: #718286;
+}
+
+:root[data-theme='dark'] .event-object:hover {
+  color: #91adb3;
+}
+
+:root[data-theme='dark'] .object-panel #object-feedback,
+:root[data-theme='dark'] .hunt-shell rq-feedback:not(#object-feedback) {
+  border-color: #344447;
+  background: #131e20;
+}
+
+:root[data-theme='dark'] .object-buttons button,
+:root[data-theme='dark'] .hunt-shell .rq-options label {
+  border-color: #344447;
+  background: #151f22;
+}
+
+:root[data-theme='dark'] .object-buttons button:hover,
+:root[data-theme='dark'] .hunt-shell .rq-options label:hover {
+  border-color: #526d72;
+  background: #1b292c;
+}
+
+:root[data-theme='dark'] .object-buttons button::before {
+  border-color: #718286;
+  background: #162124;
+}
+
+:root[data-theme='dark'] .object-buttons button[aria-pressed='true'] {
+  border-color: #5e96aa;
+  background: #1b292c;
+}
+
+:root[data-theme='dark'] .object-buttons button[data-object-id='jet-1'][aria-pressed='true'] {
+  border-color: #b86f51;
+  background: #2b211f;
+}
+
+:root[data-theme='dark'] .rule-table th,
+:root[data-theme='dark'] .rule-table td {
+  border-bottom-color: #2c3a3d;
+}
+
+:root[data-theme='dark'] .cut-visual svg,
+:root[data-theme='dark'] .mass-histogram {
+  background: #131e20;
+}
+
+:root[data-theme='dark'] .plot-axis {
+  stroke: #7d9093;
+}
+
+:root[data-theme='dark'] .metric {
+  border-color: #344447;
+  background: #162124;
+}
+
+:root[data-theme='dark'] .mass-histogram {
+  border-color: #344447;
+}
+
+:root[data-theme='dark'] .hunt-shell .rq-button--primary,
+:root[data-theme='dark'] .hunt-navigation .hunt-next {
+  color: #0b1517;
+}
+
+:root[data-theme='dark'] .hunt-navigation {
+  background: rgb(15 23 25 / 94%);
+}
+
+:root[data-theme='dark'] .hunt-navigation .hunt-next:disabled {
+  border-color: #344447;
+  background: #273437;
+  color: #7e8e91;
+}
+
+@media (max-width: 48rem), (max-height: 32rem) and (pointer: coarse) {
+  :root[data-theme='dark'] body {
+    background: #0f1719;
+  }
+
+  :root[data-theme='dark'] .hunt-progress,
+  :root[data-theme='dark'] .hunt-navigation {
+    background: rgb(22 33 36 / 97%);
+  }
+
+  :root[data-theme='dark'] .hunt-exit {
+    color: #9baaad;
+  }
+
+  :root[data-theme='dark'] .hunt-exit:hover,
+  :root[data-theme='dark'] .hunt-exit:focus-visible {
+    background: #1b292c;
+    color: #e7efee;
+  }
+
+  :root[data-theme='dark'] .hunt-navigation {
+    border-top-color: #344447;
+    box-shadow: 0 -12px 30px rgb(0 0 0 / 20%);
+  }
+
+  :root[data-theme='dark'] .hunt-navigation [data-stepper-action='previous'] {
+    background: #162124;
+    color: #e7efee;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .hunt-shell {
+    --surface: #162124;
+    --surface-soft: #1b292c;
+    --text: #e7efee;
+    --muted: #9baaad;
+    --border: #344447;
+    --accent: #69a9bf;
+    --accent-strong: #91c8d8;
+    --signal: #78ad94;
+    --background-event: #d58a68;
+    --discovery: #b58aa4;
+  }
+}
