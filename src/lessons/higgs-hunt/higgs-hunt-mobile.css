@@ -1,0 +1,323 @@
+.hunt-exit {
+  display: none;
+}
+
+@media (max-width: 48rem), (max-height: 32rem) and (pointer: coarse) {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #f4f6f4;
+  }
+
+  .site-header,
+  .site-footer,
+  .hunt-intro,
+  .teaching-data-note {
+    display: none;
+  }
+
+  body main#main {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hunt-shell {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .hunt-progress {
+    z-index: 10;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    padding:
+      calc(0.55rem + env(safe-area-inset-top))
+      max(0.85rem, env(safe-area-inset-right))
+      0.55rem
+      max(0.85rem, env(safe-area-inset-left));
+    background: rgb(255 255 255 / 97%);
+    text-transform: none;
+  }
+
+  .hunt-exit {
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 50%;
+    color: #637177;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1;
+    text-decoration: none;
+    touch-action: manipulation;
+  }
+
+  .hunt-exit:hover,
+  .hunt-exit:focus-visible {
+    background: #eef2f1;
+    color: #17252e;
+  }
+
+  .hunt-progress progress {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    height: 0.42rem;
+  }
+
+  #hunt-stage-label {
+    grid-column: 3;
+    grid-row: 1;
+    white-space: nowrap;
+    font-size: 0.66rem;
+    letter-spacing: 0;
+  }
+
+  .sample-label {
+    display: none;
+  }
+
+  .hunt-stage-viewport {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    padding:
+      0.9rem
+      max(0.9rem, env(safe-area-inset-right))
+      1.15rem
+      max(0.9rem, env(safe-area-inset-left));
+    scroll-padding-block: 0.9rem;
+  }
+
+  .hunt-stage {
+    width: min(100%, 42rem);
+    margin-inline: auto;
+  }
+
+  .stage-copy {
+    margin-bottom: 0.8rem;
+  }
+
+  .stage-kicker {
+    display: none;
+  }
+
+  .stage-copy h2 {
+    max-width: 24ch;
+    font-size: clamp(1.6rem, 7.5vw, 2.15rem);
+    line-height: 1.05;
+  }
+
+  .stage-copy > p:last-child {
+    margin-top: 0.45rem;
+    font-size: 0.88rem;
+    line-height: 1.42;
+  }
+
+  .event-workspace,
+  .rule-workspace {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .event-display {
+    padding: 0.55rem;
+  }
+
+  .event-display svg {
+    max-height: min(32dvh, 17rem);
+  }
+
+  .event-display figcaption {
+    margin-top: 0.45rem;
+    font-size: 0.65rem;
+  }
+
+  .object-panel {
+    padding: 0.7rem;
+  }
+
+  .object-panel h3 {
+    font-size: 1rem;
+  }
+
+  .object-buttons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .object-buttons button {
+    min-height: 3.4rem;
+    padding: 0.55rem 0.5rem;
+  }
+
+  .object-buttons button::before {
+    width: 0.62rem;
+    height: 0.62rem;
+    margin-right: 0.48rem;
+  }
+
+  .object-buttons strong {
+    font-size: 0.76rem;
+  }
+
+  .object-buttons small {
+    display: none;
+  }
+
+  .object-panel #object-feedback,
+  .hunt-shell rq-feedback:not(#object-feedback) {
+    min-height: 0;
+    margin-top: 0.65rem;
+    padding: 0.65rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .rule-table th,
+  .rule-table td {
+    padding: 0.62rem 0.55rem;
+    font-size: 0.78rem;
+  }
+
+  .hunt-shell rq-predict {
+    padding: 0.75rem;
+  }
+
+  .hunt-shell .rq-options {
+    gap: 0.35rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .hunt-shell .rq-options label {
+    min-height: 3rem;
+    align-items: center;
+    padding: 0.62rem 0.65rem;
+  }
+
+  .hunt-shell .rq-button--primary {
+    width: 100%;
+    min-height: 3.25rem;
+  }
+
+  .cut-workspace,
+  .plot-workspace,
+  .root-workspace {
+    max-width: none;
+    padding: 0.75rem;
+  }
+
+  .cut-visual {
+    padding: 0.6rem;
+  }
+
+  .range-label {
+    font-size: 0.76rem;
+  }
+
+  .cut-visual input[type='range'],
+  .plot-controls input[type='range'] {
+    min-height: 3rem;
+    touch-action: manipulation;
+  }
+
+  .metric-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+
+  .metric {
+    padding: 0.65rem 0.7rem;
+  }
+
+  .metric strong {
+    font-size: clamp(1.25rem, 7vw, 1.65rem);
+  }
+
+  .mass-histogram {
+    max-height: 34dvh;
+  }
+
+  .code-card pre {
+    max-height: 48dvh;
+    padding: 0.85rem;
+    font-size: 0.76rem;
+    line-height: 1.55;
+  }
+
+  #hunt-stepper {
+    min-width: 0;
+  }
+
+  .hunt-navigation {
+    position: static;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding:
+      0.7rem
+      max(0.9rem, env(safe-area-inset-right))
+      calc(0.7rem + env(safe-area-inset-bottom))
+      max(0.9rem, env(safe-area-inset-left));
+    border-top: 1px solid #d6dcda;
+    background: rgb(255 255 255 / 97%);
+    box-shadow: 0 -12px 30px rgb(23 37 46 / 7%);
+    backdrop-filter: blur(12px);
+  }
+
+  .hunt-navigation button:not([hidden]) {
+    min-height: 3.25rem;
+  }
+
+  .hunt-navigation [data-stepper-action='previous'] {
+    flex: 0 0 auto;
+    min-width: 5.25rem;
+    background: white;
+  }
+
+  .hunt-navigation .hunt-next,
+  .hunt-navigation [data-stepper-action='reset'] {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+@media (max-height: 32rem) and (pointer: coarse) {
+  .hunt-stage-viewport {
+    padding-top: 0.65rem;
+  }
+
+  .stage-copy > p:last-child,
+  .event-display figcaption {
+    display: none;
+  }
+
+  .event-display svg {
+    max-height: 10.5rem;
+  }
+
+  .stage-copy h2 {
+    font-size: 1.45rem;
+  }
+}
