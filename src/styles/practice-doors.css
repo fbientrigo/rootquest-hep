@@ -1,0 +1,60 @@
+.practice-header {
+  position: relative;
+}
+
+.practice-language {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  display: inline-flex;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.practice-language a {
+  min-width: 2.35rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: calc(var(--radius) * 0.75);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+
+.practice-language a[aria-current='page'] {
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+@media (max-width: 42rem) {
+  .practice[data-practice-mode='manipulate'] .selection-visualization {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 92%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+  }
+
+  .practice[data-practice-mode='manipulate'] .selection-visualization::-webkit-scrollbar {
+    display: none;
+  }
+
+  .practice[data-practice-mode='manipulate'] .visual-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .practice[data-practice-mode='manipulate'] .event-space {
+    aspect-ratio: 16 / 10;
+  }
+
+  .practice[data-practice-mode='manipulate'] .selection-histogram {
+    aspect-ratio: 18 / 11;
+  }
+}

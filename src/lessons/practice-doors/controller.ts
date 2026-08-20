@@ -1,5 +1,15 @@
 import { createLessonSession } from '../../learning';
 import {
+  applySpanishPracticeCopy,
+  fallbackAnswer,
+  getPracticeLocale,
+  histogramDescription,
+  installPracticeLanguageSwitch,
+  selectionFeedback,
+  stageStatus,
+  visualSummary,
+} from './locale';
+import {
   deriveSelection,
   evaluatePracticeAnswer,
   meetsSelectionGoal,
@@ -16,6 +26,11 @@ const root = document.querySelector<HTMLElement>('[data-practice-root]');
 
 if (root) {
   const mode = root.dataset.practiceMode as PracticeMode;
+  const locale = getPracticeLocale();
+  root.dataset.locale = locale;
+  if (locale === 'es') applySpanishPracticeCopy(root, mode);
+  installPracticeLanguageSwitch(root, locale);
+
   const session = createLessonSession<PracticeState>(() => ({
     stage: 1,
     threshold: 20,
@@ -65,14 +80,10 @@ if (root) {
     if (cutLabel) cutLabel.textContent = `${state.threshold} GeV`;
 
     const summary = visualization.querySelector<HTMLElement>('[data-visual-summary]');
-    if (summary) {
-      summary.textContent = `At ${state.threshold} GeV, ${snapshot.signalKept} of ${snapshot.signalTotal} signal and ${snapshot.backgroundKept} of ${snapshot.backgroundTotal} background examples remain.`;
-    }
+    if (summary) summary.textContent = visualSummary(locale, state.threshold, snapshot);
 
-    const histogramDescription = visualization.querySelector<SVGDescElement>('[data-histogram-description]');
-    if (histogramDescription) {
-      histogramDescription.textContent = `Photon transverse momentum distribution. The rejected region extends below ${state.threshold} GeV. ${snapshot.signalKept} signal and ${snapshot.backgroundKept} background examples remain.`;
-    }
+    const description = visualization.querySelector<SVGDescElement>('[data-histogram-description]');
+    if (description) description.textContent = histogramDescription(locale, state.threshold, snapshot);
   };
 
   const announceSelection = (panel: HTMLElement, state: PracticeState) => {
@@ -92,9 +103,7 @@ if (root) {
 
     if (feedback) {
       const solved = meetsSelectionGoal(state.stage, snapshot);
-      feedback.textContent = solved
-        ? `Target reached: ${snapshot.signalKept} signal examples remain with ${snapshot.backgroundKept} background examples.`
-        : `This cut keeps ${snapshot.signalKept} signal and ${snapshot.backgroundKept} background examples. Adjust the threshold toward the target.`;
+      feedback.textContent = selectionFeedback(locale, solved, snapshot);
       feedback.dataset.kind = solved ? 'success' : 'observation';
     }
   };
@@ -112,9 +121,10 @@ if (root) {
       const stage = Number(marker.dataset.stageMarker);
       const status = marker.querySelector<HTMLElement>('[data-stage-status]');
       const complete = state.completed.includes(stage);
+      const stateLabel = complete ? 'complete' : stage === state.stage ? 'current' : 'locked';
 
-      marker.dataset.state = complete ? 'complete' : stage === state.stage ? 'current' : 'locked';
-      if (status) status.textContent = complete ? 'Complete' : stage === state.stage ? 'Current' : 'Locked';
+      marker.dataset.state = stateLabel;
+      if (status) status.textContent = stageStatus(locale, stateLabel);
     });
 
     const currentComplete = state.completed.includes(state.stage);
@@ -149,7 +159,7 @@ if (root) {
       const correct = evaluatePracticeAnswer(mode, stage, answer);
 
       if (feedback) {
-        feedback.textContent = correct ? form.dataset.success ?? 'Correct.' : form.dataset.miss ?? 'Try again.';
+        feedback.textContent = correct ? form.dataset.success ?? fallbackAnswer(locale, true) : form.dataset.miss ?? fallbackAnswer(locale, false);
         feedback.dataset.kind = correct ? 'success' : 'misconception';
       }
 

@@ -58,6 +58,40 @@ test('selection lab links the cut to the 3D sample, histogram, and challenge sta
   await expect(page.getByRole('heading', { name: 'Three decisions, one mental model.' })).toBeVisible();
 });
 
+test('selection lab gives each live view readable mobile width without making the page taller', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('practice/manipulate/');
+
+  const eventCard = page.locator('.event-view');
+  const histogramCard = page.locator('.histogram-view');
+  const visualization = page.locator('[data-selection-visualization]');
+  const eventBox = await eventCard.boundingBox();
+  const histogramBox = await histogramCard.boundingBox();
+  const visualizationBox = await visualization.boundingBox();
+
+  expect(eventBox).not.toBeNull();
+  expect(histogramBox).not.toBeNull();
+  expect(visualizationBox).not.toBeNull();
+  expect(eventBox!.width).toBeGreaterThan(300);
+  expect(histogramBox!.width).toBeGreaterThan(300);
+  expect(histogramBox!.x).toBeGreaterThan(eventBox!.x + eventBox!.width - 4);
+  expect(visualizationBox!.height).toBeLessThan(360);
+});
+
+test('practice routes expose a functional Spanish version', async ({ page }) => {
+  await page.goto('practice/manipulate/?lang=es');
+
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await expect(page.getByRole('heading', { level: 1, name: 'Laboratorio de selección' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Muestra 3D' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'pT del fotón' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'ES' })).toHaveAttribute('aria-current', 'page');
+
+  await page.locator('[data-stage-panel="1"] input[type="range"]').fill('30');
+  await expect(page.locator('[data-stage-panel="1"] [data-feedback]')).toContainText('Objetivo alcanzado');
+  await expect(page.locator('[data-stage-marker="1"] [data-stage-status]')).toHaveText('Completado');
+});
+
 test('code builder gives explanatory feedback and reveals ROOT only after commitment', async ({ page }) => {
   await page.goto('practice/code/');
 
