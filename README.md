@@ -12,6 +12,32 @@ Instead of starting from API calls and notebook cells, learners first manipulate
 
 ROOT Quest is a bridge toward ROOT and real analysis work, not a replacement for the official ROOT documentation.
 
+## Curriculum
+
+ROOT Quest follows a canonical ROOT 80/20 path rather than trying to cover the full ROOT API:
+
+```text
+Higgs Hunt hook
+      ↓
+A · distributions
+      ↓
+B · ROOT data model
+      ↓
+C · RDataFrame analysis
+      ↓
+D · HEP objects and kinematics
+      ↓
+E · evidence, fits and Data/MC
+      ↓
+F · independent analysis
+```
+
+The curriculum, lesson order, current status and next lesson are defined in [`docs/05_CURRICULUM.md`](docs/05_CURRICULUM.md).
+
+The reusable lesson patterns, attention budget, definition of done and “implement the next lesson” agent protocol are defined in [`docs/06_LESSON_AUTHORING.md`](docs/06_LESSON_AUTHORING.md).
+
+The repository is designed so that a future agent can read those two files, reuse existing probes/drills, implement one polished lesson, verify it, then advance the roadmap without depending on prior chat history.
+
 ## First experience: Higgs Hunt
 
 The first vertical slice teaches the basic analysis loop through a small Higgs search. Learners will progressively:
@@ -68,14 +94,16 @@ npm run test:e2e
 - `src/learning/` — portable session mechanics and accessible teaching primitives.
 - `src/lessons/` — lesson-specific state, derivations, visuals and controllers.
 - `tests/` — pure logic and cross-browser interaction checks.
-- `docs/` — product, pedagogy, MVP and engineering sources.
+- `docs/` — product, pedagogy, curriculum, lesson-authoring, MVP and engineering sources.
 - `STACK_CONTRACT.md` — authoritative technical constraints.
 
 Lesson-specific code should be added only when a real interaction needs it. Do not create generalized learning infrastructure until repeated real lessons demonstrate the need.
 
 ## Status
 
-Early prototype. The current focus is the Higgs Hunt vertical slice and the minimum reusable foundations required to support it.
+Early prototype with a working Higgs Hunt vertical slice, reusable learning primitives and an explicit course roadmap.
+
+Current curriculum handoff: consult `docs/05_CURRICULUM.md` for the unique `NEXT` lesson before adding new course content.
 
 ## Scope
 
