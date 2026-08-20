@@ -31,7 +31,7 @@ const byId = <T extends Element>(id: string): T => {
 };
 
 const svgNamespace = 'http://www.w3.org/2000/svg';
-const session = createLessonSession(createHiggsHuntState());
+const session = createLessonSession(createHiggsHuntState);
 const abortController = new AbortController();
 const signal = abortController.signal;
 
