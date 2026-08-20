@@ -27,5 +27,5 @@ jobs:
         run: npm run build
       - name: Install Chromium for interaction smoke test
         run: npx playwright install --with-deps chromium
-      - name: Test Higgs Hunt interaction in Chromium
-        run: npx playwright test tests/e2e/higgs-hunt.spec.ts --project=chromium
+      - name: Test Higgs Hunt interaction and themes in Chromium
+        run: npx playwright test tests/e2e/higgs-hunt.spec.ts tests/e2e/theme.spec.ts --project=chromium
