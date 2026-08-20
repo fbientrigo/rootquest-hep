@@ -30,52 +30,62 @@ test('each door reaches its named micro-experience', async ({ page }) => {
   }
 });
 
-test('selection lab links the cut to the 3D sample, histogram, and challenge state', async ({ page }) => {
+test('selection lab separates one collision from the many-event distribution', async ({ page }) => {
   await page.goto('practice/manipulate/');
 
   const continueButton = page.getByRole('button', { name: 'Unlock next challenge' });
   const liveThreshold = page.locator('[data-live-threshold]');
+  const eventCard = page.locator('.event-view');
+
   await expect(continueButton).toBeDisabled();
-  await expect(page.getByRole('heading', { name: '3D sample' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Example collision' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Photon pT' })).toBeVisible();
-  await expect(page.locator('[data-selection-event][data-selected="true"]')).toHaveCount(12);
+  await expect(page.locator('[data-collision-stage]')).toHaveAttribute('data-collision-ready', 'true');
+  await expect(eventCard).toHaveAttribute('data-event-selection-state', 'pass');
+  await expect(page.locator('[data-histogram-bar][data-selected="false"]')).toHaveCount(0);
+
+  await page.getByRole('button', { name: /γ A/ }).click();
+  await expect(page.locator('[data-collision-inspector]')).toContainText('no charged track');
 
   const firstThreshold = page.locator('[data-stage-panel="1"] input[type="range"]');
   await firstThreshold.fill('30');
   await expect(liveThreshold).toHaveText('30 GeV');
-  await expect(page.locator('[data-selection-event][data-selected="true"]')).toHaveCount(9);
   await expect(page.locator('[data-histogram-bar][data-selected="false"]')).toHaveCount(4);
+  await expect(eventCard).toHaveAttribute('data-event-selection-state', 'pass');
   await expect(page.locator('[data-stage-marker="1"]')).toHaveAttribute('data-state', 'complete');
   await expect(continueButton).toBeEnabled();
   await continueButton.click();
 
   await expect(page.locator('[data-stage-marker="2"]')).toHaveAttribute('data-state', 'current');
   await page.locator('[data-stage-panel="2"] input[type="range"]').fill('40');
-  await expect(page.locator('[data-selection-event][data-selected="true"]')).toHaveCount(6);
+  await expect(page.locator('[data-histogram-bar][data-selected="false"]')).toHaveCount(8);
+  await expect(eventCard).toHaveAttribute('data-event-selection-state', 'pass');
   await continueButton.click();
 
   await page.locator('[data-stage-panel="3"] input[type="range"]').fill('50');
+  await expect(eventCard).toHaveAttribute('data-event-selection-state', 'rejected');
+  await expect(page.locator('[data-event-cut-state]')).toContainText('Event rejected');
   await expect(page.getByRole('heading', { name: 'Three decisions, one mental model.' })).toBeVisible();
 });
 
-test('selection lab gives each live view readable mobile width without making the page taller', async ({ page }) => {
+test('selection lab keeps the collision and histogram readable in the mobile carousel', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('practice/manipulate/');
 
   const eventCard = page.locator('.event-view');
   const histogramCard = page.locator('.histogram-view');
-  const visualization = page.locator('[data-selection-visualization]');
+  const collisionStage = page.locator('[data-collision-stage]');
   const eventBox = await eventCard.boundingBox();
   const histogramBox = await histogramCard.boundingBox();
-  const visualizationBox = await visualization.boundingBox();
+  const collisionBox = await collisionStage.boundingBox();
 
   expect(eventBox).not.toBeNull();
   expect(histogramBox).not.toBeNull();
-  expect(visualizationBox).not.toBeNull();
+  expect(collisionBox).not.toBeNull();
   expect(eventBox!.width).toBeGreaterThan(300);
   expect(histogramBox!.width).toBeGreaterThan(300);
   expect(histogramBox!.x).toBeGreaterThan(eventBox!.x + eventBox!.width - 4);
-  expect(visualizationBox!.height).toBeLessThan(360);
+  expect(collisionBox!.height).toBeLessThan(250);
 });
 
 test('practice routes expose a functional Spanish version', async ({ page }) => {
@@ -83,9 +93,12 @@ test('practice routes expose a functional Spanish version', async ({ page }) => 
 
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page.getByRole('heading', { level: 1, name: 'Laboratorio de selección' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Muestra 3D' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Colisión de ejemplo' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'pT del fotón' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'ES' })).toHaveAttribute('aria-current', 'page');
+
+  await page.getByRole('button', { name: /γ A/ }).click();
+  await expect(page.locator('[data-collision-inspector]')).toContainText('sin track cargado');
 
   await page.locator('[data-stage-panel="1"] input[type="range"]').fill('30');
   await expect(page.locator('[data-stage-panel="1"] [data-feedback]')).toContainText('Objetivo alcanzado');

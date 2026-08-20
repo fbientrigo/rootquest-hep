@@ -1,4 +1,5 @@
 import { createLessonSession } from '../../learning';
+import { mountCollisionEventView } from './event-view';
 import {
   applySpanishPracticeCopy,
   fallbackAnswer,
@@ -31,6 +32,8 @@ if (root) {
   if (locale === 'es') applySpanishPracticeCopy(root, mode);
   installPracticeLanguageSwitch(root, locale);
 
+  const eventView = mode === 'manipulate' ? mountCollisionEventView(root, locale) : null;
+
   const session = createLessonSession<PracticeState>(() => ({
     stage: 1,
     threshold: 20,
@@ -53,13 +56,10 @@ if (root) {
     if (!visualization) return;
 
     const snapshot = deriveSelection(state.threshold);
+    eventView?.setThreshold(state.threshold);
 
     visualization.querySelectorAll<HTMLOutputElement>('[data-live-threshold]').forEach((output) => {
       output.value = `${state.threshold} GeV`;
-    });
-
-    visualization.querySelectorAll<HTMLElement>('[data-selection-event]').forEach((event) => {
-      event.dataset.selected = Number(event.dataset.pt) >= state.threshold ? 'true' : 'false';
     });
 
     visualization.querySelectorAll<SVGElement>('[data-histogram-bar]').forEach((bar) => {
