@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const huntPath = 'learn/higgs-hunt/';
 
-const geometry = async (page: Parameters<typeof test>[0]['page']) => {
+const geometry = async (page: Page) => {
   const selectors = ['.hunt-shell', '.event-display', '.object-buttons button', '.hunt-navigation'];
   const boxes = await Promise.all(selectors.map((selector) => page.locator(selector).first().boundingBox()));
   return boxes.map((box) => {
