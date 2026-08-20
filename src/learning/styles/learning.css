@@ -9,7 +9,7 @@ rq-feedback {
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--border);
   border-inline-start: 0.3rem solid var(--feedback-accent, var(--accent));
-  border-radius: 0.65rem;
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--surface) 88%, var(--feedback-accent, var(--accent)) 12%);
 }
 
@@ -18,19 +18,19 @@ rq-feedback[hidden] {
 }
 
 rq-feedback[data-state='success'] {
-  --feedback-accent: #19733a;
+  --feedback-accent: var(--feedback-success);
 }
 
 rq-feedback[data-state='misconception'] {
-  --feedback-accent: #a64b13;
+  --feedback-accent: var(--feedback-misconception);
 }
 
 rq-feedback[data-state='hint'] {
-  --feedback-accent: #7b4cc2;
+  --feedback-accent: var(--feedback-hint);
 }
 
 rq-feedback[data-state='explanation'] {
-  --feedback-accent: #176f87;
+  --feedback-accent: var(--feedback-explanation);
 }
 
 rq-feedback p {
@@ -67,7 +67,7 @@ rq-predict legend {
   align-items: flex-start;
   gap: 0.6rem;
   padding: 0.55rem 0.65rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
 }
 
 .rq-options label:hover {
@@ -84,7 +84,7 @@ rq-stepper button {
   min-height: 2.75rem;
   padding: 0.6rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 0.6rem;
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
   font: inherit;
@@ -107,11 +107,12 @@ rq-predict :disabled {
 .rq-button--primary {
   border-color: var(--accent);
   background: var(--accent);
-  color: white;
+  color: var(--accent-contrast);
 }
 
 .rq-button--primary:hover:not(:disabled) {
   background: var(--accent-strong);
+  color: var(--accent-contrast);
 }
 
 .rq-stepper-controls {
@@ -137,26 +138,4 @@ rq-predict :disabled {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  rq-feedback[data-state='success'] {
-    --feedback-accent: #72d695;
-  }
-
-  rq-feedback[data-state='misconception'] {
-    --feedback-accent: #f1a16f;
-  }
-
-  rq-feedback[data-state='hint'] {
-    --feedback-accent: #c9a8ff;
-  }
-
-  rq-feedback[data-state='explanation'] {
-    --feedback-accent: #75cce1;
-  }
-
-  .rq-button--primary {
-    color: #101418;
-  }
 }
