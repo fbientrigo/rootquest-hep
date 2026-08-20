@@ -18,6 +18,23 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('rootquest-theme');
+          const theme = stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+          document.documentElement.dataset.theme = theme;
+        } catch {
+          document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+        }
+      })();
+    </script>
     <title>{title}</title>
   </head>
   <body>
@@ -27,6 +44,9 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
       <nav class="site-nav" aria-label="Primary navigation">
         <a href={withBase('')}>Home</a>
         <a href={withBase('learn/higgs-hunt/')}>Higgs Hunt</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+          <span data-theme-toggle-label>Theme</span>
+        </button>
       </nav>
     </header>
     <main id="main">
@@ -35,5 +55,35 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
     <footer class="site-footer">
       Independent educational experiment. Not an official ROOT or CERN project.
     </footer>
+
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const button = document.querySelector('[data-theme-toggle]');
+        const label = document.querySelector('[data-theme-toggle-label]');
+        if (!(button instanceof HTMLButtonElement) || !(label instanceof HTMLElement)) return;
+
+        const render = () => {
+          const current = root.dataset.theme === 'dark' ? 'dark' : 'light';
+          const next = current === 'dark' ? 'Light' : 'Dark';
+          label.textContent = next;
+          button.setAttribute('aria-label', `Switch to ${next.toLowerCase()} theme`);
+          button.setAttribute('aria-pressed', String(current === 'dark'));
+        };
+
+        button.addEventListener('click', () => {
+          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try {
+            localStorage.setItem('rootquest-theme', next);
+          } catch {
+            // Theme still applies for the current page when storage is unavailable.
+          }
+          render();
+        });
+
+        render();
+      })();
+    </script>
   </body>
 </html>
