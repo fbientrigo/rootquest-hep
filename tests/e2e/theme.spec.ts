@@ -17,7 +17,8 @@ const geometry = async (page: Page) => {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('rootquest-theme', 'light'));
+  await page.goto('');
+  await page.evaluate(() => localStorage.setItem('rootquest-theme', 'light'));
 });
 
 test('Higgs Hunt switches palette without changing its layout', async ({ page }) => {
