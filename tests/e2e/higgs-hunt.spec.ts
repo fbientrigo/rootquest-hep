@@ -39,6 +39,48 @@ test('clicking the event visual updates the same selection state', async ({ page
   await expect(visualA).toHaveAttribute('data-selected', 'true');
 });
 
+test('phone viewport behaves as one immersive lesson session', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+
+  await expect(page.locator('.site-header')).toBeHidden();
+  await expect(page.locator('.site-footer')).toBeHidden();
+  await expect(page.locator('.hunt-intro')).toBeHidden();
+  await expect(page.getByRole('link', { name: 'Exit Higgs Hunt' })).toBeVisible();
+
+  const layout = await page.evaluate(() => {
+    const shell = document.querySelector<HTMLElement>('.hunt-shell')!;
+    const stage = document.querySelector<HTMLElement>('.hunt-stage-viewport')!;
+    const navigation = document.querySelector<HTMLElement>('.hunt-navigation')!;
+    return {
+      viewportHeight: window.innerHeight,
+      documentHeight: document.documentElement.scrollHeight,
+      shell: shell.getBoundingClientRect().toJSON(),
+      stage: stage.getBoundingClientRect().toJSON(),
+      navigation: navigation.getBoundingClientRect().toJSON(),
+      outerScrollY: window.scrollY,
+    };
+  });
+
+  expect(Math.abs(layout.shell.height - layout.viewportHeight)).toBeLessThanOrEqual(2);
+  expect(layout.documentHeight).toBeLessThanOrEqual(layout.viewportHeight + 2);
+  expect(layout.stage.bottom).toBeLessThanOrEqual(layout.navigation.top + 1);
+  expect(layout.navigation.bottom).toBeGreaterThanOrEqual(layout.viewportHeight - 2);
+  expect(layout.navigation.bottom).toBeLessThanOrEqual(layout.viewportHeight + 2);
+  expect(layout.outerScrollY).toBe(0);
+
+  const objectA = page.getByRole('button', { name: /Object A/ });
+  const objectB = page.getByRole('button', { name: /Object B/ });
+  const next = page.getByRole('button', { name: 'Continue' });
+  const targetHeight = await objectA.evaluate((element) => element.getBoundingClientRect().height);
+  expect(targetHeight).toBeGreaterThanOrEqual(48);
+
+  await objectA.click();
+  await objectB.click();
+  await expect(next).toBeEnabled();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
 test('completes the focused learning loop and derives ROOT code', async ({ page }) => {
   const next = page.locator('#hunt-stepper').getByRole('button', { name: 'Continue' });
   await expect(next).toBeDisabled();
