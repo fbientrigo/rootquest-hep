@@ -3,6 +3,7 @@
 }
 
 :root[data-theme='dark'] .hunt-shell {
+  color-scheme: dark;
   --surface: #162124;
   --surface-soft: #1b292c;
   --text: #e7efee;
@@ -164,6 +165,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .hunt-shell {
+    color-scheme: dark;
     --surface: #162124;
     --surface-soft: #1b292c;
     --text: #e7efee;
