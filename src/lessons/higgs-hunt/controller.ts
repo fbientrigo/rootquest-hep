@@ -31,9 +31,12 @@ const byId = <T extends Element>(id: string): T => {
 };
 
 const svgNamespace = 'http://www.w3.org/2000/svg';
-const session = createLessonSession(createHiggsHuntState());
+const session = createLessonSession(createHiggsHuntState);
 const abortController = new AbortController();
 const signal = abortController.signal;
+
+const huntShell = document.querySelector<HTMLElement>('.hunt-shell');
+if (!huntShell) throw new Error('Missing Higgs Hunt interaction root: .hunt-shell');
 
 const progressLabel = byId<HTMLElement>('hunt-stage-label');
 const progress = byId<HTMLProgressElement>('hunt-progress');
@@ -56,51 +59,11 @@ const objectButton = (id: string) =>
 const objectVisual = (id: string) =>
   document.querySelector<SVGGElement>(`[data-object-visual="${id}"]`);
 
-function prepareDirectManipulation(): void {
-  const stageCopy = document.querySelector<HTMLElement>(
-    '[data-hunt-stage="0"] .stage-copy > p:last-child',
-  );
-  if (stageCopy) {
-    stageCopy.textContent =
-      'Start with one object: tap A, B, or C directly in the event. Each touch highlights it and reveals what you found. Leave both photon-like objects selected.';
-  }
-
-  const panelTitle = document.querySelector<HTMLElement>('.object-panel h3');
-  if (panelTitle) panelTitle.textContent = 'Inspect the event';
-
-  const duplicateControls = document.querySelector<HTMLElement>('.object-buttons');
-  if (duplicateControls) duplicateControls.hidden = true;
-
-  for (const object of HUNT_OBJECTS) {
-    const visual = objectVisual(object.id);
-    if (!visual) continue;
-
-    visual.style.touchAction = 'manipulation';
-
-    const marks = Array.from(
-      visual.querySelectorAll<SVGGeometryElement>('line, path, rect, circle'),
-    );
-
-    for (const mark of marks) {
-      const hitTarget = mark.cloneNode(false) as SVGGeometryElement;
-      hitTarget.removeAttribute('class');
-      hitTarget.setAttribute('aria-hidden', 'true');
-      hitTarget.setAttribute('focusable', 'false');
-      hitTarget.setAttribute('fill', 'transparent');
-      hitTarget.setAttribute('stroke', 'transparent');
-      hitTarget.setAttribute('stroke-width', '28');
-      hitTarget.setAttribute('pointer-events', 'all');
-      hitTarget.dataset.hitTarget = 'true';
-      visual.insertBefore(hitTarget, visual.firstChild);
-    }
-  }
-}
-
 function showSelectionInstruction(): void {
   selectionFeedback.hidden = false;
   selectionFeedback.dataset.state = 'instruction';
   const content = document.createElement('p');
-  content.textContent = 'Touch one object in the event to inspect it.';
+  content.textContent = 'Select two objects and compare their detector signatures.';
   selectionFeedback.replaceChildren(content);
 }
 
@@ -115,10 +78,7 @@ function renderSelection(selectedIds: string[]): void {
     objectButton(object.id)?.setAttribute('aria-pressed', String(selected));
 
     const visual = objectVisual(object.id);
-    if (visual) {
-      visual.dataset.selected = String(selected);
-      visual.setAttribute('aria-pressed', String(selected));
-    }
+    if (visual) visual.dataset.selected = String(selected);
   }
 
   if (selection.selectedCount === 0) {
@@ -133,7 +93,7 @@ function renderSelection(selectedIds: string[]): void {
     selectionFeedback.show({
       kind: 'misconception',
       heading: 'Compare the shapes',
-      message: 'One selected object is a broad jet-like spray. Touch it again to deselect it, then inspect the remaining compact deposit.',
+      message: 'One selected object is a broad jet-like spray. Deselect it, then inspect the remaining compact deposit.',
     });
   } else if (inspected) {
     const signature = inspected.kind === 'photon' ? 'compact deposit' : 'broad spray';
@@ -149,6 +109,8 @@ function renderSelection(selectedIds: string[]): void {
 }
 
 function toggleObject(id: string): void {
+  if (!HUNT_OBJECTS.some((object) => object.id === id)) return;
+
   session.update((state) => ({
     ...state,
     selectedObjectIds: toggleObjectSelection(state.selectedObjectIds, id),
@@ -276,31 +238,25 @@ function focusActiveStage(): void {
   });
 }
 
-prepareDirectManipulation();
+huntShell.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
 
-document.querySelectorAll<HTMLButtonElement>('[data-object-id]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const id = button.dataset.objectId;
-    if (id) toggleObject(id);
-  }, { signal });
-});
+  const button = target.closest<HTMLButtonElement>('[data-object-id]');
+  if (button?.dataset.objectId) {
+    toggleObject(button.dataset.objectId);
+    return;
+  }
+
+  const visual = target.closest<SVGGElement>('[data-object-visual]');
+  if (visual?.dataset.objectVisual) toggleObject(visual.dataset.objectVisual);
+}, { signal });
 
 for (const object of HUNT_OBJECTS) {
   const visual = objectVisual(object.id);
   if (!visual) continue;
-
-  const signature = object.kind === 'photon' ? 'compact deposit' : 'broad spray';
-  visual.setAttribute('role', 'button');
-  visual.setAttribute('tabindex', '0');
-  visual.setAttribute('aria-label', `${object.label}, ${object.energy} GeV, ${signature}`);
-  visual.setAttribute('aria-pressed', 'false');
-
-  visual.addEventListener('click', () => toggleObject(object.id), { signal });
-  visual.addEventListener('keydown', (event) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault();
-    toggleObject(object.id);
-  }, { signal });
+  visual.style.touchAction = 'manipulation';
+  visual.setAttribute('aria-hidden', 'true');
 }
 
 prediction.addEventListener('rq-prediction-commit', (event) => {

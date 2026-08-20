@@ -7,6 +7,38 @@ test.beforeEach(async ({ page }) => {
   await page.goto(huntPath);
 });
 
+test('object selection stays visible and unlocks Continue', async ({ page }) => {
+  const next = page.locator('#hunt-stepper').getByRole('button', { name: 'Continue' });
+  const objectA = page.locator('.object-buttons [data-object-id="photon-1"]');
+  const objectB = page.locator('.object-buttons [data-object-id="photon-2"]');
+  const visualA = page.locator('[data-object-visual="photon-1"]');
+  const visualB = page.locator('[data-object-visual="photon-2"]');
+
+  await expect(objectA).toBeVisible();
+  await expect(objectB).toBeVisible();
+  await expect(next).toBeDisabled();
+
+  await objectA.click();
+  await expect(objectA).toHaveAttribute('aria-pressed', 'true');
+  await expect(visualA).toHaveAttribute('data-selected', 'true');
+  await expect(next).toBeDisabled();
+
+  await objectB.click();
+  await expect(objectB).toHaveAttribute('aria-pressed', 'true');
+  await expect(visualB).toHaveAttribute('data-selected', 'true');
+  await expect(page.locator('#object-feedback')).toContainText('diphoton candidate');
+  await expect(next).toBeEnabled();
+});
+
+test('clicking the event visual updates the same selection state', async ({ page }) => {
+  const objectA = page.locator('.object-buttons [data-object-id="photon-1"]');
+  const visualA = page.locator('[data-object-visual="photon-1"]');
+
+  await visualA.locator('rect').click();
+  await expect(objectA).toHaveAttribute('aria-pressed', 'true');
+  await expect(visualA).toHaveAttribute('data-selected', 'true');
+});
+
 test('completes the focused learning loop and derives ROOT code', async ({ page }) => {
   const next = page.locator('#hunt-stepper').getByRole('button', { name: 'Continue' });
   await expect(next).toBeDisabled();
