@@ -161,6 +161,17 @@ const values = [
     gap: 1.25rem;
   }
 
+  .lesson-flow,
+  .lesson-card,
+  .histogram-workspace,
+  .histogram-panel,
+  .histogram-readout,
+  .code-card,
+  .lesson-card rq-predict {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .lesson-card {
     padding: clamp(1rem, 3vw, 2rem);
     border: 1px solid var(--border);
@@ -218,7 +229,9 @@ const values = [
   }
 
   .histogram {
+    display: block;
     width: 100%;
+    max-width: 100%;
     min-height: 16rem;
     border: 1px solid var(--border);
     border-radius: 0.65rem;
@@ -291,6 +304,7 @@ const values = [
   }
 
   .code-card pre {
+    max-width: 100%;
     overflow-x: auto;
     margin: 0;
     padding: 1rem;
@@ -298,7 +312,7 @@ const values = [
 
   @media (max-width: 44rem) {
     .histogram-workspace {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .histogram {
