@@ -51,5 +51,9 @@ test('A1 remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.keyboard.press('ArrowRight');
   await expect(bins).toHaveValue('6');
   await expect(page.locator('#a1-histogram-summary')).toContainText('20 measurements remain fixed');
-  await expect(page.locator('body')).not.toHaveJSProperty('scrollWidth', 0);
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
 });
