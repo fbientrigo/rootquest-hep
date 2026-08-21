@@ -12,7 +12,7 @@ test('A1 preserves source measurements while rebinning and completes transfer', 
   const bins = page.locator('#a1-bin-count');
 
   await expect(summary).toContainText('20 measurements remain fixed');
-  await expect(page.locator('#a1-bin-width-value')).toHaveValue('1.60');
+  await expect(page.locator('#a1-bin-width-value')).toHaveText('1.60');
 
   await bins.focus();
   await page.keyboard.press('End');
