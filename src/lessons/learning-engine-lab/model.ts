@@ -5,7 +5,7 @@ export {
   evaluateBinPrediction,
   type HistogramBin,
   type HistogramState,
-} from '../histogram-binning/model';
+} from '../histogram-binning/model.ts';
 
 export interface BranchDefinition {
   id: string;
