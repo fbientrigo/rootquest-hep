@@ -7,6 +7,7 @@ export const HISTOGRAM_RANGE = [0, 8] as const;
 
 export interface HistogramState {
   binCount: number;
+  threshold: number;
   prediction: string | null;
   predictionAtBins: number | null;
   predictionRevealed: boolean;
@@ -20,16 +21,19 @@ export interface HistogramBin {
 
 export const createHistogramState = (): HistogramState => ({
   binCount: 5,
+  threshold: 0,
   prediction: null,
   predictionAtBins: null,
   predictionRevealed: false,
 });
 
 export function deriveHistogram(
-  state: Pick<HistogramState, 'binCount'>,
+  state: Pick<HistogramState, 'binCount'> & Partial<Pick<HistogramState, 'threshold'>>,
   values: readonly number[] = HISTOGRAM_VALUES,
   range: readonly [number, number] = HISTOGRAM_RANGE,
 ) {
+  const threshold = state.threshold ?? Number.NEGATIVE_INFINITY;
+  const selectedValues = values.filter((value) => value >= threshold);
   const width = (range[1] - range[0]) / state.binCount;
   const bins: HistogramBin[] = Array.from(
     { length: state.binCount },
@@ -42,7 +46,7 @@ export function deriveHistogram(
   let underflow = 0;
   let overflow = 0;
 
-  for (const value of values) {
+  for (const value of selectedValues) {
     if (value < range[0]) {
       underflow += 1;
       continue;
@@ -58,6 +62,8 @@ export function deriveHistogram(
   return {
     bins,
     sourceCount: values.length,
+    selectedCount: selectedValues.length,
+    totalCount: values.length,
     inRangeCount: bins.reduce((sum, bin) => sum + bin.count, 0),
     underflow,
     overflow,
