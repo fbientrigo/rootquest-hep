@@ -1,72 +1,11 @@
-export const HISTOGRAM_VALUES = [
-  0.4, 0.8, 1.1, 1.4, 1.8, 2.0, 2.2, 2.5, 2.9, 3.1,
-  3.4, 3.8, 4.1, 4.4, 4.8, 5.2, 5.7, 6.1, 6.6, 7.3,
-] as const;
-
-export interface HistogramState {
-  binCount: number;
-  threshold: number;
-  prediction: string | null;
-  predictionAtBins: number | null;
-  predictionRevealed: boolean;
-}
-
-export interface HistogramBin {
-  start: number;
-  end: number;
-  count: number;
-}
-
-export const createHistogramState = (): HistogramState => ({
-  binCount: 5,
-  threshold: 0,
-  prediction: null,
-  predictionAtBins: null,
-  predictionRevealed: false,
-});
-
-export function deriveHistogram(
-  state: Pick<HistogramState, 'binCount' | 'threshold'>,
-  values: readonly number[] = HISTOGRAM_VALUES,
-  range: readonly [number, number] = [0, 8],
-) {
-  const selectedValues = values.filter((value) => value >= state.threshold);
-  const width = (range[1] - range[0]) / state.binCount;
-  const bins: HistogramBin[] = Array.from(
-    { length: state.binCount },
-    (_, index) => ({
-      start: range[0] + index * width,
-      end: range[0] + (index + 1) * width,
-      count: 0,
-    }),
-  );
-
-  for (const value of selectedValues) {
-    if (value < range[0] || value > range[1]) continue;
-    const index = Math.min(
-      Math.floor((value - range[0]) / width),
-      bins.length - 1,
-    );
-    bins[index].count += 1;
-  }
-
-  return {
-    bins,
-    selectedCount: selectedValues.length,
-    totalCount: values.length,
-    maxCount: Math.max(1, ...bins.map((bin) => bin.count)),
-  };
-}
-
-export function evaluateBinPrediction(prediction: string) {
-  const correct = prediction === 'narrower';
-  return {
-    correct,
-    message: correct
-      ? 'More bins divide the same fixed range into narrower intervals. The values did not multiply; their grouping changed.'
-      : 'The dataset and range stayed fixed. Increasing the bin count makes each interval narrower, so the same values are split among more bars.',
-  };
-}
+export {
+  HISTOGRAM_VALUES,
+  createHistogramState,
+  deriveHistogram,
+  evaluateBinPrediction,
+  type HistogramBin,
+  type HistogramState,
+} from '../histogram-binning/model.ts';
 
 export interface BranchDefinition {
   id: string;
