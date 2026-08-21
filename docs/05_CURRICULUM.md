@@ -79,8 +79,8 @@ Goal: build histogram and measurement intuition before treating ROOT syntax as t
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| A1 | **Same data, different bins** | Distinguish underlying values from their histogram representation; predict what binning changes and what it cannot change. | histogram concept, bins, range, under/overflow vocabulary | **NEXT** — promote/reuse the histogram probe in `lab/learning-engine`; Higgs Hunt already reinforces binning. |
-| A2 | **Build a histogram** | Turn individual measurements into a distribution and connect `Fill` to one event contributing to one bin. | `TH1D`, `Fill`, `Draw`, axes | PLANNED |
+| A1 | **Same data, different bins** | Distinguish underlying values from their histogram representation; predict what binning changes and what it cannot change. | histogram concept, bins, range, under/overflow vocabulary | **LIVE** — learner-facing lesson promotes the histogram probe model; Higgs Hunt continues to reinforce binning. |
+| A2 | **Build a histogram** | Turn individual measurements into a distribution and connect `Fill` to one event contributing to one bin. | `TH1D`, `Fill`, `Draw`, axes | **NEXT** |
 | A3 | **Read and compare histograms** | Extract counts and summaries, normalize two samples appropriately, and identify when a comparison is misleading. | `Integral`, `Scale`, `Add`, `Divide`, `GetMean`, `GetStdDev`, bin content | PLANNED |
 | A4 | **Measurements with errors** | Distinguish a distribution from a set of measured points and interpret error bars. | `TGraph`, `TGraphErrors` | PLANNED |
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **A1 — Same data, different bins**.
+The default next lesson on this roadmap is **A2 — Build a histogram**.
