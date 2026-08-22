@@ -1,7 +1,7 @@
 import {
   HISTOGRAM_RANGE,
   deriveHistogram,
-} from '../histogram-binning/model';
+} from '../histogram-binning/model.ts';
 
 export const FILL_VALUES = [0.8, 1.4, 2.2, 2.9, 4.1, 4.8, 5.7, 7.3] as const;
 export const FILL_BIN_COUNT = 4;
