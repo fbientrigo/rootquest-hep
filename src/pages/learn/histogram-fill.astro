@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Build a histogram — ROOT Quest"
+  description="See how each measurement becomes one ROOT Fill call and increments one histogram bin."
+>
+  <header class="lesson-header">
+    <p class="eyebrow">Unit A · Lesson A2</p>
+    <h1>Build a histogram</h1>
+    <p class="lede">A histogram is accumulated one measurement at a time. Follow each value into its bin, then read the ROOT that records the same operation.</p>
+  </header>
+
+  <main class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="context-heading">
+      <p class="stage-kicker">Context</p>
+      <h2 id="context-heading">Eight measurements, four fixed bins</h2>
+      <p>The range is <strong>[0, 8)</strong>, split into [0,2), [2,4), [4,6), and [6,8). No bar exists because of its x value alone: a bar grows when measurements are filled into that interval.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="fill-heading">
+      <p class="stage-kicker">Manipulate → observe</p>
+      <h2 id="fill-heading">Add one measurement</h2>
+      <p>Before pressing the button, locate the next value on the x-axis. Then watch exactly one bin count increase.</p>
+
+      <div class="workspace">
+        <div>
+          <svg class="histogram" viewBox="0 0 704 290" role="img" aria-labelledby="a2-histogram-title a2-histogram-description">
+            <title id="a2-histogram-title">Histogram being filled one measurement at a time</title>
+            <desc id="a2-histogram-description">No measurements filled yet.</desc>
+            <line class="plot-axis" x1="52" y1="234" x2="652" y2="234"></line>
+            <g id="a2-histogram-bars"></g>
+            <g class="axis-ticks" aria-hidden="true">
+              <text x="52" y="258">0</text><text x="202" y="258">2</text><text x="352" y="258">4</text><text x="502" y="258">6</text><text x="652" y="258">8</text>
+            </g>
+            <text class="axis-label" x="352" y="282" text-anchor="middle">measurement value</text>
+          </svg>
+
+          <div class="controls">
+            <button class="rq-button rq-button--primary" id="a2-add-value" type="button">Fill(0.8)</button>
+            <button class="rq-button" id="a2-reset" type="button">Reset</button>
+          </div>
+        </div>
+
+        <aside class="readout" aria-label="Fill state">
+          <p><strong>Next x</strong><br><output id="a2-next-value">0.8</output></p>
+          <p><strong>Bin containing x</strong><br><output id="a2-active-bin">[0, 2)</output></p>
+          <p><strong>Calls completed</strong><br><output id="a2-fill-count">0 / 8</output></p>
+          <p id="a2-summary">0 measurements have contributed.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="predict-heading">
+      <p class="stage-kicker">Predict</p>
+      <h2 id="predict-heading">Where will 4.8 contribute?</h2>
+      <rq-predict id="a2-prediction" answer-name="fill-prediction">
+        <form><fieldset><legend>If ROOT executes <code>h.Fill(4.8)</code>, which visible bin is incremented?</legend><div class="rq-options">
+          <label><input type="radio" name="fill-prediction" value="2-4" required> [2, 4)</label>
+          <label><input type="radio" name="fill-prediction" value="4-6"> [4, 6)</label>
+          <label><input type="radio" name="fill-prediction" value="6-8"> [6, 8)</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="code-heading">
+      <p class="stage-kicker">Code</p>
+      <h2 id="code-heading">Your clicks are <code>Fill</code> calls</h2>
+      <p><code>TH1D</code> defines the histogram. Each unweighted <code>Fill(x)</code> finds the bin containing x and increments that bin by one. <code>Draw()</code> displays the accumulated histogram.</p>
+      <div class="code-card"><header>PyROOT · TH1D</header><pre><code id="a2-root-code">h = ROOT.TH1D("h", "Measurements", 4, 0.0, 8.0)
+# add another measurement with h.Fill(x)</code></pre></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="transfer-heading">
+      <p class="stage-kicker">Transfer</p>
+      <h2 id="transfer-heading">What does <code>Fill(5.7)</code> mean?</h2>
+      <rq-predict id="a2-transfer" answer-name="transfer-answer">
+        <form><fieldset><legend>Choose the statement that matches ROOT's operation.</legend><div class="rq-options">
+          <label><input type="radio" name="transfer-answer" value="set-height" required> Set one bar height to 5.7</label>
+          <label><input type="radio" name="transfer-answer" value="increment-bin"> Find the bin containing 5.7 and increment it by one</label>
+          <label><input type="radio" name="transfer-answer" value="new-bin"> Create a new bin centered at 5.7</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>import '../../lessons/histogram-fill/controller';</script>
+
+<style is:global>
+  .lesson-header{max-width:58rem;margin-bottom:2rem}.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .55rem}.workspace{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(13rem,.6fr);gap:1.2rem;align-items:start;margin-top:1rem}.histogram{display:block;width:100%;min-height:15rem;border:1px solid var(--border);border-radius:.65rem;background:color-mix(in srgb,var(--surface) 95%,var(--accent) 5%)}.plot-axis{stroke:var(--text);stroke-width:2}.axis-label,.axis-ticks text,#a2-histogram-bars text{fill:var(--muted);font-size:.82rem}#a2-histogram-bars rect{fill:var(--accent)}.controls{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:.8rem}.readout{padding:1rem;border:1px solid var(--border);border-radius:.65rem}.readout p:first-child{margin-top:0}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.65rem .85rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.85rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:44rem){.workspace{grid-template-columns:minmax(0,1fr)}.histogram{min-height:12rem}}
+</style>
