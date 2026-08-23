@@ -22,7 +22,10 @@ const spanishText: Record<string, string> = {
   'Context': 'Contexto',
   'Manipulate': 'Manipula',
   'Observe': 'Observa',
+  'See': 'Observa',
   'Predict': 'Predice',
+  'Cut': 'Corte',
+  'Plot': 'Histograma',
   'Code': 'Código',
   'Transfer': 'Transferencia',
   'Manipulate → observe': 'Manipula → observa',
@@ -46,6 +49,11 @@ const spanishText: Record<string, string> = {
   'Previous': 'Anterior',
   'Reset': 'Reiniciar',
   'dimensionless': 'adimensional',
+  'compact deposit': 'depósito compacto',
+  'broad spray': 'cascada amplia',
+  'photon-like': 'compatible con un fotón',
+  'jet-like': 'compatible con un jet',
+  ', and': ' y',
 
   // Metadata
   'ROOT Quest — Interactive ROOT and HEP learning': 'ROOT Quest — Aprendizaje interactivo de ROOT y HEP',
@@ -161,6 +169,7 @@ const spanishText: Record<string, string> = {
   'Start with the whole analysis loop, then learn the machinery underneath it one useful idea at a time. Available lessons are interactive; future units stay visible so the destination is always clear.':
     'Empieza con el ciclo completo de análisis y luego aprende la mecánica que hay debajo, una idea útil a la vez. Las lecciones disponibles son interactivas; las unidades futuras permanecen visibles para que el destino siempre sea claro.',
   'core lessons available': 'lecciones troncales disponibles',
+  'Higgs Hunt — guided': 'Higgs Hunt — guiada',
   'Experience event selection, cuts, a mass distribution, and the ROOT code they become before studying each piece separately.':
     'Experimenta la selección de eventos, los cortes, una distribución de masa y el código ROOT en que se convierten antes de estudiar cada pieza por separado.',
   'Next lesson': 'Siguiente lección',
@@ -240,7 +249,6 @@ const spanishText: Record<string, string> = {
     'Antes de presionar el botón, ubica el siguiente valor en el eje x. Luego observa cómo aumenta exactamente un conteo de bin.',
   'Histogram being filled one measurement at a time': 'Histograma llenado una medición a la vez',
   'No measurements filled yet.': 'Aún no se ha llenado ninguna medición.',
-  'Reset': 'Reiniciar',
   'Fill state': 'Estado del llenado',
   'Next x': 'Siguiente x',
   'Bin containing x': 'Bin que contiene x',
@@ -249,7 +257,7 @@ const spanishText: Record<string, string> = {
   'Where will 4.8 contribute?': '¿Dónde contribuirá 4.8?',
   'If ROOT executes': 'Si ROOT ejecuta',
   ', which visible bin is incremented?': ', ¿qué bin visible se incrementa?',
-  'Your clicks are': 'Tus clics son llamadas',
+  'Your clicks are': 'Tus clics son llamadas a',
   'calls': '',
   'defines the histogram. Each unweighted': 'define el histograma. Cada llamada sin peso',
   'finds the bin containing x and increments that bin by one.': 'encuentra el bin que contiene x e incrementa ese bin en uno.',
@@ -299,11 +307,12 @@ const spanishText: Record<string, string> = {
   'The 12-versus-24 total-yield difference': 'La diferencia de rendimiento total entre 12 y 24',
   'The relative shape across bins': 'La forma relativa entre los bins',
   'ROOT expresses the question you chose': 'ROOT expresa la pregunta que elegiste',
+  'PyROOT · histogram comparison': 'PyROOT · comparación de histogramas',
   'reads the in-range bin content here.': 'lee aquí el contenido de los bins dentro del rango.',
   'summarize the histogram.': 'resumen el histograma.',
   'changes the bin contents, so unit-area normalization should be a deliberate analysis choice rather than an automatic plotting step.':
     'cambia el contenido de los bins, por lo que la normalización a área unitaria debe ser una decisión deliberada de análisis y no un paso automático al graficar.',
-  'For these prepared samples every value is inside the displayed range. ROOT\'s default mean and standard deviation use statistics accumulated while filling when no axis range is set.':
+  "For these prepared samples every value is inside the displayed range. ROOT's default mean and standard deviation use statistics accumulated while filling when no axis range is set.":
     'Para estas muestras preparadas, todos los valores están dentro del rango mostrado. La media y la desviación estándar por defecto de ROOT usan las estadísticas acumuladas durante el llenado cuando no se fija un rango del eje.',
   'Should you normalize?': '¿Deberías normalizar?',
   'Your question is: “Which sample contains more selected events?” What should you do before comparing the histograms?':
@@ -465,7 +474,6 @@ const spanishText: Record<string, string> = {
   'E1, E4, and E6': 'E1, E4 y E6',
   'E2 and E5': 'E2 y E5',
   'Filter pipeline steps': 'Pasos del pipeline de filtrado',
-  'Next': 'Siguiente',
   'Reset trace': 'Reiniciar recorrido',
   'Input events': 'Eventos de entrada',
   'No filter has run yet.': 'Aún no se ha ejecutado ningún filtro.',
@@ -546,6 +554,8 @@ const patterns: Array<[RegExp, (match: RegExpMatchArray) => string]> = [
   [/^Step (\d+) of (\d+)(?:: (.+))?$/, (m) => `Paso ${m[1]} de ${m[2]}${m[3] ? `: ${translateTrimmed(m[3])}` : ''}`],
   [/^Stage (\d+) of (\d+): (.+)$/, (m) => `Etapa ${m[1]} de ${m[2]}: ${translateTrimmed(m[3])}`],
   [/^Object ([ABC]) selected$/, (m) => `Objeto ${m[1]} seleccionado`],
+  [/^(\d+) GeV · η ([^·]+) · (compact deposit|broad spray)\. This object is (photon-like|jet-like)\. Inspect another object and compare what changes\.$/,
+    (m) => `${m[1]} GeV · η ${m[2].trim()} · ${translateTrimmed(m[3])}. Este objeto es ${translateTrimmed(m[4])}. Inspecciona otro objeto y compara qué cambia.`],
   [/^(\d+) of (\d+) teaching events remain after a (\d+) GeV threshold\. Circles represent signal examples and diamonds represent background examples\.$/,
     (m) => `${m[1]} de ${m[2]} eventos didácticos permanecen tras un umbral de ${m[3]} GeV. Los círculos representan ejemplos de señal y los rombos ejemplos de fondo.`],
   [/^A (\d+)-bin mass histogram of (\d+) selected synthetic events\. A concentration appears near 125 GeV; changing the bins changes its visible shape, not the underlying event masses\.$/,
@@ -589,7 +599,10 @@ export function translateToSpanish(value: string): string {
   if (!match) return value;
   const [, leading, body, trailing] = match;
   if (!body) return value;
-  return `${leading}${translateTrimmed(body)}${trailing}`;
+  const translated = translateTrimmed(body);
+  if (translated === '') return '';
+  const safeLeading = /^[?!.:,;]/.test(translated) ? '' : leading;
+  return `${safeLeading}${translated}${trailing}`;
 }
 
 function shouldSkip(node: Node): boolean {
