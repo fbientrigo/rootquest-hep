@@ -13,12 +13,41 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-language="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        let language = 'en';
+        try {
+          const stored = localStorage.getItem('rootquest-language');
+          language = stored === 'en' || stored === 'es'
+            ? stored
+            : navigator.language.toLowerCase().startsWith('es')
+              ? 'es'
+              : 'en';
+        } catch {
+          language = navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
+        }
+        root.lang = language;
+        root.dataset.language = language;
+
+        if (window.location.pathname.includes('/practice/')) {
+          const url = new URL(window.location.href);
+          if (language === 'es') url.searchParams.set('lang', 'es');
+          else url.searchParams.delete('lang');
+          window.history.replaceState(
+            window.history.state,
+            '',
+            `${url.pathname}${url.search}${url.hash}`,
+          );
+        }
+      })();
+    </script>
     <script is:inline>
       (() => {
         try {
@@ -46,6 +75,10 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
         <a href={withBase('')}>Home</a>
         <a href={withBase('course/')}>Course</a>
         <a href={withBase('learn/higgs-hunt/')}>Higgs Hunt</a>
+        <div class="language-toggle" role="group" aria-label="Language">
+          <button type="button" data-language-option="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+          <button type="button" data-language-option="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+        </div>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
           <span data-theme-toggle-label>Theme</span>
         </button>
@@ -87,5 +120,52 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
         render();
       })();
     </script>
+    <script>
+      import { installLanguageRuntime } from '../i18n/runtime';
+      installLanguageRuntime();
+    </script>
   </body>
 </html>
+
+<style is:global>
+  .language-toggle {
+    display: inline-flex;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .language-toggle button {
+    min-width: 2.35rem;
+    min-height: 2.35rem;
+    padding: 0.35rem 0.5rem;
+    border: 0;
+    border-inline-end: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .language-toggle button:last-child {
+    border-inline-end: 0;
+  }
+
+  .language-toggle button:hover,
+  .language-toggle button:focus-visible {
+    background: var(--surface-soft);
+    color: var(--text);
+  }
+
+  .language-toggle button[aria-pressed='true'] {
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .practice-language {
+    display: none !important;
+  }
+</style>
