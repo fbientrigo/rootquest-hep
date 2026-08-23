@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Read and compare histograms — ROOT Quest"
+  description="Compare histogram yields and shapes, then decide when normalization answers the question and when it hides it."
+>
+  <header class="lesson-header">
+    <p class="eyebrow">Unit A · Lesson A3</p>
+    <h1>Read and compare histograms</h1>
+    <p class="lede">Two histograms can differ because they contain different numbers of entries, because their shapes differ, or both. Decide which question you are asking before you normalize.</p>
+  </header>
+
+  <main class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="context-heading">
+      <p class="stage-kicker">Context</p>
+      <h2 id="context-heading">Same pattern, different yield</h2>
+      <p>Sample A contains 12 measurements. Sample B contains the same relative pattern twice, for 24 measurements. Raw counts preserve that yield difference; unit-area normalization deliberately removes it so shape can be compared.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="compare-heading">
+      <p class="stage-kicker">Manipulate → observe</p>
+      <h2 id="compare-heading">Change the question, then change the view</h2>
+      <fieldset id="a3-mode" class="mode-controls">
+        <legend>What should the histogram emphasize?</legend>
+        <label><input type="radio" name="comparison-mode" value="counts" checked> Raw counts — preserve total yield</label>
+        <label><input type="radio" name="comparison-mode" value="shape"> Unit area — compare relative shape</label>
+      </fieldset>
+
+      <div class="workspace">
+        <div>
+          <div class="legend" aria-label="Histogram samples"><span><i class="legend-a" aria-hidden="true"></i>Sample A</span><span><i class="legend-b" aria-hidden="true"></i>Sample B</span></div>
+          <svg class="histogram" viewBox="0 0 720 320" role="img" aria-labelledby="a3-histogram-title a3-histogram-description">
+            <title id="a3-histogram-title">Paired histograms for samples A and B</title>
+            <desc id="a3-histogram-description">Raw histogram counts for two samples.</desc>
+            <line class="plot-axis" x1="56" y1="248" x2="656" y2="248"></line>
+            <g id="a3-bars"></g>
+            <g class="axis-ticks" aria-hidden="true">
+              <text x="56" y="272">0</text><text x="206" y="272">2</text><text x="356" y="272">4</text><text x="506" y="272">6</text><text x="656" y="272">8</text>
+            </g>
+            <text class="axis-label" x="356" y="304" text-anchor="middle">measurement value</text>
+          </svg>
+          <p id="a3-summary" class="summary">Sample B has twice as many entries as sample A.</p>
+        </div>
+
+        <aside class="readout" aria-label="Histogram summaries">
+          <table>
+            <thead><tr><th scope="col">Summary</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Integral</th><td><output id="a3-integral-a">12</output></td><td><output id="a3-integral-b">24</output></td></tr>
+              <tr><th scope="row">Mean</th><td><output id="a3-mean-a"></output></td><td><output id="a3-mean-b"></output></td></tr>
+              <tr><th scope="row">StdDev</th><td><output id="a3-std-a"></output></td><td><output id="a3-std-b"></output></td></tr>
+            </tbody>
+          </table>
+        </aside>
+      </div>
+
+      <details class="bin-table-wrap">
+        <summary>Read the bin contents numerically</summary>
+        <div class="table-scroll"><table><thead><tr><th scope="col">Bin</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody id="a3-bin-table-body"></tbody></table></div>
+      </details>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="predict-heading">
+      <p class="stage-kicker">Predict</p>
+      <h2 id="predict-heading">What information disappears?</h2>
+      <rq-predict id="a3-prediction" answer-name="normalization-prediction">
+        <form><fieldset><legend>If each histogram is scaled so its integral is 1, what information is no longer visible?</legend><div class="rq-options">
+          <label><input type="radio" name="normalization-prediction" value="bin-order" required> Which x interval each bin represents</label>
+          <label><input type="radio" name="normalization-prediction" value="totals-disappear"> The 12-versus-24 total-yield difference</label>
+          <label><input type="radio" name="normalization-prediction" value="shape-disappears"> The relative shape across bins</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="code-heading">
+      <p class="stage-kicker">Code</p>
+      <h2 id="code-heading">ROOT expresses the question you chose</h2>
+      <p><code>Integral()</code> reads the in-range bin content here. <code>GetBinContent</code>, <code>GetMean</code>, and <code>GetStdDev</code> summarize the histogram. <code>Scale</code> changes the bin contents, so unit-area normalization should be a deliberate analysis choice rather than an automatic plotting step.</p>
+      <div class="code-card"><header>PyROOT · histogram comparison</header><pre><code id="a3-root-code"></code></pre></div>
+      <p class="technical-note">For these prepared samples every value is inside the displayed range. ROOT's default mean and standard deviation use statistics accumulated while filling when no axis range is set.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="transfer-heading">
+      <p class="stage-kicker">Transfer</p>
+      <h2 id="transfer-heading">Should you normalize?</h2>
+      <rq-predict id="a3-transfer" answer-name="normalization-transfer">
+        <form><fieldset><legend>Your question is: “Which sample contains more selected events?” What should you do before comparing the histograms?</legend><div class="rq-options">
+          <label><input type="radio" name="normalization-transfer" value="unit-area" required> Scale both histograms to integral 1</label>
+          <label><input type="radio" name="normalization-transfer" value="keep-counts"> Keep the raw/physically normalized yields</label>
+          <label><input type="radio" name="normalization-transfer" value="ignore-total"> Compare only the highest bin</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>import '../../lessons/histogram-compare/controller';</script>
+
+<style is:global>
+  .lesson-header{max-width:58rem;margin-bottom:2rem}.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .55rem}.mode-controls{display:grid;gap:.65rem;margin-block:1.2rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.mode-controls label{display:flex;gap:.55rem;align-items:center;min-height:2.75rem}.workspace{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(16rem,.65fr);gap:1.2rem;align-items:start}.histogram{display:block;width:100%;min-height:15rem;border:1px solid var(--border);border-radius:.65rem;background:color-mix(in srgb,var(--surface) 95%,var(--accent) 5%)}.plot-axis{stroke:var(--text);stroke-width:2}.axis-label,.axis-ticks text{fill:var(--muted);font-size:.82rem}.sample-bar--a{fill:var(--accent)}.sample-bar--b{fill:var(--text);opacity:.7}.legend{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:.5rem}.legend span{display:flex;align-items:center;gap:.4rem}.legend i{display:inline-block;width:1.1rem;height:.7rem;border-radius:.15rem}.legend-a{background:var(--accent)}.legend-b{background:var(--text);opacity:.7}.readout,.bin-table-wrap{padding:1rem;border:1px solid var(--border);border-radius:.65rem}.readout table,.bin-table-wrap table{width:100%;border-collapse:collapse}.readout th,.readout td,.bin-table-wrap th,.bin-table-wrap td{padding:.5rem;border-bottom:1px solid var(--border);text-align:right}.readout th:first-child,.bin-table-wrap th:first-child{text-align:left}.summary,.technical-note{color:var(--muted)}.bin-table-wrap{margin-top:1rem}.bin-table-wrap summary{cursor:pointer;font-weight:700}.table-scroll{overflow-x:auto}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.65rem .85rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.85rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:46rem){.workspace{grid-template-columns:minmax(0,1fr)}.histogram{min-height:12rem}.mode-controls label{align-items:flex-start}}
+</style>
