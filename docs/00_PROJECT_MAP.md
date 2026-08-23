@@ -22,10 +22,10 @@ Read for senior-code philosophy, native web, accessibility, performance, depende
 Read for the canonical ROOT 80/20 learning sequence, coverage boundary, lesson order/status and which lesson must be implemented next.
 
 ### `06_LESSON_AUTHORING.md`
-Read for the reusable lesson patterns, attention budget, lesson definition of done and the deterministic daily-agent protocol for implementing the next class.
+Read for the reusable lesson patterns, attention budget, bilingual authoring requirement, lesson definition of done and the deterministic daily-agent protocol for implementing the next class.
 
 ### `../STACK_CONTRACT.md`
-Authoritative for stack, versions, browser/build/deploy constraints and approved dependencies.
+Authoritative for stack, versions, browser/build/deploy constraints, approved dependencies and the persistent English/Spanish product contract.
 
 ## Routing
 
@@ -36,6 +36,7 @@ Authoritative for stack, versions, browser/build/deploy constraints and approved
 | Curriculum, coverage, ordering, “what should we teach?” | `05` |
 | Implement/revise a curricular lesson | `05` + `06` |
 | “Implement the next lesson/class” | `05` + `06`, then only the smallest relevant implementation/source files |
+| Language/localization or learner-facing copy | `06` + stack contract |
 | Anything in Higgs Hunt | `03` + usually `02` |
 | Refactor, dependency, browser/API choice | `04` + stack contract |
 | Accessibility/performance | `04` |
@@ -73,13 +74,13 @@ For daily curriculum work, the repository itself carries the handoff:
 ```text
 05_CURRICULUM: choose NEXT
         ↓
-06_LESSON_AUTHORING: apply lesson contract
+06_LESSON_AUTHORING: apply lesson + bilingual contract
         ↓
 reuse LIVE / DRILL / PROBE code
         ↓
-implement one polished lesson
+implement one polished lesson in EN + ES
         ↓
-build + test + verify learner behavior
+build + test + verify learner behavior and language persistence
         ↓
 mark LIVE and promote exactly one NEXT
 ```
