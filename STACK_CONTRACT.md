@@ -40,6 +40,21 @@ Do not install either until its first real interaction is implemented.
 - Lesson-specific logic should remain local to that lesson until repetition proves a reusable primitive.
 - The learning content and interaction logic must not depend unnecessarily on Astro so they can later be adapted to another static site shell, including possible ROOT/CERN infrastructure.
 
+## Language contract
+
+English and Spanish are product capabilities, not optional translations.
+
+- Every learner-facing page, lesson, drill and lab must be complete in both English (`en`) and Spanish (`es`).
+- English remains the progressive-enhancement source/fallback. Spanish copy is provided by the shared client localization layer or by established lesson-local locale data when that interaction already requires it.
+- The learner's explicit language choice is global and persists in the browser under `rootquest-language`; navigation and reloads must not silently reset it.
+- The active language must be reflected by `<html lang>`, document title and description, visible prose, controls, answer options, feedback, dynamic summaries, SVG descriptions and learner-facing ARIA text.
+- A page must not mix untranslated English UI fragments into Spanish, or vice versa. Intentional exceptions are code, ROOT/API identifiers, physics symbols, proper names and verbatim source quotations.
+- Spanish is authored for natural scientific and pedagogical meaning. Do not ship raw machine-translation output, placeholder copy, or literal translations that create unnatural terminology.
+- New learner-facing strings must be added to both languages in the same change. A lesson is not complete or `LIVE` while one language is missing.
+- Bilingual behavior and cross-route persistence are verified in Playwright. When a learner-facing route is added, extend the bilingual route coverage.
+
+The current shared implementation lives in `src/i18n/runtime.ts`. Practice routes retain their lesson-local locale data for specialized interactive copy while sharing the same persisted language preference.
+
 ## State
 
 - Keep state local to the current lesson.
@@ -67,6 +82,8 @@ At minimum preserve:
 - non-color-only meaning;
 - an understandable alternative to important visual-only information when practical.
 
+Accessibility text is part of the language contract: meaningful labels, descriptions, live feedback and visual alternatives must use the active language.
+
 ## Browser target
 
 Support current evergreen desktop and mobile browsers, with particular attention to Chromium, Firefox, and Safari/WebKit. Prefer progressive enhancement so core explanatory content remains readable if optional JavaScript fails.
@@ -85,6 +102,7 @@ Current gates:
 - production Astro build succeeds.
 - pure runtime and lesson-model tests run with Node's built-in test runner;
 - critical learning interactions run in Chromium, Firefox and WebKit with Playwright;
-- the browser suite includes an axe WCAG smoke check and a keyboard-only path.
+- the browser suite includes an axe WCAG smoke check and a keyboard-only path;
+- bilingual route coverage verifies English/Spanish switching, persisted preference, translated dynamic feedback and correct document language metadata.
 
 `@playwright/test` and `@axe-core/playwright` are development-only verification dependencies. They are not shipped to learners.
