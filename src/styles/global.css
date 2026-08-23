@@ -123,13 +123,15 @@ main {
 .site-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1rem;
   min-height: 4rem;
   border-bottom: 1px solid var(--border);
 }
 
 .brand {
+  flex: 0 0 auto;
+  white-space: nowrap;
   color: var(--text);
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 1.08rem;
@@ -142,7 +144,7 @@ main {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
+  margin-left: auto;
 }
 
 .site-nav a {
@@ -157,6 +159,13 @@ main {
   color: var(--text);
 }
 
+.site-controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .theme-toggle {
   min-height: 2.35rem;
   padding: 0.4rem 0.65rem;
@@ -167,6 +176,7 @@ main {
   font: inherit;
   font-size: 0.78rem;
   font-weight: 750;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -188,7 +198,8 @@ main {
 
 .hero {
   max-width: 50rem;
-  padding-block: clamp(2rem, 6vw, 5rem);
+  padding-block-start: clamp(2rem, 6vw, 5rem);
+  padding-block-end: clamp(4rem, 10vw, 7rem);
 }
 
 .eyebrow {
@@ -303,6 +314,39 @@ html[data-theme] .practice .rq-button--primary {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-contrast);
+}
+
+@media (max-width: 48rem) {
+  .site-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.55rem 0.75rem;
+    min-height: 0;
+    padding-block: 0.75rem;
+  }
+
+  .brand {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .site-controls {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .site-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    gap: clamp(0.85rem, 4vw, 1.25rem);
+    margin-left: 0;
+  }
+
+  .site-nav a {
+    font-size: 0.86rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
