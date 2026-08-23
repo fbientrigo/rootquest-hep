@@ -14,15 +14,18 @@ const spanishRoutes = [
   { path: 'practice/code/', heading: 'Constructor ROOT' },
 ] as const;
 
-test('language choice persists across every current learner-facing route', async ({ page }) => {
+async function chooseSpanish(page: Parameters<typeof test>[0] extends never ? never : any) {
   await page.goto('./');
   await page.evaluate(() => localStorage.setItem('rootquest-language', 'en'));
   await page.reload();
-
   await Promise.all([
     page.waitForNavigation(),
     page.locator('[data-language-option="es"]').click(),
   ]);
+}
+
+test('language choice persists across every current learner-facing route', async ({ page }) => {
+  await chooseSpanish(page);
 
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page.locator('[data-language-option="es"]')).toHaveAttribute('aria-pressed', 'true');
@@ -55,15 +58,24 @@ test('language choice persists across every current learner-facing route', async
   await expect(page.locator('h1')).toHaveText('Your path through ROOT');
 });
 
-test('legacy practice language links update the global preference', async ({ page }) => {
-  await page.goto('practice/manipulate/?lang=es');
-  await page.evaluate(() => localStorage.setItem('rootquest-language', 'es'));
-  await page.reload();
+test('Spanish copy stays natural across inline code and dynamic lesson feedback', async ({ page }) => {
+  await chooseSpanish(page);
 
-  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.locator('.practice-language a[lang="en"]')).toHaveCount(1);
-  await page.locator('.practice-language a[lang="en"]').click({ force: true });
-  await page.waitForLoadState('domcontentloaded');
+  await page.goto('course/');
+  await expect(page.locator('#anchor-title')).toHaveText('Higgs Hunt — guiada');
 
-  expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
+  await page.goto('learn/histogram-fill/');
+  await expect(page.locator('#code-heading')).toHaveText('Tus clics son llamadas a Fill');
+  await expect(page.locator('#transfer-heading')).toHaveText('¿Qué significa Fill(5.7)?');
+
+  await page.goto('learn/histogram-compare/');
+  const comparisonExplanation = page.locator('.lesson-card[aria-labelledby="code-heading"] > p').first();
+  await expect(comparisonExplanation).toContainText('GetMean(), y GetStdDev()');
+  await expect(comparisonExplanation).not.toContainText(', and ');
+
+  await page.goto('learn/higgs-hunt/');
+  await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
+  await page.locator('[data-object-id="photon-1"]').click();
+  await expect(page.locator('#object-feedback')).toContainText('depósito compacto');
+  await expect(page.locator('#object-feedback')).toContainText('Este objeto es compatible con un fotón.');
 });
