@@ -70,7 +70,7 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
 
   await page.goto('learn/histogram-compare/');
   const comparisonExplanation = page.locator('.lesson-card[aria-labelledby="code-heading"] > p').first();
-  await expect(comparisonExplanation).toContainText('GetMean(), y GetStdDev()');
+  await expect(comparisonExplanation).toContainText('GetMean y GetStdDev');
   await expect(comparisonExplanation).not.toContainText(', and ');
 
   await page.goto('learn/higgs-hunt/');
