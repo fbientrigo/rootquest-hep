@@ -1,0 +1,51 @@
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
+
+const coursePath = 'course/';
+
+test.beforeEach(async ({ page }) => {
+  await page.goto(coursePath);
+});
+
+test('course exposes available lessons and the next curriculum step', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: 'Your path through ROOT' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Same data, different bins/ })).toHaveAttribute(
+    'href',
+    /learn\/histogram-binning\/$/,
+  );
+  await expect(page.getByRole('link', { name: /Build a histogram/ })).toHaveAttribute(
+    'href',
+    /learn\/histogram-fill\/$/,
+  );
+  await expect(page.getByRole('link', { name: /Read and compare histograms/ })).toHaveAttribute(
+    'href',
+    /learn\/histogram-compare\/$/,
+  );
+  await expect(page.getByRole('heading', { name: 'A4 · Measurements with errors' })).toBeVisible();
+  await expect(page.getByText('3 / 30')).toBeVisible();
+});
+
+test('course has no automated WCAG A or AA violations', async ({ page }) => {
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test('course remains usable on a narrow mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+
+  await expect(page.getByRole('link', { name: /Same data, different bins/ })).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('home exposes the course without requiring a hidden URL', async ({ page }) => {
+  await page.goto('');
+  await expect(page.getByRole('link', { name: 'View the course →' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Same data, different bins/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Course', exact: true })).toBeVisible();
+});

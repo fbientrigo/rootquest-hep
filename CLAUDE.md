@@ -27,6 +27,7 @@ The request is deterministic; do not ask what lesson the user means.
 6. Implement one polished learner-facing vertical slice, not the following lessons.
 7. Run the relevant build/tests and verify the causal learner behavior.
 8. Only when the lesson satisfies the definition of done, mark it `LIVE` in the curriculum and promote exactly one subsequent eligible lesson to `NEXT`.
+9. Mirror that status and the new learner-facing route in `src/course/curriculum.ts`. The course registry test must remain green; a `LIVE` lesson without a route is incomplete.
 
 Do not skip curriculum order merely because another lesson is easier or more visually interesting.
 
@@ -41,6 +42,8 @@ Before coding:
 Prefer one polished vertical slice over generalized infrastructure. Do not create a learning engine, component library, state framework, or new dependency for hypothetical future lessons.
 
 Reusable teaching primitives and patterns are documented in `docs/06_LESSON_AUTHORING.md`; the engine boundary remains authoritative in `src/learning/README.md`. Promote a mechanic to shared infrastructure only after real repetition reveals a stable shape or a cross-cutting correctness requirement demands it.
+
+The learner-facing curriculum lives at `/course/` and is rendered from `src/course/curriculum.ts`. `docs/05_CURRICULUM.md` remains the canonical pedagogical roadmap; automated tests enforce that their `LIVE`/`NEXT` states do not drift apart.
 
 For ROOT or physics behavior, authoritative ROOT/CERN/experiment sources outrank inference. Repository code and tests outrank stale implementation descriptions.
 
