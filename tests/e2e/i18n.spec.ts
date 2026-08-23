@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const spanishRoutes = [
   { path: '', heading: 'Observa el evento. Encuentra la señal.' },
@@ -14,7 +14,7 @@ const spanishRoutes = [
   { path: 'practice/code/', heading: 'Constructor ROOT' },
 ] as const;
 
-async function chooseSpanish(page: Parameters<typeof test>[0] extends never ? never : any) {
+async function chooseSpanish(page: Page) {
   await page.goto('./');
   await page.evaluate(() => localStorage.setItem('rootquest-language', 'en'));
   await page.reload();
