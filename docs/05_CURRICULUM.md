@@ -81,8 +81,8 @@ Goal: build histogram and measurement intuition before treating ROOT syntax as t
 | --- | --- | --- | --- | --- |
 | A1 | **Same data, different bins** | Distinguish underlying values from their histogram representation; predict what binning changes and what it cannot change. | histogram concept, bins, range, under/overflow vocabulary | **LIVE** — learner-facing lesson promotes the histogram probe model; Higgs Hunt continues to reinforce binning. |
 | A2 | **Build a histogram** | Turn individual measurements into a distribution and connect `Fill` to one event contributing to one bin. | `TH1D`, `Fill`, `Draw`, axes | **LIVE** — learner-facing lesson fills a fixed `TH1D` one measurement at a time and maps each action to ROOT code. |
-| A3 | **Read and compare histograms** | Extract counts and summaries, normalize two samples appropriately, and identify when a comparison is misleading. | `Integral`, `Scale`, `Add`, `Divide`, `GetMean`, `GetStdDev`, bin content | **NEXT** |
-| A4 | **Measurements with errors** | Distinguish a distribution from a set of measured points and interpret error bars. | `TGraph`, `TGraphErrors` | PLANNED |
+| A3 | **Read and compare histograms** | Extract counts and summaries, normalize two samples appropriately, and identify when a comparison is misleading. | `Integral`, `Scale`, `GetBinContent`, `GetMean`, `GetStdDev` | **LIVE** — learner-facing lesson contrasts raw yield with unit-area shape using two samples whose relative bin pattern is identical but totals differ. |
+| A4 | **Measurements with errors** | Distinguish a distribution from a set of measured points and interpret error bars. | `TGraph`, `TGraphErrors` | **NEXT** |
 
 Observable unit proof: given a small dataset, the learner can choose a sensible representation, explain the effect of changing bins, and reproduce it with basic ROOT objects.
 
@@ -145,7 +145,7 @@ Goal: stop treating a histogram as the answer; introduce the minimum statistical
 | --- | --- | --- | --- | --- |
 | E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **DRILL** — `practice/manipulate` and Higgs Hunt already teach this causally. |
 | E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | PLANNED — `event_weight` already appears in the tree probe. |
-| E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | PLANNED |
+| E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | PLANNED |
 | E4 | **Fit a simple model** | Connect a visible model shape to parameters and fit a simple function over a justified range. | `TF1`, `Fit` | PLANNED |
 | E5 | **Read a fit critically** | Inspect residuals/parameter uncertainties/goodness-of-fit cues and recognize an obviously inadequate model. | fit result essentials, chi-square vocabulary where appropriate | PLANNED |
 | E6 | **Signal and control regions** | Distinguish selecting a region to test a hypothesis from tuning a cut until a desired answer appears. | selections, regions, blinded/discovery framing | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **A3 — Read and compare histograms**.
+The default next lesson on this roadmap is **A4 — Measurements with errors**.
