@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { courseUnits, liveCoreLessons, nextLesson } from '../course/curriculum.ts';
 
 const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
+const courseHref = `${import.meta.env.BASE_URL}course/`;
 const practiceBase = `${import.meta.env.BASE_URL}practice/`;
+const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+const currentUnit = courseUnits[0];
 
 const doors = [
   {
@@ -71,21 +75,67 @@ const researchBasis = [
       observe distributions, predict what happens next, then connect the result
       to ROOT code.
     </p>
-    <a class="button-link" href={higgsHref}>Enter Higgs Hunt</a>
+    <div class="hero-actions">
+      <a class="button-link" href={higgsHref}>Enter Higgs Hunt</a>
+      <a class="course-link" href={courseHref}>View the course →</a>
+    </div>
   </section>
 
-  <ol class="learning-loop" aria-label="ROOT Quest learning loop">
-    {doors.map((door) => (
-      <li>
-        <a class="learning-door" href={door.href} aria-label={`${door.action} — ${door.name}`}>
-          <span class="door-action">{door.action}</span>
-          <span class="door-name">{door.name}</span>
-          <span class="door-description">{door.description}</span>
-          <span class="door-enter" aria-hidden="true">Enter →</span>
-        </a>
-      </li>
-    ))}
-  </ol>
+  <section class="course-preview" aria-labelledby="course-preview-title">
+    <header>
+      <div>
+        <p class="eyebrow">ROOT 80/20 course</p>
+        <h2 id="course-preview-title">Learn the machinery behind the hunt</h2>
+      </div>
+      <p class="course-count">{liveCoreLessons.length} lessons available</p>
+    </header>
+
+    <div class="current-unit">
+      <p class="unit-label">Unit {currentUnit.id}</p>
+      <h3>{currentUnit.title}</h3>
+      <ol>
+        {currentUnit.lessons.map((lesson) => (
+          <li class:list={[lesson.status === 'next' && 'is-next']}>
+            {lesson.href ? (
+              <a href={withBase(lesson.href)}>
+                <span>{lesson.id}</span>
+                <strong>{lesson.title}</strong>
+                <small>Open →</small>
+              </a>
+            ) : (
+              <div>
+                <span>{lesson.id}</span>
+                <strong>{lesson.title}</strong>
+                <small>{lesson.status === 'next' ? 'Next' : 'Planned'}</small>
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    {nextLesson && <p class="next-note">Next: <strong>{nextLesson.id} · {nextLesson.title}</strong></p>}
+    <a class="course-path-link" href={courseHref}>See all six units and the full path →</a>
+  </section>
+
+  <section class="practice-section" aria-labelledby="practice-title">
+    <header>
+      <p class="eyebrow">Practice the loop</p>
+      <h2 id="practice-title">Train one analysis move at a time</h2>
+    </header>
+    <ol class="learning-loop" aria-label="ROOT Quest learning loop">
+      {doors.map((door) => (
+        <li>
+          <a class="learning-door" href={door.href} aria-label={`${door.action} — ${door.name}`}>
+            <span class="door-action">{door.action}</span>
+            <span class="door-name">{door.name}</span>
+            <span class="door-description">{door.description}</span>
+            <span class="door-enter" aria-hidden="true">Enter →</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
 
   <aside class="research-basis" aria-labelledby="research-basis-heading" data-research-basis>
     <div class="research-basis-header">
@@ -150,6 +200,118 @@ const researchBasis = [
 </script>
 
 <style>
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .course-link,
+  .course-path-link {
+    font-weight: 750;
+  }
+
+  .course-preview {
+    margin-block: 1rem clamp(4rem, 8vw, 7rem);
+    padding: clamp(1rem, 4vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .course-preview > header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .course-preview h2,
+  .practice-section h2 {
+    margin: 0;
+  }
+
+  .course-count,
+  .next-note {
+    color: var(--muted);
+  }
+
+  .course-count {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .current-unit {
+    max-width: 52rem;
+  }
+
+  .unit-label {
+    margin: 0;
+    color: var(--accent-strong);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .current-unit h3 {
+    margin-block: 0.25rem 1rem;
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+  }
+
+  .current-unit ol {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .current-unit li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .current-unit a,
+  .current-unit li > div {
+    display: grid;
+    grid-template-columns: 2.8rem minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    align-items: center;
+    min-height: 3.2rem;
+    padding: 0.7rem 0.4rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .current-unit a:hover,
+  .current-unit a:focus-visible {
+    background: var(--surface-soft);
+  }
+
+  .current-unit span {
+    color: var(--accent-strong);
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .current-unit small {
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .current-unit .is-next > div {
+    background: color-mix(in srgb, var(--surface) 94%, var(--accent) 6%);
+  }
+
+  .next-note {
+    margin-block: 1rem 0.5rem;
+  }
+
+  .practice-section {
+    margin-block: clamp(3rem, 7vw, 6rem);
+  }
+
   .learning-loop li {
     padding: 0;
     overflow: hidden;
@@ -268,9 +430,19 @@ const researchBasis = [
   }
 
   @media (max-width: 34rem) {
+    .course-preview > header,
     .research-basis-header {
       align-items: start;
       flex-direction: column;
+    }
+
+    .current-unit a,
+    .current-unit li > div {
+      grid-template-columns: 2.4rem minmax(0, 1fr);
+    }
+
+    .current-unit small {
+      grid-column: 2;
     }
   }
 
