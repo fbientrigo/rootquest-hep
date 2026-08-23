@@ -11,7 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:unit": "node --test tests/session.test.ts tests/lab-model.test.ts tests/histogram-binning-model.test.ts tests/histogram-fill-model.test.ts tests/higgs-hunt-model.test.ts tests/practice-door-model.test.ts",
+    "test:unit": "node --test tests/session.test.ts tests/lab-model.test.ts tests/histogram-binning-model.test.ts tests/histogram-fill-model.test.ts tests/histogram-compare-model.test.ts tests/higgs-hunt-model.test.ts tests/practice-door-model.test.ts",
     "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
