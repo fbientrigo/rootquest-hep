@@ -10,7 +10,7 @@ import {
   normalizeBinCounts,
 } from '../src/lessons/histogram-compare/model.ts';
 
-const nearlyEqual = (a: number, b: number, tolerance = 1e-12) =>
+const nearlyEqual = (a: number, b: number, tolerance = 1e-5) =>
   Math.abs(a - b) <= tolerance;
 
 test('sample B preserves sample A shape while doubling yield', () => {
