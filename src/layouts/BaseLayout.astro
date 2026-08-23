@@ -75,6 +75,8 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
         <a href={withBase('')}>Home</a>
         <a href={withBase('course/')}>Course</a>
         <a href={withBase('learn/higgs-hunt/')}>Higgs Hunt</a>
+      </nav>
+      <div class="site-controls">
         <div class="language-toggle" role="group" aria-label="Language">
           <button type="button" data-language-option="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
           <button type="button" data-language-option="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
@@ -82,7 +84,7 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
           <span data-theme-toggle-label>Theme</span>
         </button>
-      </nav>
+      </div>
     </header>
     <main id="main">
       <slot />
