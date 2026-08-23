@@ -69,7 +69,7 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await expect(page.locator('#transfer-heading')).toHaveText('¿Qué significa Fill(5.7)?');
 
   await page.goto('learn/histogram-compare/');
-  const comparisonExplanation = page.locator('.lesson-card[aria-labelledby="code-heading"] > p').first();
+  const comparisonExplanation = page.locator('.lesson-card[aria-labelledby="code-heading"] > p:not(.stage-kicker)').first();
   await expect(comparisonExplanation).toContainText('GetMean y GetStdDev');
   await expect(comparisonExplanation).not.toContainText(', and ');
 
