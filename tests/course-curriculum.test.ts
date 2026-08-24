@@ -22,26 +22,20 @@ function documentedStatus(id: string): CourseLessonStatus {
 test('course registry has unique lesson ids and one NEXT lesson', () => {
   const ids = [spiralAnchor.id, ...coreLessons.map((lesson) => lesson.id)];
   assert.equal(new Set(ids).size, ids.length);
-
   const next = coreLessons.filter((lesson) => lesson.status === 'next');
   assert.equal(next.length, 1);
-  assert.equal(nextLesson?.id, 'A4');
+  assert.equal(nextLesson?.id, 'B1');
 });
 
 test('learner-facing statuses mirror the canonical curriculum document', () => {
   for (const lesson of [spiralAnchor, ...coreLessons]) {
-    assert.equal(
-      lesson.status,
-      documentedStatus(lesson.id),
-      `${lesson.id} status drifted from docs/05_CURRICULUM.md`,
-    );
+    assert.equal(lesson.status, documentedStatus(lesson.id), `${lesson.id} status drifted from docs/05_CURRICULUM.md`);
   }
 });
 
 test('every LIVE learner-facing lesson has a route', () => {
   const live = [spiralAnchor, ...coreLessons].filter((lesson) => lesson.status === 'live');
   assert.ok(live.length > 0);
-
   for (const lesson of live) {
     assert.ok(lesson.href, `${lesson.id} is LIVE but has no learner-facing route`);
     assert.match(lesson.href!, /^learn\/.+\/$/);
