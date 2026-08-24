@@ -30,7 +30,7 @@ export const courseUnits: CourseUnit[] = [
       { id: 'A1', title: 'Same data, different bins', status: 'live', href: 'learn/histogram-binning/' },
       { id: 'A2', title: 'Build a histogram', status: 'live', href: 'learn/histogram-fill/' },
       { id: 'A3', title: 'Read and compare histograms', status: 'live', href: 'learn/histogram-compare/' },
-      { id: 'A4', title: 'Measurements with errors', status: 'next' },
+      { id: 'A4', title: 'Measurements with errors', status: 'live', href: 'learn/measurement-errors/' },
     ],
   },
   {
@@ -38,7 +38,7 @@ export const courseUnits: CourseUnit[] = [
     title: 'Open the ROOT file',
     goal: 'Make ROOT files, trees, branches and entries inspectable rather than opaque.',
     lessons: [
-      { id: 'B1', title: 'Open and inspect a ROOT file', status: 'planned' },
+      { id: 'B1', title: 'Open and inspect a ROOT file', status: 'next' },
       { id: 'B2', title: 'Tree, branch, entry', status: 'planned' },
       { id: 'B3', title: 'Collections inside events', status: 'planned' },
       { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'planned' },
