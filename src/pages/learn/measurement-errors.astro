@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Measurements with errors — ROOT Quest"
+  description="Distinguish a distribution from measured points and learn how TGraphErrors represents uncertainties without moving central values."
+>
+  <header class="lesson-header">
+    <p class="eyebrow">Unit A · Lesson A4</p>
+    <h1>Measurements with errors</h1>
+    <p class="lede">A histogram groups many observations. A graph can instead report one measured result at each chosen x value. Add uncertainty bars without turning those points into bins or event counts.</p>
+  </header>
+
+  <main class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="a4-context-heading">
+      <p class="stage-kicker">Context</p>
+      <h2 id="a4-context-heading">Five reported measurements, not five histogram bins</h2>
+      <p>These synthetic calibration points report a measured response y at five chosen x settings. Each point has a central value and a y uncertainty. The vertical bar describes that uncertainty; its height is not a count of events.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="a4-observe-heading">
+      <p class="stage-kicker">Manipulate → observe</p>
+      <h2 id="a4-observe-heading">Change uncertainty, keep the measurement fixed</h2>
+      <label class="scale-control" for="a4-error-scale">
+        Uncertainty scale
+        <input id="a4-error-scale" type="range" min="0.5" max="2" step="0.5" value="1">
+        <output id="a4-error-scale-output" for="a4-error-scale">1.0×</output>
+      </label>
+      <svg class="measurement-graph" viewBox="0 0 700 330" role="img" aria-labelledby="a4-graph-title a4-graph-description">
+        <title id="a4-graph-title">Measured points with vertical uncertainty bars</title>
+        <desc id="a4-graph-description">Five measured points with vertical error bars.</desc>
+        <line class="plot-axis" x1="64" y1="258" x2="624" y2="258"></line>
+        <line class="plot-axis" x1="64" y1="28" x2="64" y2="258"></line>
+        <g id="a4-points"></g>
+        <g class="axis-ticks" aria-hidden="true">
+          <text x="120" y="282">1</text><text x="232" y="282">2</text><text x="344" y="282">3</text><text x="456" y="282">4</text><text x="568" y="282">5</text>
+        </g>
+        <text class="axis-label" x="344" y="314" text-anchor="middle">measurement setting x</text>
+        <text class="axis-label" x="18" y="146" text-anchor="middle" transform="rotate(-90 18 146)">measured response y</text>
+      </svg>
+      <p id="a4-summary" class="summary">At x = 4, the central value stays 4.6 while the y uncertainty is ±0.50.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="a4-predict-heading">
+      <p class="stage-kicker">Predict</p>
+      <h2 id="a4-predict-heading">What changes if the uncertainty doubles?</h2>
+      <rq-predict id="a4-prediction" answer-name="error-prediction">
+        <form><fieldset><legend>For a measured point, if only its y uncertainty doubles, what should happen?</legend><div class="rq-options">
+          <label><input type="radio" name="error-prediction" value="same-center-wider-bar" required> The central point stays fixed and the vertical error bar becomes twice as wide</label>
+          <label><input type="radio" name="error-prediction" value="move-center"> The central y value must move upward</label>
+          <label><input type="radio" name="error-prediction" value="more-events"> The point represents twice as many events</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="a4-code-heading">
+      <p class="stage-kicker">Code</p>
+      <h2 id="a4-code-heading">ROOT stores points and errors separately</h2>
+      <p><code>TGraph</code> stores x and y coordinates. <code>TGraphErrors</code> adds x and y error arrays, so changing an error does not require changing the corresponding central coordinate.</p>
+      <div class="code-card"><header>PyROOT · measured points with uncertainties</header><pre><code id="a4-root-code"></code></pre></div>
+      <p class="technical-note">This lesson uses zero x uncertainty and symmetric y uncertainty. ROOT also provides asymmetric-error graph types when the upper and lower uncertainties differ.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="a4-transfer-heading">
+      <p class="stage-kicker">Transfer</p>
+      <h2 id="a4-transfer-heading">Choose the representation</h2>
+      <rq-predict id="a4-transfer" answer-name="representation-transfer">
+        <form><fieldset><legend>You measure detector response at five chosen voltages and report one value ± uncertainty at each voltage. Which representation matches the question?</legend><div class="rq-options">
+          <label><input type="radio" name="representation-transfer" value="histogram" required> A histogram whose bin heights are the five response values</label>
+          <label><input type="radio" name="representation-transfer" value="graph-errors"> A graph of measured points with error bars</label>
+          <label><input type="radio" name="representation-transfer" value="event-count"> Five event-count bins, one per voltage</label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>import '../../lessons/measurement-errors/controller';</script>
+
+<style is:global>
+  .lesson-header{max-width:58rem;margin-bottom:2rem}.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .55rem}.scale-control{display:grid;grid-template-columns:auto minmax(10rem,1fr) auto;gap:.8rem;align-items:center;margin-block:1.2rem;max-width:44rem;font-weight:700}.scale-control input{width:100%;min-height:2.75rem}.measurement-graph{display:block;width:100%;max-width:52rem;min-height:16rem;border:1px solid var(--border);border-radius:.65rem;background:color-mix(in srgb,var(--surface) 95%,var(--accent) 5%)}.plot-axis,.error-line{stroke:var(--text);stroke-width:2}.error-line{stroke:var(--accent-strong)}.measurement-point{fill:var(--surface);stroke:var(--accent-strong);stroke-width:4}.axis-label,.axis-ticks text{fill:var(--muted);font-size:.82rem}.summary,.technical-note{color:var(--muted)}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.65rem .85rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.85rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:38rem){.scale-control{grid-template-columns:1fr auto}.scale-control>span,.scale-control input{grid-column:1/-1}.measurement-graph{min-height:13rem}}
+</style>
