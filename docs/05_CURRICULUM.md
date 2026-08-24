@@ -82,7 +82,7 @@ Goal: build histogram and measurement intuition before treating ROOT syntax as t
 | A1 | **Same data, different bins** | Distinguish underlying values from their histogram representation; predict what binning changes and what it cannot change. | histogram concept, bins, range, under/overflow vocabulary | **LIVE** — learner-facing lesson promotes the histogram probe model; Higgs Hunt continues to reinforce binning. |
 | A2 | **Build a histogram** | Turn individual measurements into a distribution and connect `Fill` to one event contributing to one bin. | `TH1D`, `Fill`, `Draw`, axes | **LIVE** — learner-facing lesson fills a fixed `TH1D` one measurement at a time and maps each action to ROOT code. |
 | A3 | **Read and compare histograms** | Extract counts and summaries, normalize two samples appropriately, and identify when a comparison is misleading. | `Integral`, `Scale`, `GetBinContent`, `GetMean`, `GetStdDev` | **LIVE** — learner-facing lesson contrasts raw yield with unit-area shape using two samples whose relative bin pattern is identical but totals differ. |
-| A4 | **Measurements with errors** | Distinguish a distribution from a set of measured points and interpret error bars. | `TGraph`, `TGraphErrors` | **NEXT** |
+| A4 | **Measurements with errors** | Distinguish a distribution from a set of measured points and interpret error bars. | `TGraph`, `TGraphErrors` | **LIVE** — learner-facing lesson keeps measured central values fixed while uncertainty bars change, then transfers the learner to choosing graph-with-errors vs histogram representations. |
 
 Observable unit proof: given a small dataset, the learner can choose a sensible representation, explain the effect of changing bins, and reproduce it with basic ROOT objects.
 
@@ -94,7 +94,7 @@ Goal: make ROOT's data model tangible enough that an unfamiliar file is inspecta
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | PLANNED |
+| B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | **NEXT** |
 | B2 | **Tree, branch, entry** | Map `TTree → branch → entry value` to dataset/column/row mental models without claiming they are identical implementations. | `TTree`, branches, entries | **PROBE** — tree browser already exists in `lab/learning-engine`. |
 | B3 | **Collections inside events** | Recognize scalar vs vector-like branches and explain why one event can contain many jets/photons/tracks. | vector-like branch values; bridge to `RVec` | PLANNED |
 | B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **A4 — Measurements with errors**.
+The default next lesson on this roadmap is **B1 — Open and inspect a ROOT file**.
