@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 test('A4 keeps central measurements fixed while uncertainty bars change', async ({ page }) => {
   await expect(page.locator('#a4-summary')).toContainText('central value stays 4.6');
   await page.locator('#a4-error-scale').fill('2');
-  await expect(page.locator('#a4-error-scale-output')).toHaveValue('2.0×');
+  await expect(page.locator('#a4-error-scale-output')).toHaveText('2.0×');
   await expect(page.locator('#a4-summary')).toContainText('±1.00');
   await expect(page.locator('#a4-summary')).toContainText('central value stays 4.6');
 
@@ -34,7 +34,7 @@ test('A4 remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
   await page.locator('#a4-error-scale').fill('1.5');
-  await expect(page.locator('#a4-error-scale-output')).toHaveValue('1.5×');
+  await expect(page.locator('#a4-error-scale-output')).toHaveText('1.5×');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
