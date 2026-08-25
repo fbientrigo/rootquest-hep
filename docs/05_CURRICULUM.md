@@ -94,8 +94,8 @@ Goal: make ROOT's data model tangible enough that an unfamiliar file is inspecta
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | **NEXT** |
-| B2 | **Tree, branch, entry** | Map `TTree → branch → entry value` to dataset/column/row mental models without claiming they are identical implementations. | `TTree`, branches, entries | **PROBE** — tree browser already exists in `lab/learning-engine`. |
+| B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | **LIVE** — learner-facing lesson turns a synthetic ROOT-file inventory into an inspect → identify → `Get` workflow, with `rootls` as the shell equivalent. |
+| B2 | **Tree, branch, entry** | Map `TTree → branch → entry value` to dataset/column/row mental models without claiming they are identical implementations. | `TTree`, branches, entries | **NEXT** — promote the existing tree browser probe in `lab/learning-engine`; do not rebuild the linked hierarchy mechanic. |
 | B3 | **Collections inside events** | Recognize scalar vs vector-like branches and explain why one event can contain many jets/photons/tracks. | vector-like branch values; bridge to `RVec` | PLANNED |
 | B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | PLANNED |
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **B1 — Open and inspect a ROOT file**.
+The default next lesson on this roadmap is **B2 — Tree, branch, entry**.

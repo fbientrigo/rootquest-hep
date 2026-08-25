@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import { demoRootFile } from '../../lessons/root-file-inspection/model.ts';
+---
+
+<BaseLayout title="Open and inspect a ROOT file — ROOT Quest" description="Learn the everyday ROOT workflow: open a ROOT file, inspect its stored objects, and retrieve a named object only after you know what the file contains.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad B · Lección B1">Unit B · Lesson B1</p>
+    <h1 data-es="Abre e inspecciona un archivo ROOT">Open and inspect a ROOT file</h1>
+    <p class="lede" data-es="Un archivo .root no es una caja negra. Ábrelo, mira qué objetos contiene y recupera uno por su nombre cuando ya sabes qué estás buscando.">A .root file is not a black box. Open it, inspect the objects it contains, then retrieve one by name once you know what you are looking for.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="b1-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="b1-context-heading" data-es="Te entregan analysis.root">You are handed analysis.root</h2>
+      <p data-es="Quieres encontrar una distribución de masa diphotón, pero no debes asumir cómo se llama ni qué más hay en el archivo. Este archivo didáctico es sintético; los nombres imitan objetos ROOT comunes.">You want to find a diphoton mass distribution, but you should not assume its name or what else the file contains. This teaching file is synthetic; the names mimic common ROOT objects.</p>
+      <div class="code-card"><header data-es="PyROOT · abrir el archivo">PyROOT · open the file</header><pre><code>f = ROOT.TFile.Open("analysis.root")</code></pre></div>
+      <p class="technical-note" data-es="TFile.Open abre o crea un archivo según el modo solicitado. En lectura, una apertura fallida devuelve un puntero nulo; en código real también conviene comprobar que el archivo se abrió correctamente.">TFile.Open opens or creates a file according to the requested mode. In read mode, a failed open returns a null pointer; real analysis code should also check that the file opened successfully.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b1-inspect-heading">
+      <p class="stage-kicker" data-es="Manipula → observa">Manipulate → observe</p>
+      <h2 id="b1-inspect-heading" data-es="Inspecciona antes de recuperar">Inspect before you retrieve</h2>
+      <p data-es="Un listado te entrega el inventario: nombre almacenado, clase ROOT y una breve pista. Selecciona un objeto para conectar esa entrada con la llamada Get correspondiente.">A listing gives you the inventory: stored name, ROOT class, and a short clue. Select an object to connect that entry to the matching Get call.</p>
+
+      <div class="file-browser">
+        <section class="file-tree" aria-labelledby="b1-file-heading">
+          <h3 id="b1-file-heading"><span class="file-icon" aria-hidden="true">▣</span> {demoRootFile.name}</h3>
+          <p class="terminal-label" data-es="Equivalente en terminal: rootls analysis.root">Terminal equivalent: rootls analysis.root</p>
+          <div class="object-list" role="group" aria-label="Stored ROOT objects" data-es-aria-label="Objetos ROOT almacenados">
+            {demoRootFile.objects.map((object, index) => (
+              <button type="button" data-root-object={object.name} aria-pressed={index === 0 ? 'true' : 'false'}>
+                <span class="object-name">{object.name}</span>
+                <span class="object-kind">{object.kind}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <article class="object-detail" aria-live="polite" aria-labelledby="b1-selected-name">
+          <p class="detail-label" data-es="Objeto seleccionado">Selected object</p>
+          <h3 id="b1-selected-name">Events</h3>
+          <dl>
+            <div><dt data-es="Clase ROOT">ROOT class</dt><dd id="b1-selected-class">TTree</dd></div>
+            <div><dt data-es="Título">Title</dt><dd id="b1-selected-title">Selected collision events</dd></div>
+            <div><dt data-es="Detalle">Detail</dt><dd id="b1-selected-detail">12,480 entries</dd></div>
+          </dl>
+          <div class="code-card compact"><header data-es="Recuperar este objeto">Retrieve this object</header><pre><code id="b1-get-code">obj = f.Get("Events")</code></pre></div>
+          <p id="b1-selection-summary" class="summary">You selected Events, a TTree. The stored name is what Get uses to retrieve that object.</p>
+        </article>
+      </div>
+
+      <details class="inspection-code">
+        <summary data-es="Ver las dos formas de listar el contenido">See two ways to list the contents</summary>
+        <div class="dual-code">
+          <div class="code-card"><header>PyROOT</header><pre><code>f.ls()</code></pre></div>
+          <div class="code-card"><header data-es="Terminal">Terminal</header><pre><code>rootls analysis.root</code></pre></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b1-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="b1-predict-heading" data-es="¿Qué objeto responde la pregunta?">Which object answers the question?</h2>
+      <rq-predict id="b1-prediction" answer-name="object-choice">
+        <form><fieldset>
+          <legend data-es="Buscas la distribución de masa diphotón. Según el inventario, ¿qué nombre debes pasar a Get?">You need the diphoton mass distribution. From the inventory, which name should you pass to Get?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="object-choice" value="Events" required><span>Events</span></label>
+            <label><input type="radio" name="object-choice" value="m_gg"><span>m_gg</span></label>
+            <label><input type="radio" name="object-choice" value="efficiency"><span>efficiency</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar elección">Commit choice</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b1-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="b1-code-heading" data-es="El flujo cotidiano completo">The everyday workflow in one place</h2>
+      <p data-es="Primero abre. Después lista. Sólo entonces recupera el objeto que identificaste. TFile::ls lista el contenido del archivo y TDirectoryFile::Get devuelve el objeto identificado por su nombre almacenado.">Open first. Then list. Only then retrieve the object you identified. TFile::ls lists the file contents, and TDirectoryFile::Get returns the object identified by its stored name.</p>
+      <div class="code-card"><header data-es="PyROOT · inspeccionar y recuperar">PyROOT · inspect and retrieve</header><pre><code>import ROOT
+
+f = ROOT.TFile.Open("analysis.root")
+f.ls()
+h = f.Get("m_gg")</code></pre></div>
+      <p class="technical-note" data-es="En la terminal, rootls analysis.root cumple la misma función de inspección rápida sin escribir un script. No necesitas recordar los nombres internos antes de mirar el archivo.">At the shell, rootls analysis.root provides the same quick inspection step without writing a script. You do not need to remember internal names before looking at the file.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b1-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="b1-transfer-heading" data-es="Te llega un archivo desconocido">An unfamiliar file arrives</h2>
+      <rq-predict id="b1-transfer" answer-name="inspection-transfer">
+        <form><fieldset>
+          <legend data-es="Recibes results.root y no conoces sus objetos. ¿Cuál es el primer paso más robusto?">You receive results.root and do not know its objects. What is the most robust first step?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="inspection-transfer" value="guess-get" required><span data-es='Probar f.Get("Events") porque suele llamarse así'>Try f.Get("Events") because that name is common</span></label>
+            <label><input type="radio" name="inspection-transfer" value="list-first"><span data-es="Listar el contenido y decidir qué objeto responde a tu pregunta">List the contents and decide which object answers your question</span></label>
+            <label><input type="radio" name="inspection-transfer" value="rename-file"><span data-es="Renombrar el archivo antes de abrirlo">Rename the file before opening it</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Abre e inspecciona un archivo ROOT — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende el flujo cotidiano de ROOT: abrir un archivo, inspeccionar sus objetos almacenados y recuperar un objeto por nombre sólo después de saber qué contiene.');
+  }
+</script>
+<script>import '../../lessons/root-file-inspection/controller';</script>
+
+<style is:global>
+  .lesson-header{max-width:58rem;margin-bottom:2rem}.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker,.detail-label,.terminal-label{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .6rem}.technical-note,.summary,.terminal-label{color:var(--muted)}.file-browser{display:grid;grid-template-columns:minmax(15rem,.9fr) minmax(16rem,1.1fr);gap:1rem;margin-top:1.25rem}.file-tree,.object-detail{min-width:0;padding:1rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.file-tree h3,.object-detail h3{margin:.15rem 0 .7rem}.file-icon{color:var(--accent)}.object-list{display:grid;gap:.45rem}.object-list button{display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:center;min-height:3rem;padding:.65rem .75rem;border:1px solid var(--border);border-radius:.5rem;background:var(--surface);color:var(--text);font:inherit;text-align:left;cursor:pointer}.object-list button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset .2rem 0 0 var(--accent)}.object-name{font-weight:800}.object-kind{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem}.object-detail dl{display:grid;gap:.45rem}.object-detail dl div{display:grid;grid-template-columns:7rem 1fr;gap:.5rem}.object-detail dt{color:var(--muted)}.object-detail dd{margin:0}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.compact pre{padding:.75rem}.inspection-code{margin-top:1rem}.dual-code{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}.dual-code .code-card{margin-top:.75rem}@media(max-width:42rem){.file-browser,.dual-code{grid-template-columns:1fr}.object-detail dl div{grid-template-columns:1fr;gap:.1rem}}
+</style>

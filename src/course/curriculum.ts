@@ -38,8 +38,8 @@ export const courseUnits: CourseUnit[] = [
     title: 'Open the ROOT file',
     goal: 'Make ROOT files, trees, branches and entries inspectable rather than opaque.',
     lessons: [
-      { id: 'B1', title: 'Open and inspect a ROOT file', status: 'next' },
-      { id: 'B2', title: 'Tree, branch, entry', status: 'planned' },
+      { id: 'B1', title: 'Open and inspect a ROOT file', status: 'live', href: 'learn/root-file-inspection/' },
+      { id: 'B2', title: 'Tree, branch, entry', status: 'next' },
       { id: 'B3', title: 'Collections inside events', status: 'planned' },
       { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'planned' },
     ],
