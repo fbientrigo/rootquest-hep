@@ -13,8 +13,9 @@ test('course exposes available lessons and the next curriculum step', async ({ p
   await expect(page.getByRole('link', { name: /Build a histogram/ })).toHaveAttribute('href', /learn\/histogram-fill\/$/);
   await expect(page.getByRole('link', { name: /Read and compare histograms/ })).toHaveAttribute('href', /learn\/histogram-compare\/$/);
   await expect(page.getByRole('link', { name: /Measurements with errors/ })).toHaveAttribute('href', /learn\/measurement-errors\/$/);
-  await expect(page.getByRole('heading', { name: 'B1 · Open and inspect a ROOT file' })).toBeVisible();
-  await expect(page.getByText('4 / 30')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Open and inspect a ROOT file/ })).toHaveAttribute('href', /learn\/root-file-inspection\/$/);
+  await expect(page.getByRole('heading', { name: 'B2 · Tree, branch, entry' })).toBeVisible();
+  await expect(page.getByText('5 / 30')).toBeVisible();
 });
 
 test('course has no automated WCAG A or AA violations', async ({ page }) => {
