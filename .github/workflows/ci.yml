@@ -28,5 +28,5 @@ jobs:
       - name: Install Chromium for interaction smoke test
         run: npx playwright install --with-deps chromium
       - name: Test core learner interactions, themes and language in Chromium
-        # Keep each LIVE Unit A lesson, curriculum surface and bilingual route contract in this explicit smoke path until coverage is reorganized deliberately.
-        run: npx playwright test tests/e2e/course.spec.ts tests/e2e/higgs-hunt.spec.ts tests/e2e/histogram-binning.spec.ts tests/e2e/histogram-fill.spec.ts tests/e2e/histogram-compare.spec.ts tests/e2e/measurement-errors.spec.ts tests/e2e/theme.spec.ts tests/e2e/i18n.spec.ts --project=chromium
+        # Keep each LIVE lesson, curriculum surface and bilingual route contract in this explicit smoke path until coverage is reorganized deliberately.
+        run: npx playwright test tests/e2e/course.spec.ts tests/e2e/higgs-hunt.spec.ts tests/e2e/histogram-binning.spec.ts tests/e2e/histogram-fill.spec.ts tests/e2e/histogram-compare.spec.ts tests/e2e/measurement-errors.spec.ts tests/e2e/root-file-inspection.spec.ts tests/e2e/theme.spec.ts tests/e2e/i18n.spec.ts --project=chromium
