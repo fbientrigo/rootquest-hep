@@ -70,7 +70,7 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await expect(page.locator('#a4-prediction rq-feedback')).toContainText('Predicción confirmada');
 
   await page.goto('learn/root-file-inspection/');
-  await page.getByLabel('m_gg').check();
+  await page.locator('#b1-prediction').getByRole('radio', { name: 'm_gg' }).check();
   await page.locator('#b1-prediction').getByRole('button', { name: 'Confirmar elección' }).click();
   await expect(page.locator('#b1-prediction rq-feedback')).toContainText('Objeto identificado');
 
