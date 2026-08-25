@@ -7,6 +7,7 @@ const spanishRoutes = [
   { path: 'learn/histogram-fill/', heading: 'Construye un histograma' },
   { path: 'learn/histogram-compare/', heading: 'Lee y compara histogramas' },
   { path: 'learn/measurement-errors/', heading: 'Mediciones con incertidumbres' },
+  { path: 'learn/root-file-inspection/', heading: 'Abre e inspecciona un archivo ROOT' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -39,6 +40,9 @@ test('language choice persists across every current learner-facing route', async
   await expect(page.locator('#a4-summary')).toContainText('el valor central permanece en 4.6');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Distingue una distribución de puntos medidos y aprende cómo TGraphErrors representa incertidumbres sin mover los valores centrales.');
 
+  await page.goto('learn/root-file-inspection/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende el flujo cotidiano de ROOT: abrir un archivo, inspeccionar sus objetos almacenados y recuperar un objeto por nombre sólo después de saber qué contiene.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
@@ -64,6 +68,11 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('El punto central queda fijo y la barra vertical de error duplica su ancho').check();
   await page.locator('#a4-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
   await expect(page.locator('#a4-prediction rq-feedback')).toContainText('Predicción confirmada');
+
+  await page.goto('learn/root-file-inspection/');
+  await page.getByLabel('m_gg').check();
+  await page.locator('#b1-prediction').getByRole('button', { name: 'Confirmar elección' }).click();
+  await expect(page.locator('#b1-prediction rq-feedback')).toContainText('Objeto identificado');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
