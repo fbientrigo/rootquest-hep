@@ -13,7 +13,7 @@ test('B1 teaches inspect then retrieve from a named ROOT object inventory', asyn
   await expect(page.locator('#b1-selected-class')).toHaveText('TH1D');
   await expect(page.locator('#b1-get-code')).toHaveText('obj = f.Get("m_gg")');
 
-  await page.getByLabel('m_gg').check();
+  await page.locator('#b1-prediction').getByRole('radio', { name: 'm_gg' }).check();
   await page.locator('#b1-prediction').getByRole('button', { name: 'Commit choice' }).click();
   await expect(page.locator('#b1-prediction rq-feedback')).toContainText('Object identified');
 
@@ -26,7 +26,7 @@ test('B1 is complete in Spanish including dynamic feedback', async ({ page }) =>
   await page.evaluate(() => localStorage.setItem('rootquest-language', 'es'));
   await page.reload();
   await expect(page.locator('h1')).toHaveText('Abre e inspecciona un archivo ROOT');
-  await page.getByLabel('m_gg').check();
+  await page.locator('#b1-prediction').getByRole('radio', { name: 'm_gg' }).check();
   await page.locator('#b1-prediction').getByRole('button', { name: 'Confirmar elección' }).click();
   await expect(page.locator('#b1-prediction rq-feedback')).toContainText('Objeto identificado');
 });
