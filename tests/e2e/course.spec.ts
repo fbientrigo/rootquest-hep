@@ -27,7 +27,7 @@ test('course has no automated WCAG A or AA violations', async ({ page }) => {
 test('course remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
-  await expect(page.getByRole('link', { name: /Tree, branch, entry/ })).toBeVisible();
+  await expect(page.locator('a[href$="learn/tree-branch-entry/"]')).toHaveCount(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
