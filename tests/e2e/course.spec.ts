@@ -14,8 +14,9 @@ test('course exposes available lessons and the next curriculum step', async ({ p
   await expect(page.getByRole('link', { name: /Read and compare histograms/ })).toHaveAttribute('href', /learn\/histogram-compare\/$/);
   await expect(page.getByRole('link', { name: /Measurements with errors/ })).toHaveAttribute('href', /learn\/measurement-errors\/$/);
   await expect(page.locator('a[href$="learn/root-file-inspection/"]')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'B2 · Tree, branch, entry' })).toBeVisible();
-  await expect(page.getByText('5 / 30')).toBeVisible();
+  await expect(page.locator('a[href$="learn/tree-branch-entry/"]')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'B3 · Collections inside events' })).toBeVisible();
+  await expect(page.getByText('6 / 30')).toBeVisible();
 });
 
 test('course has no automated WCAG A or AA violations', async ({ page }) => {
@@ -26,7 +27,7 @@ test('course has no automated WCAG A or AA violations', async ({ page }) => {
 test('course remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
-  await expect(page.getByRole('link', { name: /Measurements with errors/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Tree, branch, entry/ })).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
