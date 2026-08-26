@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import { TREE_BRANCHES } from '../../lessons/tree-branch-entry/model.ts';
+---
+
+<BaseLayout title="Tree, branch, entry — ROOT Quest" description="Learn how a ROOT TTree organizes branch values across entries, and use a dataset/column/row analogy without confusing it with ROOT's internal implementation.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad B · Lección B2">Unit B · Lesson B2</p>
+    <h1 data-es="Árbol, rama, entrada">Tree, branch, entry</h1>
+    <p class="lede" data-es="Un TTree organiza datos columnares. Elige una rama y una entrada para ver exactamente qué valor estás leyendo y qué cambia cuando mueves cada coordenada.">A TTree organizes columnar data. Choose a branch and an entry to see exactly which value you are reading and what changes when you move each coordinate.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="b2-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="b2-context-heading" data-es="Events contiene campos repetidos para muchas entradas">Events stores fields across many entries</h2>
+      <p data-es="Esta vista didáctica reutiliza el navegador de árbol del laboratorio. Los datos son sintéticos. Piensa en TTree ≈ dataset, branch ≈ columna y entry ≈ registro tipo fila, pero recuerda que es una analogía conceptual, no una afirmación sobre la implementación interna de ROOT.">This teaching view promotes the tree-browser probe from the lab. The data are synthetic. Think TTree ≈ dataset, branch ≈ column, and entry ≈ row-like record, while remembering that this is a conceptual analogy rather than a claim about ROOT's internal implementation.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b2-manipulate-heading">
+      <p class="stage-kicker" data-es="Manipula → observa">Manipulate → observe</p>
+      <h2 id="b2-manipulate-heading" data-es="Elige una coordenada dentro del árbol">Choose a coordinate inside the tree</h2>
+      <div class="tree-layout">
+        <section class="tree-browser" aria-labelledby="b2-tree-heading">
+          <h3 id="b2-tree-heading">TTree · Events</h3>
+          <div class="branch-list" role="group" aria-label="Branches in Events" data-es-aria-label="Ramas en Events">
+            {TREE_BRANCHES.map((branch, index) => (
+              <button type="button" data-b2-branch={branch.id} aria-pressed={index === 0 ? 'true' : 'false'}>
+                <span>{branch.name}</span><small>{branch.type}</small>
+              </button>
+            ))}
+          </div>
+          <label for="b2-entry"><span data-es="Entrada">Entry</span>: <output id="b2-entry-value" for="b2-entry">0</output></label>
+          <input id="b2-entry" type="range" min="0" max="2" step="1" value="0" />
+        </section>
+
+        <article class="branch-view" aria-live="polite" aria-labelledby="b2-branch-name">
+          <p class="detail-label" data-es="Coordenada seleccionada">Selected coordinate</p>
+          <h3 id="b2-branch-name">photon_pt</h3>
+          <dl>
+            <div><dt data-es="Tipo almacenado">Stored type</dt><dd id="b2-branch-type">vector&lt;float&gt;</dd></div>
+            <div><dt data-es="Valor en esta entrada">Value at this entry</dt><dd id="b2-selected-value">[42.1, 31.8] GeV</dd></div>
+          </dl>
+          <p id="b2-coordinate-summary" class="summary">You are reading entry 0 of Events and, within that entry, branch photon_pt.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b2-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="b2-predict-heading" data-es="Cambia la rama, no la entrada">Change the branch, not the entry</h2>
+      <rq-predict id="b2-prediction" answer-name="branch-prediction">
+        <form><fieldset>
+          <legend data-es="Si mantienes Entry 1 y cambias de photon_pt a event_weight, ¿qué ocurre?">If you keep Entry 1 and switch from photon_pt to event_weight, what happens?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="branch-prediction" value="same-entry-different-branch" required><span data-es="Lees otro campo de la misma entrada">You read a different field from the same entry</span></label>
+            <label><input type="radio" name="branch-prediction" value="new-entry"><span data-es="ROOT crea una entrada nueva">ROOT creates a new entry</span></label>
+            <label><input type="radio" name="branch-prediction" value="next-entry"><span data-es="Avanzas automáticamente a Entry 2">You automatically advance to Entry 2</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b2-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="b2-code-heading" data-es="ROOT expresa la misma coordenada">ROOT expresses the same coordinate</h2>
+      <p data-es="En PyROOT puedes iterar un TTree. Cada iteración lee una entrada y el objeto entry permite acceder a los valores de sus ramas. El código cambia con tus selecciones de arriba.">In PyROOT you can iterate over a TTree. Each iteration reads an entry, and the entry object gives access to its branch values. The code changes with your selections above.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code id="b2-code">tree = f.Get("Events")
+for i, entry in enumerate(tree):
+    if i == 0:
+        print(entry.photon_pt)</code></pre></div>
+      <p class="technical-note" data-es="La documentación oficial de ROOT describe TTree como un dataset columnar y señala que cada iteración en PyROOT lee una nueva entrada, cuyos valores de rama se acceden como entry.branch_name.">ROOT's official documentation describes TTree as a columnar dataset and states that each PyROOT iteration reads a new entry whose branch values are accessible as entry.branch_name.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b2-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="b2-transfer-heading" data-es="Asigna correctamente los roles">Assign the roles correctly</h2>
+      <rq-predict id="b2-transfer" answer-name="tree-transfer">
+        <form><fieldset>
+          <legend data-es="¿Qué analogía es útil para razonar sobre un TTree sin afirmar que sea una tabla ordinaria?">Which analogy is useful for reasoning about a TTree without claiming it is an ordinary table?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="tree-transfer" value="entry-column" required><span data-es="Entry ≈ columna; branch ≈ fila">Entry ≈ column; branch ≈ row</span></label>
+            <label><input type="radio" name="tree-transfer" value="branch-column-entry-row"><span data-es="Branch ≈ columna; entry ≈ registro tipo fila">Branch ≈ column; entry ≈ row-like record</span></label>
+            <label><input type="radio" name="tree-transfer" value="tree-cell"><span data-es="TTree ≈ una sola celda">TTree ≈ one cell</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Árbol, rama, entrada — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende cómo un TTree organiza valores de ramas a través de entradas y usa con cuidado la analogía dataset/columna/registro.');
+  }
+</script>
+<script>import '../../lessons/tree-branch-entry/controller';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker,.detail-label{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .6rem}.tree-layout{display:grid;grid-template-columns:minmax(15rem,.9fr) minmax(16rem,1.1fr);gap:1rem;margin-top:1.25rem}.tree-browser,.branch-view{min-width:0;padding:1rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.branch-list{display:grid;gap:.45rem;margin-bottom:1rem}.branch-list button{display:flex;justify-content:space-between;gap:.75rem;min-height:3rem;padding:.65rem .75rem;border:1px solid var(--border);border-radius:.5rem;background:var(--surface);color:var(--text);font:inherit;text-align:left;cursor:pointer}.branch-list button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset .2rem 0 0 var(--accent)}.branch-list small{color:var(--muted)}#b2-entry{width:100%;min-height:2.75rem;accent-color:var(--accent)}.branch-view dl{display:grid;gap:.5rem}.branch-view dl div{display:grid;grid-template-columns:8rem 1fr;gap:.5rem}.branch-view dt{color:var(--muted)}.branch-view dd{margin:0;font-weight:700}.summary,.technical-note{color:var(--muted)}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:42rem){.tree-layout{grid-template-columns:1fr}.branch-view dl div{grid-template-columns:1fr;gap:.1rem}}
+</style>

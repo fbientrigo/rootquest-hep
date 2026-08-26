@@ -100,15 +100,13 @@ test('completes the focused learning loop and derives ROOT code', async ({ page 
   await next.click();
 
   const threshold = page.getByLabel('Minimum leading photon pT');
-  await threshold.focus();
-  await page.keyboard.press('End');
+  await threshold.fill('60');
   await expect(page.locator('#photon-pt-value')).toHaveText('60 GeV');
   await expect(page.locator('#cut-feedback')).toContainText('0% of the signal');
   await next.click();
 
   const bins = page.getByLabel('Histogram bins');
-  await bins.focus();
-  await page.keyboard.press('End');
+  await bins.fill('16');
   await expect(page.locator('#mass-bin-value')).toHaveText('16');
   await next.click();
 
