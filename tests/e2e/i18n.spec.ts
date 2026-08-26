@@ -8,6 +8,7 @@ const spanishRoutes = [
   { path: 'learn/histogram-compare/', heading: 'Lee y compara histogramas' },
   { path: 'learn/measurement-errors/', heading: 'Mediciones con incertidumbres' },
   { path: 'learn/root-file-inspection/', heading: 'Abre e inspecciona un archivo ROOT' },
+  { path: 'learn/tree-branch-entry/', heading: 'Árbol, rama, entrada' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -43,6 +44,9 @@ test('language choice persists across every current learner-facing route', async
   await page.goto('learn/root-file-inspection/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende el flujo cotidiano de ROOT: abrir un archivo, inspeccionar sus objetos almacenados y recuperar un objeto por nombre sólo después de saber qué contiene.');
 
+  await page.goto('learn/tree-branch-entry/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende cómo un TTree organiza valores de ramas a través de entradas y usa con cuidado la analogía dataset/columna/registro.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
@@ -73,6 +77,11 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.locator('#b1-prediction').getByRole('radio', { name: 'm_gg' }).check();
   await page.locator('#b1-prediction').getByRole('button', { name: 'Confirmar elección' }).click();
   await expect(page.locator('#b1-prediction rq-feedback')).toContainText('Objeto identificado');
+
+  await page.goto('learn/tree-branch-entry/');
+  await page.getByLabel('Lees otro campo de la misma entrada').check();
+  await page.locator('#b2-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#b2-prediction rq-feedback')).toContainText('Misma entrada, otro campo');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
