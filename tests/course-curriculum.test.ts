@@ -24,7 +24,7 @@ test('course registry has unique lesson ids and one NEXT lesson', () => {
   assert.equal(new Set(ids).size, ids.length);
   const next = coreLessons.filter((lesson) => lesson.status === 'next');
   assert.equal(next.length, 1);
-  assert.equal(nextLesson?.id, 'B3');
+  assert.equal(nextLesson?.id, 'B4');
 });
 
 test('learner-facing statuses mirror the canonical curriculum document', () => {
