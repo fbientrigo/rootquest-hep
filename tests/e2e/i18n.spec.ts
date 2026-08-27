@@ -9,6 +9,7 @@ const spanishRoutes = [
   { path: 'learn/measurement-errors/', heading: 'Mediciones con incertidumbres' },
   { path: 'learn/root-file-inspection/', heading: 'Abre e inspecciona un archivo ROOT' },
   { path: 'learn/tree-branch-entry/', heading: 'Árbol, rama, entrada' },
+  { path: 'learn/event-collections/', heading: 'Colecciones dentro de eventos' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -47,6 +48,9 @@ test('language choice persists across every current learner-facing route', async
   await page.goto('learn/tree-branch-entry/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende cómo un TTree organiza valores de ramas a través de entradas y usa con cuidado la analogía dataset/columna/registro.');
 
+  await page.goto('learn/event-collections/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende por qué una entrada de TTree puede contener colecciones de tamaño variable de objetos reconstruidos mientras las ramas escalares mantienen un valor por entrada.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
@@ -82,6 +86,11 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('Lees otro campo de la misma entrada').check();
   await page.locator('#b2-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
   await expect(page.locator('#b2-prediction rq-feedback')).toContainText('Misma entrada, otro campo');
+
+  await page.goto('learn/event-collections/');
+  await page.getByLabel('photon_pt tiene tres valores dentro de esa entrada; event_weight sigue siendo un escalar').check();
+  await page.locator('#b3-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#b3-prediction rq-feedback')).toContainText('Una entrada, varios objetos');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
