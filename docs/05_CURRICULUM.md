@@ -96,8 +96,8 @@ Goal: make ROOT's data model tangible enough that an unfamiliar file is inspecta
 | --- | --- | --- | --- | --- |
 | B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | **LIVE** — learner-facing lesson turns a synthetic ROOT-file inventory into an inspect → identify → `Get` workflow, with `rootls` as the shell equivalent. |
 | B2 | **Tree, branch, entry** | Map `TTree → branch → entry value` to dataset/column/row mental models without claiming they are identical implementations. | `TTree`, branches, entries | **LIVE** — learner-facing lesson promotes the existing tree-browser probe, adds entry selection as an independent coordinate, and maps `TTree ≈ dataset`, branch ≈ column, entry ≈ row-like record with an explicit analogy caveat. |
-| B3 | **Collections inside events** | Recognize scalar vs vector-like branches and explain why one event can contain many jets/photons/tracks. | vector-like branch values; bridge to `RVec` | **NEXT** — reuse the vector-valued photon branches already exposed by B2 rather than inventing a second dataset. |
-| B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | PLANNED |
+| B3 | **Collections inside events** | Recognize scalar vs vector-like branches and explain why one event can contain many jets/photons/tracks. | vector-like branch values; bridge to `RVec` | **LIVE** — learner-facing lesson reuses B2's synthetic `photon_pt` and `event_weight` branches to separate entry count from collection multiplicity, then bridges supported collection columns to `ROOT::RVec`. |
+| B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | **NEXT** |
 
 Observable unit proof: give the learner a small unfamiliar ROOT file and a question; they can locate the relevant tree/branches and explain what one entry represents.
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **B3 — Collections inside events**.
+The default next lesson on this roadmap is **B4 — Use ROOT without memorizing ROOT**.

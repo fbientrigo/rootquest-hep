@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout title="Collections inside events — ROOT Quest" description="Learn why one ROOT tree entry can contain a variable-length collection of reconstructed objects while scalar branches still store one value per entry.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad B · Lección B3">Unit B · Lesson B3</p>
+    <h1 data-es="Colecciones dentro de eventos">Collections inside events</h1>
+    <p class="lede" data-es="Una entrada puede representar un evento y aun así contener varios fotones, jets o tracks. Separa el número de entradas del número de objetos guardados dentro de una rama-colección.">One entry can represent an event-like record and still contain several photons, jets, or tracks. Separate the number of entries from the number of objects stored inside a collection branch.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="b3-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="b3-context-heading" data-es="La misma entrada puede tener ramas con formas distintas">The same entry can hold branches with different shapes</h2>
+      <p data-es="Reutilizamos exactamente las ramas sintéticas de B2. event_weight es escalar: un valor por entrada. photon_pt es vector-like: una lista de valores cuyo largo puede cambiar entre entradas porque distintos eventos pueden contener distinto número de fotones reconstruidos.">We reuse exactly the synthetic branches from B2. event_weight is scalar: one value per entry. photon_pt is vector-like: a list whose length can change between entries because different events can contain different numbers of reconstructed photons.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b3-manipulate-heading">
+      <p class="stage-kicker" data-es="Manipula → observa">Manipulate → observe</p>
+      <h2 id="b3-manipulate-heading" data-es="Cambia de entrada y cuenta dos cosas distintas">Move between entries and count two different things</h2>
+      <label for="b3-entry"><span data-es="Entrada">Entry</span>: <output id="b3-entry-value" for="b3-entry">0</output></label>
+      <input id="b3-entry" type="range" min="0" max="2" step="1" value="0" />
+
+      <div class="shape-grid">
+        <article class="shape-card">
+          <p class="detail-label" data-es="Rama-colección">Collection branch</p>
+          <h3>photon_pt · vector&lt;float&gt;</h3>
+          <p><strong id="b3-photon-count">2</strong> <span data-es="valores en esta entrada">values in this entry</span></p>
+          <ul id="b3-photon-values" aria-label="photon_pt values in the selected entry" data-es-aria-label="valores de photon_pt en la entrada seleccionada">
+            <li>photon 1: 42.1 GeV</li><li>photon 2: 31.8 GeV</li>
+          </ul>
+        </article>
+        <article class="shape-card">
+          <p class="detail-label" data-es="Rama escalar">Scalar branch</p>
+          <h3>event_weight · float</h3>
+          <p><strong id="b3-event-weight">1</strong> <span data-es="valor en esta entrada">value in this entry</span></p>
+          <p class="muted" data-es="Moverte a otra entrada cambia el valor, pero esta rama sigue teniendo un solo escalar por entrada.">Moving to another entry can change the value, but this branch still has one scalar per entry.</p>
+        </article>
+      </div>
+      <p id="b3-summary" class="summary">Entry 0 is still one entry: photon_pt contains 2 values inside it, while event_weight contains one scalar.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b3-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="b3-predict-heading" data-es="Una entrada nueva contiene tres fotones">A new entry contains three photons</h2>
+      <rq-predict id="b3-prediction" answer-name="multiplicity-prediction">
+        <form><fieldset>
+          <legend data-es="Si una sola entrada contiene tres fotones reconstruidos, ¿qué estructura esperas?">If one entry contains three reconstructed photons, which structure do you expect?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="multiplicity-prediction" value="three-values-one-entry" required><span data-es="photon_pt tiene tres valores dentro de esa entrada; event_weight sigue siendo un escalar">photon_pt has three values inside that entry; event_weight is still one scalar</span></label>
+            <label><input type="radio" name="multiplicity-prediction" value="three-entries"><span data-es="ROOT debe convertir esos tres fotones en tres entradas">ROOT must turn those three photons into three entries</span></label>
+            <label><input type="radio" name="multiplicity-prediction" value="three-weights"><span data-es="event_weight también debe contener tres valores">event_weight must also contain three values</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b3-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="b3-code-heading" data-es="RDataFrame expone las colecciones como RVec">RDataFrame exposes collections as RVec</h2>
+      <p data-es="ROOT documenta que RDataFrame lee arrays, std::vector y otras colecciones compatibles como ROOT::RVec. Por eso una columna como photon_pt puede tener distinto número de elementos en cada evento y aun así seguir siendo una sola columna del dataset.">ROOT documents that RDataFrame reads arrays, std::vector, and other supported collections as ROOT::RVec. That is why a column such as photon_pt can have a different number of elements in each event while still remaining one dataset column.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code id="b3-code">df = ROOT.RDataFrame("Events", "events.root")
+with_counts = df.Define("n_photons", "photon_pt.size()")</code></pre></div>
+      <p class="technical-note" data-es="RVec se comporta de forma similar a std::vector y está diseñado para operar sobre colecciones de valores. Aquí sólo usamos size() para conectar la intuición de multiplicidad con la representación de ROOT; las operaciones vectorizadas llegan más adelante.">RVec is std::vector-like and is designed for operations on collections of values. Here we only use size() to connect multiplicity intuition to ROOT's representation; vectorized operations come later.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b3-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="b3-transfer-heading" data-es="Lee otra colección sin contar eventos de más">Read another collection without inventing extra events</h2>
+      <rq-predict id="b3-transfer" answer-name="collection-transfer">
+        <form><fieldset>
+          <legend data-es="En una entrada ves jet_pt = [81, 44, 23] y run_number = 310000. ¿Qué significa?">In one entry you see jet_pt = [81, 44, 23] and run_number = 310000. What does it mean?</legend>
+          <div class="rq-options">
+            <label><input type="radio" name="collection-transfer" value="one-event-three-jets" required><span data-es="Una entrada con tres valores de jets y un run_number escalar">One entry with three jet values and one scalar run_number</span></label>
+            <label><input type="radio" name="collection-transfer" value="three-events"><span data-es="Tres entradas distintas porque jet_pt tiene tres números">Three different entries because jet_pt has three numbers</span></label>
+            <label><input type="radio" name="collection-transfer" value="three-runs"><span data-es="Tres runs distintos dentro de la misma entrada">Three different runs inside the same entry</span></label>
+          </div>
+        </fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Colecciones dentro de eventos — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende por qué una entrada de TTree puede contener colecciones de tamaño variable de objetos reconstruidos mientras las ramas escalares mantienen un valor por entrada.');
+  }
+</script>
+<script>import '../../lessons/event-collections/controller';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker,.detail-label{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .6rem}#b3-entry{width:100%;min-height:2.75rem;accent-color:var(--accent)}.shape-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.shape-card{min-width:0;padding:1rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.shape-card h3{overflow-wrap:anywhere}.shape-card ul{margin-bottom:0;padding-left:1.25rem}.summary,.technical-note,.muted{color:var(--muted)}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:42rem){.shape-grid{grid-template-columns:1fr}}
+</style>
