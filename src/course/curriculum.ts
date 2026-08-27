@@ -15,8 +15,8 @@ export const courseUnits: CourseUnit[] = [
   { id: 'B', title: 'Open the ROOT file', goal: 'Make ROOT files, trees, branches and entries inspectable rather than opaque.', lessons: [
     { id: 'B1', title: 'Open and inspect a ROOT file', status: 'live', href: 'learn/root-file-inspection/' },
     { id: 'B2', title: 'Tree, branch, entry', status: 'live', href: 'learn/tree-branch-entry/' },
-    { id: 'B3', title: 'Collections inside events', status: 'next' },
-    { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'planned' },
+    { id: 'B3', title: 'Collections inside events', status: 'live', href: 'learn/event-collections/' },
+    { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'next' },
   ]},
   { id: 'C', title: 'Analysis as a data pipeline', goal: 'Build fluent everyday analysis around RDataFrame transformations and actions.', lessons: [
     { id: 'C1', title: 'A pipeline transforms a dataset', status: 'planned' }, { id: 'C2', title: 'Filter: keep rows for a reason', status: 'planned' }, { id: 'C3', title: 'Define: create an observable', status: 'planned' }, { id: 'C4', title: 'Actions summarize the sample', status: 'planned' }, { id: 'C5', title: 'Cutflow: where did the events go?', status: 'planned' }, { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
