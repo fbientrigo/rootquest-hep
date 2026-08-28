@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Use ROOT without memorizing ROOT — ROOT Quest"
+  description="Learn how to turn an analysis intention into the right ROOT class, method, signature and example using the official reference, tutorials and local ROOT help."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad B · Lección B4">Unit B · Lesson B4</p>
+    <h1 data-es="Usa ROOT sin memorizar ROOT">Use ROOT without memorizing ROOT</h1>
+    <p class="lede" data-es="No necesitas recordar toda la API. Aprende un flujo repetible: nombra la intención, encuentra la clase adecuada, confirma el método y su firma, y usa un ejemplo oficial para escribir la llamada mínima.">You do not need to remember the whole API. Learn a repeatable workflow: name the intention, find the relevant class, confirm the method and its signature, then use an official example to write the smallest call.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="b4-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="b4-context-heading" data-es="Empieza por lo que quieres hacer, no por un nombre de método">Start from what you want to do, not from a method name</h2>
+      <p data-es="Tienes un RDataFrame llamado df y quieres conservar sólo las entradas con pt > 25. No recuerdas si la operación se llama Select, Cut o Filter. Esa falta de memoria no es un bloqueo: la intención ya te dice qué documentación necesitas explorar.">You have an RDataFrame named df and want to keep only entries with pt > 25. You do not remember whether the operation is called Select, Cut, or Filter. That memory gap is not a blocker: the intention already tells you what documentation to inspect.</p>
+      <div class="intent-card" aria-label="Analysis intention" data-es-aria-label="Intención de análisis">
+        <span data-es="Tengo">I have</span> <code>ROOT.RDataFrame</code>
+        <span aria-hidden="true">→</span>
+        <strong data-es="quiero conservar filas que cumplan una condición">I want to keep rows that satisfy a condition</strong>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b4-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="b4-predict-heading" data-es="¿Dónde mirarías primero?">Where would you look first?</h2>
+      <rq-predict id="b4-source-choice" answer-name="source-choice">
+        <form>
+          <fieldset>
+            <legend data-es="Ya conoces la clase RDataFrame y necesitas saber qué operación conserva filas. ¿Cuál es el punto de partida con mayor señal?">You already know the RDataFrame class and need the operation that keeps rows. Which starting point has the highest signal?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="source-choice" value="rdf-reference" required><span data-es="Referencia oficial de ROOT::RDataFrame: lista de métodos y firmas">Official ROOT::RDataFrame reference: method list and signatures</span></label>
+              <label><input type="radio" name="source-choice" value="tfile-reference"><span data-es="Referencia de TFile: abrir y recuperar objetos de archivos">TFile reference: opening files and retrieving stored objects</span></label>
+              <label><input type="radio" name="source-choice" value="histogram-tutorial"><span data-es="Tutorial de histogramas: ejemplos de TH1 y binning">Histogram tutorial: TH1 and binning examples</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Confirmar elección">Commit choice</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b4-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="b4-observe-heading" data-es="Lee la referencia como evidencia, no como un libro">Read the reference as evidence, not as a textbook</h2>
+      <p data-es="En la referencia de RDataFrame, la sección Transformations muestra Filter. El overload de expresión string dice que agrega un filtro al grafo, recibe una expresión C++ y devuelve el nodo filtrado. El ejemplo mínimo confirma la forma de uso.">In the RDataFrame reference, the Transformations section exposes Filter. The string-expression overload says it appends a filter to the graph, takes a C++ expression, and returns the filtered node. The minimal example confirms the usage shape.</p>
+
+      <dl class="evidence-grid">
+        <div><dt data-es="Clase">Class</dt><dd><code>ROOT::RDataFrame</code></dd></div>
+        <div><dt data-es="Método">Method</dt><dd><code>Filter</code></dd></div>
+        <div><dt data-es="Firma relevante">Relevant signature</dt><dd><code>Filter(std::string_view expression, std::string_view name = "")</code></dd></div>
+        <div><dt data-es="Ejemplo mínimo">Minimal example</dt><dd><code>df.Filter("pt &gt; 25")</code></dd></div>
+      </dl>
+
+      <p class="technical-note" data-es="No necesitas entender los tipos internos del valor de retorno para usar esta operación. La pregunta práctica es: ¿acepta la información que tengo y devuelve algo que puedo seguir encadenando?">You do not need to understand the internal return type to use this operation. The practical question is: does it accept the information I have and return something I can keep chaining?</p>
+
+      <div class="doc-links" aria-label="Official ROOT documentation used in this lesson" data-es-aria-label="Documentación oficial de ROOT usada en esta lección">
+        <a href="https://root.cern.ch/doc/master/classROOT_1_1RDataFrame.html">RDataFrame reference ↗</a>
+        <a href="https://root.cern.ch/doc/master/group__Tutorials.html"><span data-es="Tutoriales de ROOT">ROOT tutorials</span> ↗</a>
+        <a href="https://root.cern.ch/manual/first_steps_with_root/"><span data-es="Primeros pasos y ayuda del prompt">First steps and prompt help</span> ↗</a>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b4-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="b4-code-heading" data-es="La documentación reduce la búsqueda a una llamada pequeña">Documentation collapses the search into one small call</h2>
+      <div class="code-card">
+        <header>PyROOT</header>
+        <pre><code>import ROOT
+
+df = ROOT.RDataFrame("Events", "events.root")
+selected = df.Filter("pt > 25")</code></pre>
+      </div>
+      <p data-es="Si estás dentro del prompt de ROOT y sólo recuerdas una clase, ROOT también documenta .help (o .?) y .Class X como herramientas de inspección local. Para flujos completos, usa los tutoriales; para verificar una API concreta, vuelve a la referencia de la clase.">If you are at the ROOT prompt and only remember a class, ROOT also documents .help (or .?) and .Class X as local inspection tools. For complete workflows, use tutorials; for an exact API check, return to the class reference.</p>
+      <div class="code-card compact">
+        <header>ROOT prompt</header>
+        <pre><code>root [0] .help
+root [1] .Class ROOT::RDataFrame</code></pre>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="b4-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="b4-transfer-heading" data-es="Ahora cambia la intención">Now change the intention</h2>
+      <rq-predict id="b4-transfer" answer-name="transfer-choice">
+        <form>
+          <fieldset>
+            <legend data-es="Después del filtro quieres saber cuántas entradas sobrevivieron. En la referencia de RDataFrame ves Count, Mean y Snapshot. ¿Qué elegirías antes de mirar un ejemplo?">After filtering, you want to know how many entries survived. In the RDataFrame reference you see Count, Mean, and Snapshot. Which would you choose before looking at an example?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="transfer-choice" value="count" required><span><code>Count()</code> — <span data-es="cuenta las entradas procesadas">counts processed entries</span></span></label>
+              <label><input type="radio" name="transfer-choice" value="mean"><span><code>Mean("pt")</code> — <span data-es="resume una columna con su media">summarizes a column with its mean</span></span></label>
+              <label><input type="radio" name="transfer-choice" value="snapshot"><span><code>Snapshot(...)</code> — <span data-es="guarda columnas seleccionadas en disco">writes selected columns to disk</span></span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+      <p class="transfer-rule" data-es="Regla reutilizable: intención → clase → método → firma → ejemplo. Memorizar viene después, por repetición.">Reusable rule: intention → class → method → signature → example. Memorization comes later, through repetition.</p>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Usa ROOT sin memorizar ROOT — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende a convertir una intención de análisis en la clase, método, firma y ejemplo correctos usando la referencia oficial, tutoriales y ayuda local de ROOT.');
+  }
+</script>
+
+<script>
+  const spanish = () => document.documentElement.dataset.language === 'es';
+
+  function wirePrediction(id: string, correctValue: string, messages: { successEn: string; successEs: string; retryEn: string; retryEs: string }) {
+    const host = document.getElementById(id);
+    const form = host?.querySelector('form');
+    const feedback = host?.querySelector('rq-feedback');
+    if (!(form instanceof HTMLFormElement) || !(feedback instanceof HTMLElement)) return;
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const selected = new FormData(form).get(form.querySelector('input[type="radio"]')?.getAttribute('name') ?? '');
+      const correct = selected === correctValue;
+      feedback.hidden = false;
+      feedback.setAttribute('kind', correct ? 'success' : 'misconception');
+      feedback.textContent = spanish()
+        ? (correct ? messages.successEs : messages.retryEs)
+        : (correct ? messages.successEn : messages.retryEn);
+    });
+  }
+
+  wirePrediction('b4-source-choice', 'rdf-reference', {
+    successEn: 'Good route. You already know the class, so its reference gives the shortest path to the method list, signatures and examples.',
+    successEs: 'Buena ruta. Ya conoces la clase, así que su referencia da el camino más corto hacia métodos, firmas y ejemplos.',
+    retryEn: 'That source is official, but it answers a different question. Start from the class that owns the analysis object you already have: RDataFrame.',
+    retryEs: 'Esa fuente es oficial, pero responde otra pregunta. Empieza por la clase del objeto de análisis que ya tienes: RDataFrame.',
+  });
+
+  wirePrediction('b4-transfer', 'count', {
+    successEn: 'Transfer complete. Count matches the intention directly: measure how many entries reach this point in the pipeline.',
+    successEs: 'Transferencia completa. Count coincide directamente con la intención: medir cuántas entradas llegan a este punto del pipeline.',
+    retryEn: 'Match the verb in the question to the documented operation. You want the number of surviving entries, not a column average or a persisted dataset.',
+    retryEs: 'Conecta el verbo de la pregunta con la operación documentada. Quieres el número de entradas sobrevivientes, no la media de una columna ni guardar un dataset.',
+  });
+</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.intent-card{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:1rem 0}.evidence-grid>div{min-width:0;padding:.9rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.evidence-grid dt{color:var(--muted);font-size:.8rem;font-weight:800;text-transform:uppercase}.evidence-grid dd{margin:.35rem 0 0;overflow-wrap:anywhere}.evidence-grid code{white-space:normal}.technical-note,.transfer-rule{color:var(--muted)}.doc-links{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}.doc-links a{display:inline-flex;min-height:2.75rem;align-items:center;padding:.6rem .8rem;border:1px solid var(--border);border-radius:.55rem;background:var(--surface-soft);font-weight:700;text-decoration:none}.code-card{overflow:hidden;margin-top:1rem;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.code-card.compact{max-width:34rem}@media(max-width:42rem){.evidence-grid{grid-template-columns:1fr}.doc-links{flex-direction:column}.doc-links a{width:100%}}
+</style>
