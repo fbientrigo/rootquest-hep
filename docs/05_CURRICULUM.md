@@ -97,7 +97,7 @@ Goal: make ROOT's data model tangible enough that an unfamiliar file is inspecta
 | B1 | **Open and inspect a ROOT file** | Open an unfamiliar file, list its contents and retrieve a named object. | `TFile.Open`, `ls`, `Get`, `rootls` | **LIVE** — learner-facing lesson turns a synthetic ROOT-file inventory into an inspect → identify → `Get` workflow, with `rootls` as the shell equivalent. |
 | B2 | **Tree, branch, entry** | Map `TTree → branch → entry value` to dataset/column/row mental models without claiming they are identical implementations. | `TTree`, branches, entries | **LIVE** — learner-facing lesson promotes the existing tree-browser probe, adds entry selection as an independent coordinate, and maps `TTree ≈ dataset`, branch ≈ column, entry ≈ row-like record with an explicit analogy caveat. |
 | B3 | **Collections inside events** | Recognize scalar vs vector-like branches and explain why one event can contain many jets/photons/tracks. | vector-like branch values; bridge to `RVec` | **LIVE** — learner-facing lesson reuses B2's synthetic `photon_pt` and `event_weight` branches to separate entry count from collection multiplicity, then bridges supported collection columns to `ROOT::RVec`. |
-| B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | **NEXT** |
+| B4 | **Use ROOT without memorizing ROOT** | Find a class, method, signature and example from ROOT's own help/documentation and choose the relevant operation. | PyROOT import, ROOT prompt/help, class reference, tutorials | **LIVE** — learner-facing lesson starts from an analysis intention, routes to the relevant class reference, extracts `Filter` method/signature/example evidence, introduces `.help`/`.Class` and tutorials as complementary sources, then transfers the lookup strategy to `Count`. |
 
 Observable unit proof: give the learner a small unfamiliar ROOT file and a question; they can locate the relevant tree/branches and explain what one entry represents.
 
@@ -109,7 +109,7 @@ Goal: make modern everyday analysis fluent around `RDataFrame`, with syntax foll
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| C1 | **A pipeline transforms a dataset** | Trace which events enter, are removed and survive successive operations. | `RDataFrame` mental model | **PROBE** — filtering trace exists in `lab/learning-engine`. |
+| C1 | **A pipeline transforms a dataset** | Trace which events enter, are removed and survive successive operations. | `RDataFrame` mental model | **NEXT** — promote the existing filtering trace from `lab/learning-engine` rather than rebuilding it. |
 | C2 | **Filter: keep rows for a reason** | Translate a stated selection criterion into a filter and predict its effect before applying it. | `Filter` | **DRILL** — `practice/code` and Higgs Hunt contain working examples. |
 | C3 | **Define: create an observable** | Create a derived quantity without confusing transformation with selection. | `Define` | **DRILL** — `practice/code` contains a working example. |
 | C4 | **Actions summarize the sample** | Choose an action that answers a question about the current dataframe. | `Histo1D`, `Histo2D`, `Count`, `Mean`, `Sum`, `Min`, `Max` | **DRILL** for `Histo1D`; remaining actions planned. |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **B4 — Use ROOT without memorizing ROOT**.
+The default next lesson on this roadmap is **C1 — A pipeline transforms a dataset**.

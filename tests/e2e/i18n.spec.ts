@@ -10,6 +10,7 @@ const spanishRoutes = [
   { path: 'learn/root-file-inspection/', heading: 'Abre e inspecciona un archivo ROOT' },
   { path: 'learn/tree-branch-entry/', heading: 'Árbol, rama, entrada' },
   { path: 'learn/event-collections/', heading: 'Colecciones dentro de eventos' },
+  { path: 'learn/root-documentation/', heading: 'Usa ROOT sin memorizar ROOT' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -51,6 +52,9 @@ test('language choice persists across every current learner-facing route', async
   await page.goto('learn/event-collections/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende por qué una entrada de TTree puede contener colecciones de tamaño variable de objetos reconstruidos mientras las ramas escalares mantienen un valor por entrada.');
 
+  await page.goto('learn/root-documentation/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende a convertir una intención de análisis en la clase, método, firma y ejemplo correctos usando la referencia oficial, tutoriales y ayuda local de ROOT.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
@@ -91,6 +95,14 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('photon_pt tiene tres valores dentro de esa entrada; event_weight sigue siendo un escalar').check();
   await page.locator('#b3-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
   await expect(page.locator('#b3-prediction rq-feedback')).toContainText('Una entrada, varios objetos');
+
+  await page.goto('learn/root-documentation/');
+  await page.getByLabel('Referencia oficial de ROOT::RDataFrame: lista de métodos y firmas').check();
+  await page.locator('#b4-source-choice').getByRole('button', { name: 'Confirmar elección' }).click();
+  await expect(page.locator('#b4-source-choice rq-feedback')).toContainText('Buena ruta');
+  await page.getByLabel('Count() — cuenta las entradas procesadas').check();
+  await page.locator('#b4-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#b4-transfer rq-feedback')).toContainText('Transferencia completa');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');

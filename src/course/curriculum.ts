@@ -16,10 +16,10 @@ export const courseUnits: CourseUnit[] = [
     { id: 'B1', title: 'Open and inspect a ROOT file', status: 'live', href: 'learn/root-file-inspection/' },
     { id: 'B2', title: 'Tree, branch, entry', status: 'live', href: 'learn/tree-branch-entry/' },
     { id: 'B3', title: 'Collections inside events', status: 'live', href: 'learn/event-collections/' },
-    { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'next' },
+    { id: 'B4', title: 'Use ROOT without memorizing ROOT', status: 'live', href: 'learn/root-documentation/' },
   ]},
   { id: 'C', title: 'Analysis as a data pipeline', goal: 'Build fluent everyday analysis around RDataFrame transformations and actions.', lessons: [
-    { id: 'C1', title: 'A pipeline transforms a dataset', status: 'planned' }, { id: 'C2', title: 'Filter: keep rows for a reason', status: 'planned' }, { id: 'C3', title: 'Define: create an observable', status: 'planned' }, { id: 'C4', title: 'Actions summarize the sample', status: 'planned' }, { id: 'C5', title: 'Cutflow: where did the events go?', status: 'planned' }, { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
+    { id: 'C1', title: 'A pipeline transforms a dataset', status: 'next' }, { id: 'C2', title: 'Filter: keep rows for a reason', status: 'planned' }, { id: 'C3', title: 'Define: create an observable', status: 'planned' }, { id: 'C4', title: 'Actions summarize the sample', status: 'planned' }, { id: 'C5', title: 'Cutflow: where did the events go?', status: 'planned' }, { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
   ]},
   { id: 'D', title: 'Events contain physics objects', goal: 'Connect particle collections to the kinematics used in introductory HEP analysis.', lessons: [
     { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'planned' }, { id: 'D2', title: 'Select objects, then events', status: 'planned' }, { id: 'D3', title: 'Work with collections', status: 'planned' }, { id: 'D4', title: 'Angular separation', status: 'planned' }, { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' }, { id: 'D6', title: 'Build a candidate', status: 'planned' },
