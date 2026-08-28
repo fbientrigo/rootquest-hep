@@ -13,7 +13,7 @@ test('B4 turns an analysis intention into an official ROOT API lookup', async ({
   await expect(page.locator('#b4-source-choice rq-feedback')).toContainText('Good route');
 
   await expect(page.getByText('Filter(std::string_view expression, std::string_view name = "")')).toBeVisible();
-  await expect(page.getByText('df.Filter("pt > 25")')).toBeVisible();
+  await expect(page.getByText('df.Filter("pt > 25")', { exact: true })).toBeVisible();
 
   await page.getByLabel('Count() — counts processed entries').check();
   await page.locator('#b4-transfer').getByRole('button', { name: 'Check understanding' }).click();
