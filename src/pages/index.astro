@@ -6,7 +6,7 @@ const higgsHref = `${import.meta.env.BASE_URL}learn/higgs-hunt/`;
 const courseHref = `${import.meta.env.BASE_URL}course/`;
 const practiceBase = `${import.meta.env.BASE_URL}practice/`;
 const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
-const currentUnit = courseUnits[0];
+const currentUnit = courseUnits.find((unit) => unit.lessons.some((lesson) => lesson.id === nextLesson?.id)) ?? courseUnits[0];
 
 const doors = [
   {
@@ -405,6 +405,8 @@ const researchBasis = [
     background: transparent;
     color: var(--text);
     font: inherit;
+    font-size: 0.78rem;
+    font-weight: 750;
     cursor: pointer;
   }
 
