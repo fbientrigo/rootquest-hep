@@ -60,9 +60,12 @@ function render() {
     item.append(name, details);
     return item;
   }));
-  summary.textContent = spanish()
-    ? `${frame.entered.length} entran; ${frame.removed.length} se eliminan aquí; ${frame.remaining.length} permanecen.`
-    : `${frame.entered.length} enter; ${frame.removed.length} are removed here; ${frame.remaining.length} remain.`;
+  if (spanish()) {
+    summary.textContent = `${frame.entered.length} entran; ${frame.removed.length} se eliminan aquí; ${frame.remaining.length} permanecen.`;
+  } else {
+    const removedVerb = frame.removed.length === 1 ? 'is' : 'are';
+    summary.textContent = `${frame.entered.length} enter; ${frame.removed.length} ${removedVerb} removed here; ${frame.remaining.length} remain.`;
+  }
 }
 
 prediction.addEventListener('rq-prediction-commit', (rawEvent) => {
