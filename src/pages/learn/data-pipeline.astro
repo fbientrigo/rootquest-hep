@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import { PIPELINE_EVENTS } from '../../lessons/data-pipeline/model.ts';
+---
+
+<BaseLayout
+  title="A pipeline transforms a dataset — ROOT Quest"
+  description="Trace events through successive RDataFrame filters and see each transformation receive the survivors of the previous step."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad C · Lección C1">Unit C · Lesson C1</p>
+    <h1 data-es="Un pipeline transforma un conjunto de datos">A pipeline transforms a dataset</h1>
+    <p class="lede" data-es="Un pipeline no vuelve a empezar desde los datos originales en cada paso. Sigue seis eventos a través de dos filtros y observa cómo cada transformación recibe sólo lo que sobrevivió antes.">A pipeline does not restart from the original data at every step. Follow six events through two filters and see how each transformation receives only what survived before.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="c1-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="c1-context-heading" data-es="Seis eventos entran; cada filtro transforma la muestra">Six events enter; each filter transforms the sample</h2>
+      <p data-es="Los datos son sintéticos y sólo sirven para hacer visible la causalidad del pipeline.">The data are synthetic and exist only to make the pipeline causality visible.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th scope="col" data-es="Evento">Event</th><th scope="col" data-es="Fotones">Photons</th><th scope="col">leading pT</th><th scope="col" data-es="Masa">Mass</th></tr></thead>
+          <tbody>{PIPELINE_EVENTS.map((event) => <tr><th scope="row">{event.id}</th><td>{event.photonCount}</td><td>{event.leadingPhotonPt} GeV</td><td>{event.mass} GeV</td></tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c1-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="c1-predict-heading" data-es="Comprométete antes de ejecutar el primer filtro">Commit before running the first filter</h2>
+      <rq-predict id="c1-prediction" answer-name="prediction">
+        <form>
+          <fieldset>
+            <legend data-es="Si el primer paso conserva sólo eventos con exactamente dos fotones, ¿qué eventos pasan al siguiente paso?">If the first step keeps only events with exactly two photons, which events reach the next step?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="prediction" value="e1-e3-e4-e6" required><span>E1, E3, E4, E6</span></label>
+              <label><input type="radio" name="prediction" value="e1-e4-e6"><span>E1, E4, E6</span></label>
+              <label><input type="radio" name="prediction" value="e2-e5"><span>E2, E5</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c1-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="c1-observe-heading" data-es="Avanza por el pipeline">Step through the pipeline</h2>
+      <rq-stepper id="c1-stepper" aria-label="Pipeline steps" data-es-aria-label="Pasos del pipeline">
+        <div class="rq-stepper-controls">
+          <button type="button" data-stepper-action="previous" data-es="Anterior">Previous</button>
+          <output data-stepper-status>Step 1 of 3: Input</output>
+          <button type="button" data-stepper-action="next" data-es="Siguiente">Next</button>
+          <button type="button" data-stepper-action="reset" data-es="Reiniciar">Reset</button>
+        </div>
+      </rq-stepper>
+      <div class="pipeline-stage" aria-describedby="c1-summary">
+        <h3 id="c1-frame-title">Input</h3>
+        <p id="c1-rule">No filter has run yet.</p>
+        <ul id="c1-events" class="event-cards"></ul>
+        <p id="c1-summary">6 events enter; 0 are removed here; 6 remain.</p>
+      </div>
+      <rq-feedback id="c1-feedback"><p data-es="Predice primero y luego ejecuta el pipeline paso a paso.">Predict first, then run the pipeline one step at a time.</p></rq-feedback>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c1-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="c1-code-heading" data-es="RDataFrame expresa la misma cadena">RDataFrame expresses the same chain</h2>
+      <p data-es="Cada Filter produce un nuevo nodo lógico. El segundo filtro actúa sobre las entradas que pasaron el primero; no sobre una copia fresca de los seis eventos.">Each Filter produces a new logical node. The second filter acts on entries that passed the first one, not on a fresh copy of all six events.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code>df = ROOT.RDataFrame("Events", "events.root")
+
+two_photons = df.Filter("photonCount == 2")
+hard_photons = two_photons.Filter("leadingPhotonPt > 35")</code></pre></div>
+      <p class="technical-note" data-es="ROOT evalúa los filtros encadenados en orden durante el event loop; una entrada descartada por un filtro no continúa por esa rama del grafo.">ROOT evaluates chained filters in order during the event loop; an entry rejected by a filter does not continue down that branch of the graph.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c1-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="c1-transfer-heading" data-es="¿Qué conjunto ve el segundo filtro?">Which dataset does the second filter see?</h2>
+      <rq-predict id="c1-transfer" answer-name="transfer">
+        <form>
+          <fieldset>
+            <legend data-es="Después de photonCount == 2 sobreviven E1, E3, E4 y E6. ¿Sobre qué eventos se evalúa leadingPhotonPt > 35?">After photonCount == 2 leaves E1, E3, E4 and E6, which events are evaluated by leadingPhotonPt > 35?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="transfer" value="survivors" required><span data-es="Sólo E1, E3, E4 y E6">Only E1, E3, E4 and E6</span></label>
+              <label><input type="radio" name="transfer" value="all"><span data-es="Los seis eventos originales otra vez">All six original events again</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Un pipeline transforma un conjunto de datos — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Sigue eventos a través de filtros sucesivos de RDataFrame y observa cómo cada transformación recibe los sobrevivientes del paso anterior.');
+  }
+</script>
+<script>import '../../lessons/data-pipeline/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.65rem;border-bottom:1px solid var(--border);text-align:start}.pipeline-stage{margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.event-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.6rem;padding:0;list-style:none}.event-card{display:grid;gap:.25rem;padding:.75rem;border:1px solid var(--border);border-radius:.55rem}.event-card span{color:var(--muted);font-size:.86rem}.event-card[data-status='removed-now']{border-style:dashed}.event-card[data-status='removed-before']{opacity:.55}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.technical-note{color:var(--muted)}
+</style>
