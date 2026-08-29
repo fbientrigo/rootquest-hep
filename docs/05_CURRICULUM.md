@@ -109,8 +109,8 @@ Goal: make modern everyday analysis fluent around `RDataFrame`, with syntax foll
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| C1 | **A pipeline transforms a dataset** | Trace which events enter, are removed and survive successive operations. | `RDataFrame` mental model | **NEXT** — promote the existing filtering trace from `lab/learning-engine` rather than rebuilding it. |
-| C2 | **Filter: keep rows for a reason** | Translate a stated selection criterion into a filter and predict its effect before applying it. | `Filter` | **DRILL** — `practice/code` and Higgs Hunt contain working examples. |
+| C1 | **A pipeline transforms a dataset** | Trace which events enter, are removed and survive successive operations. | `RDataFrame` mental model | **LIVE** — learner-facing lesson promotes the existing filtering trace: six synthetic events pass through two sequential filters, with prediction before reveal and an explicit `RDataFrame` chain showing that the second filter receives only first-filter survivors. |
+| C2 | **Filter: keep rows for a reason** | Translate a stated selection criterion into a filter and predict its effect before applying it. | `Filter` | **NEXT** — promote the existing `practice/code` and Higgs Hunt Filter drills into a full curricular lesson rather than rebuilding the mechanic. |
 | C3 | **Define: create an observable** | Create a derived quantity without confusing transformation with selection. | `Define` | **DRILL** — `practice/code` contains a working example. |
 | C4 | **Actions summarize the sample** | Choose an action that answers a question about the current dataframe. | `Histo1D`, `Histo2D`, `Count`, `Mean`, `Sum`, `Min`, `Max` | **DRILL** for `Histo1D`; remaining actions planned. |
 | C5 | **Cutflow: where did the events go?** | Diagnose a selection pipeline by measuring survival at each stage rather than guessing from the final plot. | named `Filter`s, `Report` | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **C1 — A pipeline transforms a dataset**.
+The default next lesson on this roadmap is **C2 — Filter: keep rows for a reason**.
