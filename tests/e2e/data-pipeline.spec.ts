@@ -13,7 +13,7 @@ test('C1 requires prediction then traces survivors through sequential filters', 
   await page.getByRole('button', { name: 'Next' }).click();
   await expect(page.locator('#c1-summary')).toHaveText('6 enter; 2 are removed here; 4 remain.');
   await page.getByRole('button', { name: 'Next' }).click();
-  await expect(page.locator('#c1-summary')).toHaveText('4 enter; 1 are removed here; 3 remain.');
+  await expect(page.locator('#c1-summary')).toHaveText('4 enter; 1 is removed here; 3 remain.');
   await expect(page.locator('#c1-events [data-status="removed-before"] strong')).toContainText(['E2', 'E5']);
   await page.getByLabel('Only E1, E3, E4 and E6').check();
   await page.locator('#c1-transfer').getByRole('button', { name: 'Check understanding' }).click();
