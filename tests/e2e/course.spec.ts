@@ -17,8 +17,9 @@ test('course exposes available lessons and the next curriculum step', async ({ p
   await expect(page.locator('a[href$="learn/tree-branch-entry/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/event-collections/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/root-documentation/"]')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'C1 · A pipeline transforms a dataset' })).toBeVisible();
-  await expect(page.getByText('8 / 30')).toBeVisible();
+  await expect(page.locator('a[href$="learn/data-pipeline/"]')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'C2 · Filter: keep rows for a reason' })).toBeVisible();
+  await expect(page.getByText('9 / 30')).toBeVisible();
 });
 
 test('course has no automated WCAG A or AA violations', async ({ page }) => {
@@ -29,7 +30,7 @@ test('course has no automated WCAG A or AA violations', async ({ page }) => {
 test('course remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
-  await expect(page.locator('a[href$="learn/root-documentation/"]')).toHaveCount(1);
+  await expect(page.locator('a[href$="learn/data-pipeline/"]')).toHaveCount(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -38,6 +39,6 @@ test('home exposes the current curriculum unit without requiring hidden URLs', a
   await page.goto('');
   await expect(page.getByRole('link', { name: 'View the course →' })).toBeVisible();
   await expect(page.getByText('Unit C')).toBeVisible();
-  await expect(page.getByText('Next:')).toContainText('C1 · A pipeline transforms a dataset');
+  await expect(page.getByText('Next:')).toContainText('C2 · Filter: keep rows for a reason');
   await expect(page.getByRole('link', { name: 'Course', exact: true })).toBeVisible();
 });
