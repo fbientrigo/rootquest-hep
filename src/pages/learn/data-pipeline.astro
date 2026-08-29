@@ -22,9 +22,7 @@ import { PIPELINE_EVENTS } from '../../lessons/data-pipeline/model.ts';
       <div class="table-scroll">
         <table>
           <thead><tr><th scope="col" data-es="Evento">Event</th><th scope="col" data-es="Fotones">Photons</th><th scope="col">leading pT</th><th scope="col" data-es="Masa">Mass</th></tr></thead>
-          <tbody>
-            {PIPELINE_EVENTS.map((event) => <tr><th scope="row">{event.id}</th><td>{event.photonCount}</td><td>{event.leadingPhotonPt} GeV</td><td>{event.mass} GeV</td></tr>)}
-          </tbody>
+          <tbody>{PIPELINE_EVENTS.map((event) => <tr><th scope="row">{event.id}</th><td>{event.photonCount}</td><td>{event.leadingPhotonPt} GeV</td><td>{event.mass} GeV</td></tr>)}</tbody>
         </table>
       </div>
     </section>
@@ -101,67 +99,15 @@ hard_photons = two_photons.Filter("leadingPhotonPt > 35")</code></pre></div>
 
 <script is:inline>
   if (document.documentElement.dataset.language === 'es') {
-    document.querySelectorAll('[data-es]').forEach((el) => { el.textContent = el.getAttribute('data-es'); });
-    document.querySelectorAll('[data-es-aria-label]').forEach((el) => { el.setAttribute('aria-label', el.getAttribute('data-es-aria-label')); });
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
     document.title = 'Un pipeline transforma un conjunto de datos — ROOT Quest';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute('content', 'Sigue eventos a través de filtros sucesivos de RDataFrame y observa cómo cada transformación recibe los sobrevivientes del paso anterior.');
   }
 </script>
-
-<script>
-  import { PIPELINE_EVENTS, buildPipelineFrames, evaluateFirstFilterPrediction, eventStatus } from '../../lessons/data-pipeline/model.ts';
-  const es = () => document.documentElement.dataset.language === 'es';
-  const frames = buildPipelineFrames();
-  const copy = {
-    input: { en: ['Input', 'No filter has run yet.'], es: ['Entrada', 'Todavía no se ha ejecutado ningún filtro.'] },
-    photons: { en: ['Exactly two photons', 'Keep entries where photonCount == 2.'], es: ['Exactamente dos fotones', 'Conserva entradas donde photonCount == 2.'] },
-    pt: { en: ['Leading pT > 35 GeV', 'Apply the pT filter only to the survivors of the first filter.'], es: ['pT líder > 35 GeV', 'Aplica el filtro de pT sólo a los sobrevivientes del primer filtro.'] },
-  } as const;
-  const prediction = document.getElementById('c1-prediction') as any;
-  const transfer = document.getElementById('c1-transfer') as HTMLElement | null;
-  const stepper = document.getElementById('c1-stepper') as any;
-  const title = document.getElementById('c1-frame-title')!;
-  const rule = document.getElementById('c1-rule')!;
-  const list = document.getElementById('c1-events')!;
-  const summary = document.getElementById('c1-summary')!;
-  const feedback = document.getElementById('c1-feedback') as any;
-  let step = 0;
-  let committed = false;
-
-  function render() {
-    const frame = frames[step];
-    const text = copy[frame.id][es() ? 'es' : 'en'];
-    stepper?.setPosition(step, frames.length, text[0]);
-    title.textContent = text[0]; rule.textContent = text[1];
-    list.replaceChildren(...PIPELINE_EVENTS.map((event) => {
-      const li = document.createElement('li');
-      const status = eventStatus(frame, event.id); li.className = 'event-card'; li.dataset.status = status;
-      const label = status === 'removed-now' ? (es() ? 'Eliminado en este paso' : 'Removed at this step') : status === 'removed-before' ? (es() ? 'Eliminado antes' : 'Removed earlier') : (es() ? 'Permanece' : 'Remains');
-      li.innerHTML = `<strong>${event.id}</strong><span>${label} · ${event.photonCount} photons · ${event.leadingPhotonPt} GeV</span>`;
-      return li;
-    }));
-    summary.textContent = es()
-      ? `${frame.entered.length} entran; ${frame.removed.length} se eliminan aquí; ${frame.remaining.length} permanecen.`
-      : `${frame.entered.length} enter; ${frame.removed.length} are removed here; ${frame.remaining.length} remain.`;
-  }
-
-  prediction?.addEventListener('rq-prediction-commit', (event: CustomEvent<{value:string}>) => {
-    committed = true; const result = evaluateFirstFilterPrediction(event.detail.value);
-    prediction.reveal({ kind: result.correct ? 'success' : 'misconception', heading: result.correct ? (es() ? 'Predicción correcta.' : 'Prediction supported.') : (es() ? 'Revisa el número de fotones.' : 'Check the photon counts.'), message: es() ? 'E1, E3, E4 y E6 tienen exactamente dos fotones.' : 'E1, E3, E4 and E6 each have exactly two photons.' });
-  });
-  stepper?.addEventListener('rq-step-request', (event: CustomEvent<any>) => {
-    if (event.detail.action === 'reset') { step = 0; committed = false; prediction?.resetPrediction(); render(); return; }
-    if (event.detail.action === 'next' && step === 0 && !committed) { event.preventDefault(); feedback?.show({ kind:'hint', heading: es() ? 'Predice primero.' : 'Predict first.', message: es() ? 'Compromete una predicción antes de revelar el primer filtro.' : 'Commit a prediction before revealing the first filter.' }); return; }
-    step = event.detail.requestedIndex; render();
-  });
-  transfer?.querySelector('form')?.addEventListener('submit', (event) => {
-    event.preventDefault(); const form = event.currentTarget as HTMLFormElement; const value = new FormData(form).get('transfer'); const host = transfer.querySelector('rq-feedback') as any;
-    host.hidden = false; host.show?.({ kind: value === 'survivors' ? 'success' : 'misconception', heading: value === 'survivors' ? (es() ? 'Transferencia completa.' : 'Transfer complete.') : (es() ? 'El pipeline conserva el estado.' : 'The pipeline carries state forward.'), message: es() ? 'El segundo filtro recibe sólo las entradas que sobrevivieron el primero.' : 'The second filter receives only entries that survived the first filter.' });
-  });
-  render();
-</script>
+<script>import '../../lessons/data-pipeline/controller.ts';</script>
 
 <style is:global>
-.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.65rem;border-bottom:1px solid var(--border);text-align:start}.pipeline-stage{margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.event-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.6rem;padding:0;list-style:none}.event-card{display:grid;gap:.25rem;padding:.75rem;border:1px solid var(--border);border-radius:.55rem}.event-card span{color:var(--muted);font-size:.86rem}.event-card[data-status='removed-now']{border-style:dashed}.event-card[data-status='removed-before']{opacity:.55}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.technical-note{color:var(--muted)}
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.65rem;border-bottom:1px solid var(--border);text-align:start}.pipeline-stage{margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.event-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.6rem;padding:0;list-style:none}.event-card{display:grid;gap:.25rem;padding:.75rem;border:1px solid var(--border);border-radius:.55rem}.event-card span{color:var(--muted);font-size:.86rem}.event-card[data-status='removed-now']{border-style:dashed}.event-card[data-status='removed-before']{opacity:.55}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.technical-note{color:var(--muted)}
 </style>
