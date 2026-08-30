@@ -20,8 +20,8 @@ export const courseUnits: CourseUnit[] = [
   ]},
   { id: 'C', title: 'Analysis as a data pipeline', goal: 'Build fluent everyday analysis around RDataFrame transformations and actions.', lessons: [
     { id: 'C1', title: 'A pipeline transforms a dataset', status: 'live', href: 'learn/data-pipeline/' },
-    { id: 'C2', title: 'Filter: keep rows for a reason', status: 'next' },
-    { id: 'C3', title: 'Define: create an observable', status: 'planned' },
+    { id: 'C2', title: 'Filter: keep rows for a reason', status: 'live', href: 'learn/filter-reason/' },
+    { id: 'C3', title: 'Define: create an observable', status: 'next' },
     { id: 'C4', title: 'Actions summarize the sample', status: 'planned' },
     { id: 'C5', title: 'Cutflow: where did the events go?', status: 'planned' },
     { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
