@@ -11,6 +11,8 @@ const spanishRoutes = [
   { path: 'learn/tree-branch-entry/', heading: 'Árbol, rama, entrada' },
   { path: 'learn/event-collections/', heading: 'Colecciones dentro de eventos' },
   { path: 'learn/root-documentation/', heading: 'Usa ROOT sin memorizar ROOT' },
+  { path: 'learn/data-pipeline/', heading: 'Un pipeline transforma un conjunto de datos' },
+  { path: 'learn/filter-reason/', heading: 'Filter: conserva filas por una razón' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -103,6 +105,12 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('Count() — cuenta las entradas procesadas').check();
   await page.locator('#b4-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
   await expect(page.locator('#b4-transfer rq-feedback')).toContainText('Transferencia completa');
+
+  await page.goto('learn/filter-reason/');
+  await page.getByLabel('Conservar eventos con exactamente 2 fotones').check();
+  await page.getByLabel('E1, E3, E4, E6').check();
+  await page.locator('#c2-prediction').getByRole('button', { name: 'Aplicar predicción' }).click();
+  await expect(page.locator('#c2-prediction rq-feedback')).toContainText('Predicción correcta');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
