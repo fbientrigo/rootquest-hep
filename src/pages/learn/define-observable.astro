@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import { PIPELINE_EVENTS } from '../../lessons/data-pipeline/model.ts';
+---
+
+<BaseLayout title="Define: create an observable — ROOT Quest" description="Learn how RDataFrame Define creates a derived column without selecting away rows, then distinguish transformation from filtering.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad C · Lección C3">Unit C · Lesson C3</p>
+    <h1 data-es="Define: crea un observable">Define: create an observable</h1>
+    <p class="lede" data-es="Filter decide qué filas continúan. Define hace otra cosa: calcula información nueva para las filas que ya tienes. Comprueba la diferencia antes de ver la sintaxis de ROOT.">Filter decides which rows continue. Define does something different: it computes new information for the rows you already have. Establish the difference before seeing ROOT syntax.</p>
+  </header>
+
+  <div class="lesson-flow" data-c3-root>
+    <section class="lesson-card" aria-labelledby="c3-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="c3-context-heading" data-es="Las mismas seis filas necesitan una cantidad nueva">The same six rows need a new quantity</h2>
+      <p data-es="Reutilizamos la muestra sintética de C1 y C2. Cada fila ya tiene mass y leadingPhotonPt; ahora queremos derivar otra columna sin cambiar qué eventos forman la muestra.">We reuse the synthetic sample from C1 and C2. Each row already has mass and leadingPhotonPt; now we want another column without changing which events belong to the sample.</p>
+      <div class="table-scroll"><table><thead><tr><th scope="col" data-es="Evento">Event</th><th scope="col" data-es="Masa">Mass</th><th scope="col">leading pT</th></tr></thead><tbody>{PIPELINE_EVENTS.map((event) => <tr><th scope="row">{event.id}</th><td>{event.mass} GeV</td><td>{event.leadingPhotonPt} GeV</td></tr>)}</tbody></table></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c3-manipulate-heading">
+      <p class="stage-kicker" data-es="Manipula">Manipulate</p>
+      <h2 id="c3-manipulate-heading" data-es="Elige qué información derivar">Choose what information to derive</h2>
+      <fieldset class="observable-picker">
+        <legend data-es="Añade una columna calculada a cada fila">Add one calculated column to each row</legend>
+        <label><input type="radio" name="observable" value="mass-offset" checked><span data-es="massOffset = mass − 125 GeV">massOffset = mass − 125 GeV</span></label>
+        <label><input type="radio" name="observable" value="hard-leading-flag"><span data-es="hardLeading = leadingPhotonPt > 35 GeV">hardLeading = leadingPhotonPt > 35 GeV</span></label>
+      </fieldset>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c3-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="c3-predict-heading" data-es="¿Qué ocurre con las filas?">What happens to the rows?</h2>
+      <rq-predict id="c3-prediction" answer-name="rows">
+        <form><fieldset><legend data-es="Después de crear la nueva columna con Define, ¿cuántas de las seis filas permanecen en el dataframe?">After creating the new column with Define, how many of the six rows remain in the dataframe?</legend><div class="rq-options">
+          <label><input type="radio" name="rows" value="same" required><span data-es="Las 6 filas permanecen">All 6 rows remain</span></label>
+          <label><input type="radio" name="rows" value="positive"><span data-es="Sólo permanecen las filas cuyo valor derivado es positivo o true">Only rows with a positive or true derived value remain</span></label>
+          <label><input type="radio" name="rows" value="new"><span data-es="Aparecen filas nuevas, una por cada valor calculado">New rows appear, one for each calculated value</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c3-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="c3-observe-heading" data-es="Una columna nueva, la misma muestra">One new column, the same sample</h2>
+      <p id="c3-summary" aria-live="polite" data-es="Predice primero si Define cambia el número de filas.">Predict first whether Define changes the number of rows.</p>
+      <div class="table-scroll"><table><thead><tr><th scope="col" data-es="Evento">Event</th><th scope="col" data-es="Masa">Mass</th><th scope="col">leading pT</th><th scope="col" id="c3-derived-heading">massOffset</th></tr></thead><tbody id="c3-derived-body"></tbody></table></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c3-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="c3-code-heading" data-es="ROOT llama Define a esta transformación">ROOT calls this transformation Define</h2>
+      <p data-es="La documentación de RDataFrame describe Define como la creación de una columna personalizada a partir de columnas existentes. La nueva columna puede usarse en operaciones posteriores; crearla no equivale a seleccionar filas.">RDataFrame documentation describes Define as creating a custom column from existing columns. The new column can be used by later operations; creating it is not the same as selecting rows.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code id="c3-code">withColumn = df.Define("massOffset", "mass - 125.0")</code></pre></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c3-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="c3-transfer-heading" data-es="Una columna booleana sigue siendo una columna">A boolean column is still a column</h2>
+      <rq-predict id="c3-transfer" answer-name="transfer">
+        <form><fieldset><legend><code>df.Define("isHard", "leadingPhotonPt &gt; 35")</code><span data-es=" crea isHard. ¿Qué resultado describe correctamente ese paso?"> creates isHard. Which outcome correctly describes that step?</span></legend><div class="rq-options">
+          <label><input type="radio" name="transfer" value="all-rows" required><span data-es="Todas las filas permanecen; isHard vale true o false en cada una">Every row remains; isHard is true or false for each one</span></label>
+          <label><input type="radio" name="transfer" value="filtered"><span data-es="Sólo permanecen las filas donde isHard es true">Only rows where isHard is true remain</span></label>
+          <label><input type="radio" name="transfer" value="count"><span data-es="El dataframe se reemplaza por un único conteo">The dataframe is replaced by a single count</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Define: crea un observable — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende cómo RDataFrame Define crea una columna derivada sin eliminar filas y distingue transformación de selección.');
+  }
+</script>
+<script>import '../../lessons/define-observable/controller.ts';</script>
+
+<style is:global>
+.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.65rem;border-bottom:1px solid var(--border);text-align:start}.observable-picker{display:grid;gap:.65rem}.observable-picker label{display:flex;gap:.65rem;align-items:flex-start;padding:.65rem;border:1px solid var(--border);border-radius:.55rem}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
