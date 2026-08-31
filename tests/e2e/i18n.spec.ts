@@ -13,6 +13,7 @@ const spanishRoutes = [
   { path: 'learn/root-documentation/', heading: 'Usa ROOT sin memorizar ROOT' },
   { path: 'learn/data-pipeline/', heading: 'Un pipeline transforma un conjunto de datos' },
   { path: 'learn/filter-reason/', heading: 'Filter: conserva filas por una razón' },
+  { path: 'learn/define-observable/', heading: 'Define: crea un observable' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -56,6 +57,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/root-documentation/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende a convertir una intención de análisis en la clase, método, firma y ejemplo correctos usando la referencia oficial, tutoriales y ayuda local de ROOT.');
+
+  await page.goto('learn/define-observable/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende cómo RDataFrame Define crea una columna derivada sin eliminar filas y distingue transformación de selección.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -111,6 +115,14 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('E1, E3, E4, E6').check();
   await page.locator('#c2-prediction').getByRole('button', { name: 'Aplicar predicción' }).click();
   await expect(page.locator('#c2-prediction rq-feedback')).toContainText('Predicción correcta');
+
+  await page.goto('learn/define-observable/');
+  await page.getByLabel('Las 6 filas permanecen').check();
+  await page.locator('#c3-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#c3-prediction rq-feedback')).toContainText('Mismas filas, nueva columna');
+  await page.getByLabel('Todas las filas permanecen; isHard vale true o false en cada una').check();
+  await page.locator('#c3-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#c3-transfer rq-feedback')).toContainText('Transferencia completa');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
