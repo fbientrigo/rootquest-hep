@@ -22,8 +22,8 @@ export const courseUnits: CourseUnit[] = [
     { id: 'C1', title: 'A pipeline transforms a dataset', status: 'live', href: 'learn/data-pipeline/' },
     { id: 'C2', title: 'Filter: keep rows for a reason', status: 'live', href: 'learn/filter-reason/' },
     { id: 'C3', title: 'Define: create an observable', status: 'live', href: 'learn/define-observable/' },
-    { id: 'C4', title: 'Actions summarize the sample', status: 'next' },
-    { id: 'C5', title: 'Cutflow: where did the events go?', status: 'planned' },
+    { id: 'C4', title: 'Actions summarize the sample', status: 'live', href: 'learn/actions-summary/' },
+    { id: 'C5', title: 'Cutflow: where did the events go?', status: 'next' },
     { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
   ]},
   { id: 'D', title: 'Events contain physics objects', goal: 'Connect particle collections to the kinematics used in introductory HEP analysis.', lessons: [
