@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout title="Actions summarize the sample — ROOT Quest" description="Choose the RDataFrame action that answers an analysis question: count rows, summarize a column, or build a distribution.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad C · Lección C4">Unit C · Lesson C4</p>
+    <h1 data-es="Las acciones resumen la muestra">Actions summarize the sample</h1>
+    <p class="lede" data-es="Filter y Define construyen el pipeline. Una acción responde una pregunta sobre el dataframe actual. Empieza por la pregunta; elige la acción después.">Filter and Define build the pipeline. An action answers a question about the current dataframe. Start from the question; choose the action second.</p>
+  </header>
+
+  <div class="lesson-flow" data-c4-root>
+    <section class="lesson-card" aria-labelledby="c4-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="c4-context-heading" data-es="El pipeline ya produjo una muestra">The pipeline already produced a sample</h2>
+      <p data-es="Supón que tus filtros y columnas derivadas ya están definidos. Ahora necesitas responder una pregunta concreta sobre las filas que sobrevivieron. Las acciones de RDataFrame producen resultados a partir de ese estado del pipeline.">Assume your filters and derived columns are already defined. Now you need to answer a concrete question about the surviving rows. RDataFrame actions produce results from that pipeline state.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c4-manipulate-heading">
+      <p class="stage-kicker" data-es="Manipula">Manipulate</p>
+      <h2 id="c4-manipulate-heading" data-es="Elige la pregunta primero">Choose the question first</h2>
+      <label for="c4-question" data-es="Pregunta de análisis">Analysis question</label>
+      <select id="c4-question">
+        <option value="entries" data-es="¿Cuántas filas hay en la muestra actual?">How many rows are in the current sample?</option>
+        <option value="mean-mass" data-es="¿Cuál es la masa diphotón promedio?">What is the average diphoton mass?</option>
+        <option value="sum-weight" data-es="¿Cuál es el peso total de eventos?">What is the total event weight?</option>
+        <option value="mass-shape" data-es="¿Cómo se distribuyen los valores de masa diphotón?">How are diphoton-mass values distributed?</option>
+      </select>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c4-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="c4-predict-heading" data-es="¿Qué acción responde esa pregunta?">Which action answers that question?</h2>
+      <rq-predict id="c4-prediction" answer-name="action">
+        <form><fieldset><legend id="c4-prompt" data-es="Elige la acción que produce directamente el resultado pedido.">Choose the action that directly produces the requested result.</legend><div class="rq-options">
+          <label><input type="radio" name="action" value="count" required><span>Count</span></label>
+          <label><input type="radio" name="action" value="mean"><span>Mean</span></label>
+          <label><input type="radio" name="action" value="sum"><span>Sum</span></label>
+          <label><input type="radio" name="action" value="histo1d"><span>Histo1D</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c4-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="c4-observe-heading" data-es="La forma del resultado sigue a la pregunta">The result shape follows the question</h2>
+      <p id="c4-summary" aria-live="polite" data-es="Predice primero qué acción corresponde.">Predict first which action fits.</p>
+      <ul class="result-kinds">
+        <li><strong>Count</strong> <span data-es="→ un número de filas">→ one row count</span></li>
+        <li><strong>Mean / Sum / Min / Max</strong> <span data-es="→ un resumen escalar de una columna">→ one scalar summary of a column</span></li>
+        <li><strong>Histo1D / Histo2D</strong> <span data-es="→ una distribución de una o dos variables">→ a one- or two-variable distribution</span></li>
+      </ul>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c4-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="c4-code-heading" data-es="ROOT expresa la pregunta como una acción">ROOT expresses the question as an action</h2>
+      <p data-es="La referencia de RDataFrame clasifica Count, Mean, Sum, Min, Max, Histo1D y Histo2D como acciones: operaciones que producen un resultado a partir de las filas procesadas.">The RDataFrame reference classifies Count, Mean, Sum, Min, Max, Histo1D and Histo2D as actions: operations that produce a result from the processed rows.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code id="c4-code">n = df.Count()</code></pre></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c4-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="c4-transfer-heading" data-es="Elige por intención, no por memoria">Choose by intent, not memory</h2>
+      <rq-predict id="c4-transfer" answer-name="transfer">
+        <form><fieldset><legend data-es="Quieres encontrar el valor más pequeño de leadingPhotonPt entre las filas actuales. ¿Qué acción responde directamente esa pregunta?">You want the smallest leadingPhotonPt value among the current rows. Which action directly answers that question?</legend><div class="rq-options">
+          <label><input type="radio" name="transfer" value="min" required><span>Min</span></label>
+          <label><input type="radio" name="transfer" value="histo2d"><span>Histo2D</span></label>
+          <label><input type="radio" name="transfer" value="define"><span>Define</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Las acciones resumen la muestra — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Elige la acción de RDataFrame que responde una pregunta de análisis: contar filas, resumir una columna o construir una distribución.');
+  }
+</script>
+<script>import '../../lessons/actions-summary/controller.ts';</script>
+
+<style is:global>
+.lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}select{width:min(100%,36rem);min-height:2.75rem;padding:.6rem;border:1px solid var(--border);border-radius:.55rem;background:var(--surface);color:var(--text);font:inherit}.result-kinds{display:grid;gap:.55rem;padding-left:1.25rem}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
