@@ -24,6 +24,18 @@ test('C4 maps analysis questions to result-producing actions', async ({ page }) 
   await expect(page.locator('#c4-transfer rq-feedback')).toContainText('Transfer complete');
 });
 
+test('C4 exposes the same causal learner flow in Spanish', async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem('rootquest-language', 'es'));
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await expect(page.locator('h1')).toHaveText('Las acciones resumen la muestra');
+  await page.getByLabel('Pregunta de análisis').selectOption('sum-weight');
+  await page.getByLabel('Sum').check();
+  await page.locator('#c4-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#c4-summary')).toContainText('Sum responde directamente');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Elige la acción de RDataFrame que responde una pregunta de análisis: contar filas, resumir una columna o construir una distribución.');
+});
+
 test('C4 has no automated WCAG A or AA violations', async ({ page }) => {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
