@@ -23,8 +23,8 @@ export const courseUnits: CourseUnit[] = [
     { id: 'C2', title: 'Filter: keep rows for a reason', status: 'live', href: 'learn/filter-reason/' },
     { id: 'C3', title: 'Define: create an observable', status: 'live', href: 'learn/define-observable/' },
     { id: 'C4', title: 'Actions summarize the sample', status: 'live', href: 'learn/actions-summary/' },
-    { id: 'C5', title: 'Cutflow: where did the events go?', status: 'next', href: 'learn/cutflow/' },
-    { id: 'C6', title: 'Keep a useful derived sample', status: 'planned' },
+    { id: 'C5', title: 'Cutflow: where did the events go?', status: 'live', href: 'learn/cutflow/' },
+    { id: 'C6', title: 'Keep a useful derived sample', status: 'next' },
   ]},
   { id: 'D', title: 'Events contain physics objects', goal: 'Connect particle collections to the kinematics used in introductory HEP analysis.', lessons: [
     { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'planned' }, { id: 'D2', title: 'Select objects, then events', status: 'planned' }, { id: 'D3', title: 'Work with collections', status: 'planned' }, { id: 'D4', title: 'Angular separation', status: 'planned' }, { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' }, { id: 'D6', title: 'Build a candidate', status: 'planned' },
