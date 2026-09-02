@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+import { PIPELINE_EVENTS } from '../../lessons/data-pipeline/model.ts';
+import { buildCutflow, finalSurvivorCount } from '../../lessons/cutflow/model.ts';
+
+const rows = buildCutflow();
+const finalCount = finalSurvivorCount();
+const pct = (value: number) => `${(value * 100).toFixed(1)}%`;
+---
+
+<BaseLayout
+  title="Cutflow: where did the events go? — ROOT Quest"
+  description="Diagnose an RDataFrame selection pipeline by measuring how many entries pass each named filter with Report."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad C · Lección C5">Unit C · Lesson C5</p>
+    <h1 data-es="Cutflow: ¿adónde fueron los eventos?">Cutflow: where did the events go?</h1>
+    <p class="lede" data-es="Un resultado final puede decirte cuánto queda, pero no dónde se perdió la muestra. Mide cada filtro para localizar la etapa responsable.">A final result can tell you how much remains, but not where the sample was lost. Measure each filter to locate the responsible stage.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="c5-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="c5-context-heading" data-es="El mismo pipeline de C1 termina con 3 de 6 eventos">The same C1 pipeline ends with 3 of 6 events</h2>
+      <p data-es="Estos seis eventos son sintéticos y se reutilizan para que la única idea nueva sea el diagnóstico del cutflow.">These six events are synthetic and reused so the only new idea is cutflow diagnosis.</p>
+      <p class="result-callout"><strong>{PIPELINE_EVENTS.length}</strong> <span data-es="entran">enter</span> → <strong>{finalCount}</strong> <span data-es="sobreviven">survive</span></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c5-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="c5-predict-heading" data-es="¿El conteo final basta para diagnosticar la pérdida?">Is the final count enough to diagnose the loss?</h2>
+      <rq-predict id="c5-inference" answer-name="inference">
+        <form>
+          <fieldset>
+            <legend data-es="Sólo sabes que 6 eventos entraron y 3 sobrevivieron dos filtros. ¿Puedes saber cuál filtro rechazó más eventos?">You only know that 6 events entered and 3 survived two filters. Can you tell which filter rejected more events?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="inference" value="final-is-enough" required><span data-es="Sí, el conteo final lo identifica">Yes, the final count identifies it</span></label>
+              <label><input type="radio" name="inference" value="need-stage-counts"><span data-es="No, necesito conteos por etapa">No, I need stage-by-stage counts</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c5-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="c5-observe-heading" data-es="Ejecuta el informe del cutflow">Run the cutflow report</h2>
+      <button id="c5-run-report" class="rq-button rq-button--primary" type="button" disabled data-es="Mostrar conteos por filtro">Show counts per filter</button>
+      <div id="c5-report" hidden>
+        <div class="table-scroll">
+          <table>
+            <caption data-es="Conteos medidos para cada filtro nombrado">Measured counts for each named filter</caption>
+            <thead><tr><th scope="col" data-es="Filtro">Filter</th><th scope="col" data-es="Entraron">Entered</th><th scope="col" data-es="Pasaron">Passed</th><th scope="col" data-es="Rechazados">Rejected</th><th scope="col" data-es="Eficiencia de etapa">Stage efficiency</th><th scope="col" data-es="Eficiencia acumulada">Cumulative efficiency</th></tr></thead>
+            <tbody>
+              {rows.map((row) => <tr><th scope="row">{row.name}</th><td>{row.entered}</td><td>{row.passed}</td><td>{row.rejected}</td><td>{pct(row.relativeEfficiency)}</td><td>{pct(row.cumulativeEfficiency)}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <p id="c5-report-feedback" class="technical-note" aria-live="polite"></p>
+      </div>
+
+      <rq-predict id="c5-diagnosis" answer-name="diagnosis" hidden>
+        <form>
+          <fieldset>
+            <legend data-es="Según los conteos medidos, ¿qué filtro causa la mayor pérdida absoluta?">From the measured counts, which filter causes the largest absolute loss?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="diagnosis" value="two-photons" required><span>Exactly two photons</span></label>
+              <label><input type="radio" name="diagnosis" value="hard-leading"><span>Leading photon pT &gt; 35 GeV</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Diagnosticar">Diagnose</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c5-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="c5-code-heading" data-es="Nombra los filtros; luego pide Report">Name the filters, then ask for Report</h2>
+      <p data-es="Un Filter nombrado conserva estadísticas de aceptación y rechazo. Report reúne esas estadísticas para los filtros nombrados de la cadena relevante.">A named Filter keeps acceptance/rejection statistics. Report gathers those statistics for the named filters in the relevant chain.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code>selected = (
+    df.Filter("photonCount == 2", "Exactly two photons")
+      .Filter("leadingPhotonPt > 35", "Leading photon pT > 35 GeV")
+)
+
+report = selected.Report()
+report.Print()</code></pre></div>
+      <p class="technical-note" data-es="Report es una acción lazy: reserva el informe y sus estadísticas corresponden al event loop pertinente cuando el resultado se evalúa.">Report is a lazy action: it books the report, and its statistics correspond to the relevant event loop when the result is evaluated.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c5-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="c5-transfer-heading" data-es="Localiza una pérdida nueva sin mirar el plot final">Locate a new loss without staring at the final plot</h2>
+      <p data-es="Un análisis nuevo mide: input 100 → Cut A 90 → Cut B 45. ¿Qué etapa investigarías primero si buscas la mayor pérdida de eventos?">A new analysis measures: input 100 → Cut A 90 → Cut B 45. Which stage would you investigate first if you are looking for the largest event loss?</p>
+      <rq-predict id="c5-transfer" answer-name="transfer">
+        <form>
+          <fieldset>
+            <legend data-es="Elige la etapa con mayor pérdida absoluta.">Choose the stage with the largest absolute loss.</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="transfer" value="cut-a" required><span>Cut A</span></label>
+              <label><input type="radio" name="transfer" value="cut-b"><span>Cut B</span></label>
+              <label><input type="radio" name="transfer" value="final"><span data-es="No se puede saber aun con esos conteos">It still cannot be known from those counts</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Cutflow: ¿adónde fueron los eventos? — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Diagnostica un pipeline de selección de RDataFrame midiendo cuántas entradas pasan cada filtro nombrado con Report.');
+  }
+</script>
+<script>import '../../lessons/cutflow/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.result-callout{font-size:clamp(1.2rem,4vw,2rem)}.table-scroll{overflow-x:auto;margin-top:1rem}table{width:100%;border-collapse:collapse}caption{padding:.5rem 0;text-align:start;font-weight:700}th,td{padding:.65rem;border-bottom:1px solid var(--border);text-align:start;white-space:nowrap}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}.technical-note{color:var(--muted)}#c5-diagnosis{display:block;margin-top:1rem}#c5-diagnosis[hidden]{display:none}
+</style>
