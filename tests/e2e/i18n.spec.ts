@@ -14,6 +14,8 @@ const spanishRoutes = [
   { path: 'learn/data-pipeline/', heading: 'Un pipeline transforma un conjunto de datos' },
   { path: 'learn/filter-reason/', heading: 'Filter: conserva filas por una razón' },
   { path: 'learn/define-observable/', heading: 'Define: crea un observable' },
+  { path: 'learn/actions-summary/', heading: 'Las acciones resumen la muestra' },
+  { path: 'learn/cutflow/', heading: 'Cutflow: ¿adónde fueron los eventos?' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -60,6 +62,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/define-observable/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende cómo RDataFrame Define crea una columna derivada sin eliminar filas y distingue transformación de selección.');
+
+  await page.goto('learn/cutflow/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Diagnostica un pipeline de selección de RDataFrame midiendo cuántas entradas pasan cada filtro nombrado con Report.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -123,6 +128,12 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('Todas las filas permanecen; isHard vale true o false en cada una').check();
   await page.locator('#c3-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
   await expect(page.locator('#c3-transfer rq-feedback')).toContainText('Transferencia completa');
+
+  await page.goto('learn/cutflow/');
+  await page.getByLabel('No, necesito conteos por etapa').check();
+  await page.locator('#c5-inference').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await page.getByRole('button', { name: 'Mostrar conteos por filtro' }).click();
+  await expect(page.locator('#c5-report-feedback')).toContainText('el primer filtro rechaza 2 eventos');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
