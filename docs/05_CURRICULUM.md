@@ -113,8 +113,8 @@ Goal: make modern everyday analysis fluent around `RDataFrame`, with syntax foll
 | C2 | **Filter: keep rows for a reason** | Translate a stated selection criterion into a filter and predict its effect before applying it. | `Filter` | **LIVE** — learner-facing lesson reuses C1's six synthetic events and the existing Filter drills; the learner chooses an analysis criterion, predicts the exact survivor set, then sees the matching `RDataFrame.Filter` expression and transfers the idea to a new criterion. |
 | C3 | **Define: create an observable** | Create a derived quantity without confusing transformation with selection. | `Define` | **LIVE** — learner-facing lesson promotes the existing Define drill: the learner adds a numeric or boolean derived column to C1/C2's six rows, predicts that row count is preserved, then distinguishes `Define` from `Filter` in transfer. |
 | C4 | **Actions summarize the sample** | Choose an action that answers a question about the current dataframe. | `Histo1D`, `Histo2D`, `Count`, `Mean`, `Sum`, `Min`, `Max` | **LIVE** — learner-facing lesson promotes the existing `Histo1D` drill and teaches question → action using `Count`, `Mean`, `Sum` and `Histo1D`, with `Min`, `Max` and `Histo2D` as nearby transfer vocabulary. |
-| C5 | **Cutflow: where did the events go?** | Diagnose a selection pipeline by measuring survival at each stage rather than guessing from the final plot. | named `Filter`s, `Report` | **NEXT** |
-| C6 | **Keep a useful derived sample** | Decide when to persist selected/derived columns and when not to. | `Snapshot`, `Range` as a small debugging aid | PLANNED |
+| C5 | **Cutflow: where did the events go?** | Diagnose a selection pipeline by measuring survival at each stage rather than guessing from the final plot. | named `Filter`s, `Report` | **LIVE** — learner-facing lesson reuses C1's six-event pipeline, requires the learner to recognize that the final count cannot localize a loss, reveals measured per-stage counts/efficiencies, and bridges the diagnosis to named `Filter`s plus `Report`. |
+| C6 | **Keep a useful derived sample** | Decide when to persist selected/derived columns and when not to. | `Snapshot`, `Range` as a small debugging aid | **NEXT** |
 
 Observable unit proof: from a stated analysis question, the learner can build and explain a small `RDataFrame` chain and trace the consequence of each operation.
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **C5 — Cutflow: where did the events go?**.
+The default next lesson on this roadmap is **C6 — Keep a useful derived sample**.
