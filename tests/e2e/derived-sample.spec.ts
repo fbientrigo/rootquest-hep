@@ -11,7 +11,7 @@ test('C6 distinguishes Snapshot persistence from Range inspection', async ({ pag
   await page.getByLabel('Persist the useful rows and columns with Snapshot').check();
   await page.locator('#c6-persist').getByRole('button', { name: 'Commit decision' }).click();
   await expect(page.locator('#c6-persist rq-feedback')).toContainText('Persistence has a concrete reason');
-  await expect(page.locator('pre')).toContainText('Snapshot');
+  await expect(page.getByRole('region', { name: 'Express the decision after understanding why you persist' }).locator('pre')).toContainText('Snapshot');
 
   await page.getByLabel('Use Range(5) on a temporary pipeline branch').check();
   await page.locator('#c6-transfer').getByRole('button', { name: 'Check understanding' }).click();
