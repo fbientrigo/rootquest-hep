@@ -16,6 +16,7 @@ const spanishRoutes = [
   { path: 'learn/define-observable/', heading: 'Define: crea un observable' },
   { path: 'learn/actions-summary/', heading: 'Las acciones resumen la muestra' },
   { path: 'learn/cutflow/', heading: 'Cutflow: ¿adónde fueron los eventos?' },
+  { path: 'learn/derived-sample/', heading: 'Conserva una muestra derivada útil' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -65,6 +66,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/cutflow/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Diagnostica un pipeline de selección de RDataFrame midiendo cuántas entradas pasan cada filtro nombrado con Report.');
+
+  await page.goto('learn/derived-sample/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Decide cuándo un resultado de RDataFrame debe seguir como pipeline, persistirse con Snapshot o limitarse temporalmente con Range.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -134,6 +138,14 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.locator('#c5-inference').getByRole('button', { name: 'Confirmar predicción' }).click();
   await page.getByRole('button', { name: 'Mostrar conteos por filtro' }).click();
   await expect(page.locator('#c5-report-feedback')).toContainText('el primer filtro rechaza 2 eventos');
+
+  await page.goto('learn/derived-sample/');
+  await page.getByLabel('Guardar las filas y columnas útiles con Snapshot').check();
+  await page.locator('#c6-persist').getByRole('button', { name: 'Confirmar decisión' }).click();
+  await expect(page.locator('#c6-persist rq-feedback')).toContainText('Persistir tiene una razón concreta');
+  await page.getByLabel('Usar Range(5) en una rama temporal del pipeline').check();
+  await page.locator('#c6-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#c6-transfer rq-feedback')).toContainText('Range sirve para mirar poco, no para guardar');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');

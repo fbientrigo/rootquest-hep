@@ -114,7 +114,7 @@ Goal: make modern everyday analysis fluent around `RDataFrame`, with syntax foll
 | C3 | **Define: create an observable** | Create a derived quantity without confusing transformation with selection. | `Define` | **LIVE** — learner-facing lesson promotes the existing Define drill: the learner adds a numeric or boolean derived column to C1/C2's six rows, predicts that row count is preserved, then distinguishes `Define` from `Filter` in transfer. |
 | C4 | **Actions summarize the sample** | Choose an action that answers a question about the current dataframe. | `Histo1D`, `Histo2D`, `Count`, `Mean`, `Sum`, `Min`, `Max` | **LIVE** — learner-facing lesson promotes the existing `Histo1D` drill and teaches question → action using `Count`, `Mean`, `Sum` and `Histo1D`, with `Min`, `Max` and `Histo2D` as nearby transfer vocabulary. |
 | C5 | **Cutflow: where did the events go?** | Diagnose a selection pipeline by measuring survival at each stage rather than guessing from the final plot. | named `Filter`s, `Report` | **LIVE** — learner-facing lesson reuses C1's six-event pipeline, requires the learner to recognize that the final count cannot localize a loss, reveals measured per-stage counts/efficiencies, and bridges the diagnosis to named `Filter`s plus `Report`. |
-| C6 | **Keep a useful derived sample** | Decide when to persist selected/derived columns and when not to. | `Snapshot`, `Range` as a small debugging aid | **NEXT** |
+| C6 | **Keep a useful derived sample** | Decide when to persist selected/derived columns and when not to. | `Snapshot`, `Range` as a small debugging aid | **LIVE** — learner-facing lesson distinguishes a reusable derived dataset from a one-off pipeline result and a small debugging view: `Snapshot` persists rows reaching that node plus chosen columns, while `Range` only limits processing on a temporary branch. |
 
 Observable unit proof: from a stated analysis question, the learner can build and explain a small `RDataFrame` chain and trace the consequence of each operation.
 
@@ -126,7 +126,7 @@ Goal: connect vector-like data structures to the physical quantities used in int
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| D1 | **Coordinates of a reconstructed object** | Interpret `pT`, `eta` and `phi` geometrically and identify which quantity answers a stated detector/kinematic question. | common HEP columns | PLANNED — Higgs Hunt already uses `pT` and photon-like objects. |
+| D1 | **Coordinates of a reconstructed object** | Interpret `pT`, `eta` and `phi` geometrically and identify which quantity answers a stated detector/kinematic question. | common HEP columns | **NEXT** — Higgs Hunt already uses `pT` and photon-like objects; reuse that context rather than introducing a new detector story. |
 | D2 | **Select objects, then events** | Separate an object-level mask from an event-level requirement. | `ROOT::VecOps::RVec`, boolean masks | PLANNED |
 | D3 | **Work with collections** | Filter and summarize variable-length particle collections without manual per-event bookkeeping. | `RVec`, masks, `size`, common VecOps patterns | PLANNED |
 | D4 | **Angular separation** | Predict and compute when two objects are close/far in detector coordinates. | `DeltaR` concept / appropriate ROOT VecOps or math helper | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **C6 — Keep a useful derived sample**.
+The default next lesson on this roadmap is **D1 — Coordinates of a reconstructed object**.

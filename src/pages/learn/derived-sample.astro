@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Keep a useful derived sample — ROOT Quest"
+  description="Decide when an RDataFrame result should stay as a pipeline, be persisted with Snapshot, or be temporarily limited with Range."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad C · Lección C6">Unit C · Lesson C6</p>
+    <h1 data-es="Conserva una muestra derivada útil">Keep a useful derived sample</h1>
+    <p class="lede" data-es="No todo resultado intermedio necesita otro archivo. Decide primero si vas a reutilizar la muestra, continuar el análisis una sola vez o inspeccionar sólo unas pocas entradas.">Not every intermediate result needs another file. First decide whether you will reuse the sample, continue the analysis once, or inspect only a few entries.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="c6-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="c6-context-heading" data-es="El pipeline ya hizo el trabajo conceptual">The pipeline already did the conceptual work</h2>
+      <p data-es="Partimos de una muestra sintética ya filtrada y con una columna derivada llamada massOffset. La pregunta nueva no es cómo seleccionar o definir, sino qué hacer con ese resultado después.">Start from a synthetic sample that is already filtered and has a derived column called massOffset. The new question is not how to select or define, but what to do with that result next.</p>
+      <div class="pipeline-line" aria-label="RDataFrame pipeline with Filter and Define">
+        <code>df</code><span aria-hidden="true">→</span><code>Filter(...)</code><span aria-hidden="true">→</span><code>Define("massOffset", ...)</code>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c6-persist-heading">
+      <p class="stage-kicker" data-es="Decide">Decide</p>
+      <h2 id="c6-persist-heading" data-es="Vas a reutilizar esta muestra en varios análisis posteriores">You will reuse this sample in several later analyses</h2>
+      <rq-predict id="c6-persist" answer-name="persist-choice">
+        <form>
+          <fieldset>
+            <legend data-es="¿Qué opción corresponde mejor al objetivo?">Which option best matches the goal?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="persist-choice" value="snapshot" required><span data-es="Guardar las filas y columnas útiles con Snapshot">Persist the useful rows and columns with Snapshot</span></label>
+              <label><input type="radio" name="persist-choice" value="pipeline"><span data-es="Dejarlo sólo como pipeline y repetirlo cada vez">Keep only the pipeline and repeat it each time</span></label>
+              <label><input type="radio" name="persist-choice" value="range"><span data-es="Usar Range para crear el archivo derivado">Use Range to create the derived file</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Confirmar decisión">Commit decision</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c6-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="c6-observe-heading" data-es="Snapshot persiste una salida; no es otro filtro">Snapshot persists an output; it is not another filter</h2>
+      <p data-es="Snapshot escribe un nuevo dataset con las filas que llegan a ese punto del pipeline y con las columnas que eliges guardar. No cambia retrospectivamente qué filas sobrevivieron los filtros.">Snapshot writes a new dataset from the rows that reach that point in the pipeline and the columns you choose to save. It does not retrospectively change which rows survived the filters.</p>
+      <div class="linked-grid">
+        <div class="result-box"><strong data-es="Filas">Rows</strong><span data-es="las que llegan después de Filter">those reaching this point after Filter</span></div>
+        <div class="result-box"><strong data-es="Columnas">Columns</strong><span><code>event</code>, <code>m_gg</code>, <code>massOffset</code></span></div>
+        <div class="result-box"><strong data-es="Salida">Output</strong><span><code>selected.root</code></span></div>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c6-code-heading">
+      <p class="stage-kicker" data-es="Código">Code</p>
+      <h2 id="c6-code-heading" data-es="Expresa la decisión después de entender por qué persistes">Express the decision after understanding why you persist</h2>
+      <div class="code-card"><header>PyROOT</header><pre><code>selected = (
+    df.Filter("photonCount == 2")
+      .Define("massOffset", "m_gg - 125.0")
+)
+
+selected.Snapshot(
+    "Events",
+    "selected.root",
+    ("event", "m_gg", "massOffset"),
+)</code></pre></div>
+      <p class="technical-note" data-es="Si sólo necesitas el resultado final ahora, puedes mantener el pipeline y ejecutar directamente una acción como Histo1D o Count. Persistir añade I/O y un nuevo artefacto que debe tener una razón de reutilización.">If you only need the final result now, you can keep the pipeline and directly run an action such as Histo1D or Count. Persistence adds I/O and a new artifact that should have a reuse reason.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c6-range-heading">
+      <p class="stage-kicker" data-es="Herramienta pequeña">Small tool</p>
+      <h2 id="c6-range-heading" data-es="Range limita procesamiento; no guarda una muestra">Range limits processing; it does not save a sample</h2>
+      <p data-es="Para revisar rápidamente unas pocas entradas puedes crear una rama temporal como selected.Range(5). Si Range aparece después de un Filter, cuenta sólo las entradas que pasaron ese filtro.">To quickly inspect a few entries, create a temporary branch such as selected.Range(5). If Range comes after a Filter, it counts only entries that passed that filter.</p>
+      <div class="code-card"><header>PyROOT</header><pre><code>selected.Range(5).Display(("event", "m_gg", "massOffset")).Print()</code></pre></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="c6-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="c6-transfer-heading" data-es="Sólo quieres inspeccionar cinco eventos que pasan la selección">You only want to inspect five events that pass the selection</h2>
+      <rq-predict id="c6-transfer" answer-name="debug-choice">
+        <form>
+          <fieldset>
+            <legend data-es="¿Qué harías primero?">What would you do first?</legend>
+            <div class="rq-options">
+              <label><input type="radio" name="debug-choice" value="snapshot" required><span data-es="Crear un Snapshot permanente de cinco eventos">Create a permanent Snapshot of five events</span></label>
+              <label><input type="radio" name="debug-choice" value="pipeline"><span data-es="Procesar siempre el dataset completo para inspeccionar cinco">Always process the full dataset to inspect five</span></label>
+              <label><input type="radio" name="debug-choice" value="range"><span data-es="Usar Range(5) en una rama temporal del pipeline">Use Range(5) on a temporary pipeline branch</span></label>
+            </div>
+          </fieldset>
+          <button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button>
+        </form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Conserva una muestra derivada útil — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Decide cuándo un resultado de RDataFrame debe seguir como pipeline, persistirse con Snapshot o limitarse temporalmente con Range.');
+  }
+</script>
+<script>import '../../lessons/derived-sample/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.pipeline-line{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.linked-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem;margin-top:1rem}.result-box{display:grid;gap:.35rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.result-box span,.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
