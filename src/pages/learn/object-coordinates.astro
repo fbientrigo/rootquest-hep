@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Coordinates of a reconstructed object — ROOT Quest"
+  description="Interpret transverse momentum, pseudorapidity and azimuth for a reconstructed particle and choose the coordinate that answers a detector or kinematic question."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D1">Unit D · Lesson D1</p>
+    <h1 data-es="Coordenadas de un objeto reconstruido">Coordinates of a reconstructed object</h1>
+    <p class="lede" data-es="Un fotón no necesita una historia nueva para cada dirección. pT, eta y phi responden tres preguntas geométricas distintas alrededor del eje del haz.">A photon does not need a new story for every direction. pT, eta and phi answer three different geometric questions around the beam axis.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d1-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d1-context-heading" data-es="Reutiliza el fotón que ya conoces de Higgs Hunt">Reuse the photon you already know from Higgs Hunt</h2>
+      <p data-es="Los cuatro estados siguientes son objetos sintéticos preparados para aislar una coordenada a la vez. El eje z sigue la dirección de los haces; el plano x-y es el plano transversal.">The four states below are prepared synthetic objects that isolate one coordinate at a time. The z axis follows the beams; the x-y plane is the transverse plane.</p>
+      <fieldset class="preset-fieldset">
+        <legend data-es="Elige el fotón reconstruido">Choose the reconstructed photon</legend>
+        <div class="rq-options compact-options">
+          <label><input type="radio" name="photon-preset" value="baseline" checked><span data-es="Base · pT 45, eta 0, phi 0">Baseline · pT 45, eta 0, phi 0</span></label>
+          <label><input type="radio" name="photon-preset" value="harder"><span data-es="Más pT · sólo pT cambia">Harder · only pT changes</span></label>
+          <label><input type="radio" name="photon-preset" value="forward"><span data-es="Más forward · sólo eta cambia">More forward · only eta changes</span></label>
+          <label><input type="radio" name="photon-preset" value="rotated"><span data-es="Rotado · sólo phi cambia">Rotated · only phi changes</span></label>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d1-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="d1-observe-heading" data-es="Tres números, tres preguntas">Three numbers, three questions</h2>
+      <div class="coordinate-grid" aria-describedby="d1-summary">
+        <div class="coordinate-value"><strong><var>pT</var></strong><output id="d1-pt">45 GeV</output><span data-es="¿Cuánto momento hay perpendicular al haz?">How much momentum lies perpendicular to the beam?</span></div>
+        <div class="coordinate-value"><strong><var>eta</var></strong><output id="d1-eta">0.00</output><span data-es="¿Qué tan central o forward es la dirección respecto al haz?">How central or forward is the direction relative to the beam?</span></div>
+        <div class="coordinate-value"><strong><var>phi</var></strong><output id="d1-phi">0.00 rad</output><span data-es="¿Hacia dónde apunta alrededor del eje del haz?">Where does it point around the beam axis?</span></div>
+      </div>
+      <div class="views" aria-hidden="true">
+        <div class="transverse-view"><span class="beam-dot"></span><span id="d1-transverse-arrow" class="transverse-arrow"></span><span class="view-label">x-y</span></div>
+        <div class="side-view"><span class="beam-line"></span><span id="d1-side-arrow" class="side-arrow" data-region="central"></span><span class="view-label">z</span></div>
+      </div>
+      <p id="d1-summary" class="technical-note">Synthetic photon: pT=45 GeV, eta=0.00, phi=0.00 rad. Relative to the baseline photon, changed: none.</p>
+      <p class="technical-note" data-es="eta=0 corresponde a una dirección perpendicular al haz; al crecer |eta|, la dirección se acerca al eje del haz. El signo distingue los dos hemisferios del haz.">eta=0 corresponds to a direction perpendicular to the beam; as |eta| grows, the direction approaches the beam axis. The sign distinguishes the two beam hemispheres.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d1-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d1-predict-heading" data-es="Quieres saber si el fotón giró alrededor del eje del haz">You want to know whether the photon rotated around the beam axis</h2>
+      <rq-predict id="d1-predict" answer-name="coordinate-choice">
+        <form><fieldset><legend data-es="¿Qué coordenada debes comparar?">Which coordinate should you compare?</legend><div class="rq-options">
+          <label><input type="radio" name="coordinate-choice" value="pt" required><span>pT</span></label>
+          <label><input type="radio" name="coordinate-choice" value="eta"><span>eta</span></label>
+          <label><input type="radio" name="coordinate-choice" value="phi"><span>phi</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d1-code-heading">
+      <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+      <h2 id="d1-code-heading" data-es="ROOT conserva este vocabulario geométrico">ROOT keeps the same geometric vocabulary</h2>
+      <p data-es="En un dataset HEP estas cantidades suelen aparecer como columnas de objetos. ROOT también ofrece vectores de física con coordenadas (pT, eta, phi, m); aquí sólo importa reconocer qué significa cada coordenada.">In a HEP dataset these quantities commonly appear as object columns. ROOT also provides physics vectors parameterized by (pT, eta, phi, m); here the important part is recognizing what each coordinate means.</p>
+      <div class="code-card"><header>ROOT</header><pre><code>ROOT::Math::PtEtaPhiMVector photon(
+    45.0,   // pT
+    0.60,   // eta
+    0.80,   // phi [rad]
+    0.0     // mass
+);</code></pre></div>
+      <p class="technical-note"><a href="https://root.cern/doc/master/group__GenVector.html" data-es="Referencia oficial de Physics Vectors de ROOT">Official ROOT Physics Vectors reference</a> · <a href="https://atlas.cern/glossary/rapidity" data-es="Glosario ATLAS: rapidez y pseudorapidez">ATLAS glossary: rapidity and pseudorapidity</a></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d1-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d1-transfer-heading" data-es="Quieres separar objetos centrales de objetos cercanos al haz">You want to separate central objects from objects close to the beam</h2>
+      <rq-predict id="d1-transfer" answer-name="transfer-choice">
+        <form><fieldset><legend data-es="¿Qué coordenada responde directamente esa pregunta?">Which coordinate directly answers that question?</legend><div class="rq-options">
+          <label><input type="radio" name="transfer-choice" value="pt" required><span>pT</span></label>
+          <label><input type="radio" name="transfer-choice" value="eta"><span>eta</span></label>
+          <label><input type="radio" name="transfer-choice" value="phi"><span>phi</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Coordenadas de un objeto reconstruido — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Interpreta momento transversal, pseudorapidez y azimut para un objeto reconstruido y elige la coordenada que responde una pregunta geométrica o cinemática.');
+  }
+</script>
+<script>import '../../lessons/object-coordinates/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.preset-fieldset{margin-top:1rem}.compact-options{grid-template-columns:repeat(auto-fit,minmax(10rem,1fr))}.coordinate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}.coordinate-value{display:grid;gap:.3rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.coordinate-value strong{font-size:1.2rem}.coordinate-value output{font-variant-numeric:tabular-nums;font-weight:800}.coordinate-value span,.technical-note{color:var(--muted)}.views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.transverse-view,.side-view{position:relative;min-height:11rem;overflow:hidden;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-soft)}.beam-dot{position:absolute;left:50%;top:50%;width:.7rem;height:.7rem;border-radius:50%;background:var(--text);transform:translate(-50%,-50%)}.transverse-arrow{--phi:0rad;--pt-scale:.64;position:absolute;left:50%;top:50%;width:calc(42% * var(--pt-scale));height:.22rem;background:var(--accent);transform:rotate(var(--phi));transform-origin:left center}.transverse-arrow::after,.side-arrow::after{content:'';position:absolute;right:-.15rem;top:50%;width:.65rem;height:.65rem;border-top:.18rem solid var(--accent);border-right:.18rem solid var(--accent);transform:translateY(-50%) rotate(45deg)}.beam-line{position:absolute;left:8%;right:8%;top:50%;height:.12rem;background:var(--muted)}.side-arrow{position:absolute;left:50%;top:50%;width:38%;height:.22rem;background:var(--accent);transform-origin:left center;transform:rotate(-90deg)}.side-arrow[data-region="forward-positive"]{transform:rotate(-18deg)}.side-arrow[data-region="forward-negative"]{transform:rotate(-162deg)}.view-label{position:absolute;right:.65rem;bottom:.4rem;color:var(--muted);font-weight:700}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card header{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted);font-size:.84rem;font-weight:750}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:34rem){.views{grid-template-columns:1fr}}
+</style>
