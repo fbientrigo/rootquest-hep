@@ -17,6 +17,7 @@ const spanishRoutes = [
   { path: 'learn/actions-summary/', heading: 'Las acciones resumen la muestra' },
   { path: 'learn/cutflow/', heading: 'Cutflow: ¿adónde fueron los eventos?' },
   { path: 'learn/derived-sample/', heading: 'Conserva una muestra derivada útil' },
+  { path: 'learn/object-coordinates/', heading: 'Coordenadas de un objeto reconstruido' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -69,6 +70,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/derived-sample/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Decide cuándo un resultado de RDataFrame debe seguir como pipeline, persistirse con Snapshot o limitarse temporalmente con Range.');
+
+  await page.goto('learn/object-coordinates/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Interpreta momento transversal, pseudorapidez y azimut para un objeto reconstruido y elige la coordenada que responde una pregunta geométrica o cinemática.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -146,6 +150,13 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('Usar Range(5) en una rama temporal del pipeline').check();
   await page.locator('#c6-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
   await expect(page.locator('#c6-transfer rq-feedback')).toContainText('Range sirve para mirar poco, no para guardar');
+
+  await page.goto('learn/object-coordinates/');
+  await page.getByLabel('Rotado · sólo phi cambia').check();
+  await expect(page.locator('#d1-summary')).toContainText('cambia: phi');
+  await page.locator('#d1-transfer').getByLabel('eta', { exact: true }).check();
+  await page.locator('#d1-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#d1-transfer rq-feedback')).toContainText('Coordenada correcta');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
