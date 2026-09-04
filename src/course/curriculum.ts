@@ -27,7 +27,7 @@ export const courseUnits: CourseUnit[] = [
     { id: 'C6', title: 'Keep a useful derived sample', status: 'live', href: 'learn/derived-sample/' },
   ]},
   { id: 'D', title: 'Events contain physics objects', goal: 'Connect particle collections to the kinematics used in introductory HEP analysis.', lessons: [
-    { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'next' }, { id: 'D2', title: 'Select objects, then events', status: 'planned' }, { id: 'D3', title: 'Work with collections', status: 'planned' }, { id: 'D4', title: 'Angular separation', status: 'planned' }, { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' }, { id: 'D6', title: 'Build a candidate', status: 'planned' },
+    { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'live', href: 'learn/object-coordinates/' }, { id: 'D2', title: 'Select objects, then events', status: 'next' }, { id: 'D3', title: 'Work with collections', status: 'planned' }, { id: 'D4', title: 'Angular separation', status: 'planned' }, { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' }, { id: 'D6', title: 'Build a candidate', status: 'planned' },
   ]},
   { id: 'E', title: 'From plots to evidence', goal: 'Add the minimum normalization and fitting machinery needed for responsible interpretation.', lessons: [
     { id: 'E1', title: 'Signal and background trade-offs', status: 'planned' }, { id: 'E2', title: 'Event weights and normalization', status: 'planned' }, { id: 'E3', title: 'Data vs simulation', status: 'planned' }, { id: 'E4', title: 'Fit a simple model', status: 'planned' }, { id: 'E5', title: 'Read a fit critically', status: 'planned' }, { id: 'E6', title: 'Signal and control regions', status: 'planned' },
