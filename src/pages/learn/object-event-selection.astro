@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Select objects, then events — ROOT Quest"
+  description="Learn to separate object-level masks from event-level requirements with ROOT RVec collections."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D2">Unit D · Lesson D2</p>
+    <h1 data-es="Selecciona objetos y luego eventos">Select objects, then events</h1>
+    <p class="lede" data-es="Una condición sobre cada fotón no es todavía una decisión sobre el evento completo. Primero construye una máscara de objetos; después decide si la entrada contiene suficientes objetos seleccionados.">A condition on each photon is not yet a decision about the whole event. First build an object mask; then decide whether the entry contains enough selected objects.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d2-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d2-context-heading" data-es="Tres fotones dentro de una entrada">Three photons inside one entry</h2>
+      <p data-es="Estos eventos sintéticos reutilizan las colecciones de B3 y las coordenadas de D1. Seleccionaremos fotones con pT > 30 GeV y |eta| < 2.5; el evento pasa sólo si quedan al menos dos.">These synthetic events reuse B3 collections and D1 coordinates. We will select photons with pT > 30 GeV and |eta| < 2.5; the event passes only if at least two remain.</p>
+      <fieldset><legend data-es="Elige la entrada">Choose the entry</legend><div class="rq-options">
+        <label><input type="radio" name="d2-event" value="0" checked><span data-es="Evento A · pT [52, 34, 22] GeV">Event A · pT [52, 34, 22] GeV</span></label>
+        <label><input type="radio" name="d2-event" value="1"><span data-es="Evento B · pT [41, 27, 19] GeV">Event B · pT [41, 27, 19] GeV</span></label>
+      </div></fieldset>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d2-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="d2-observe-heading" data-es="La máscara tiene una respuesta por objeto">The mask has one answer per object</h2>
+      <div class="selection-grid" aria-describedby="d2-summary">
+        <div><strong data-es="Máscara de objetos">Object mask</strong><output id="d2-mask">[true, true, false]</output></div>
+        <div><strong data-es="pT seleccionado">Selected pT</strong><output id="d2-selected">[52, 34] GeV</output></div>
+        <div><strong data-es="Decisión del evento">Event decision</strong><output id="d2-event-result">passes</output></div>
+      </div>
+      <p id="d2-summary" class="technical-note">The mask keeps 2 of 3 photons. The event passes because it requires at least 2 selected photons.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d2-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d2-predict-heading" data-es="¿Qué decide realmente la máscara?">What does the mask actually decide?</h2>
+      <rq-predict id="d2-predict" answer-name="d2-mask-meaning"><form><fieldset><legend data-es="Elige la afirmación correcta">Choose the correct statement</legend><div class="rq-options">
+        <label><input type="radio" name="d2-mask-meaning" value="mask-decides-event" required><span data-es="La máscara true/false ya acepta o rechaza el evento completo">The true/false mask already accepts or rejects the whole event</span></label>
+        <label><input type="radio" name="d2-mask-meaning" value="mask-does-not-decide-event"><span data-es="La máscara selecciona fotones; una condición escalar posterior decide el evento">The mask selects photons; a later scalar condition decides the event</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d2-code-heading">
+      <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+      <h2 id="d2-code-heading" data-es="RVec mantiene separados los dos niveles">RVec keeps the two levels separate</h2>
+      <p data-es="Las comparaciones sobre RVec producen una máscara elemento a elemento. Indexar con esa máscara devuelve la colección seleccionada; recién después Filter recibe una condición escalar sobre la entrada.">Comparisons on an RVec produce an element-by-element mask. Indexing with that mask returns the selected collection; only then does Filter receive a scalar condition about the entry.</p>
+      <div class="code-card"><pre><code>auto selected = df
+  .Define("goodPhoton", "photon_pt > 30.f && abs(photon_eta) < 2.5f")
+  .Define("selectedPhotonPt", "photon_pt[goodPhoton]")
+  .Filter("selectedPhotonPt.size() >= 2");</code></pre></div>
+      <p class="technical-note"><a href="https://root.cern/doc/master/md_math_2vecops_2ARCHITECTURE.html" data-es="Documentación oficial de ROOT sobre RVec">Official ROOT RVec documentation</a></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d2-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d2-transfer-heading" data-es="Ahora haz lo mismo con jets">Now do the same with jets</h2>
+      <rq-predict id="d2-transfer" answer-name="d2-transfer-choice"><form><fieldset><legend data-es="Quieres eventos con al menos tres jets de pT alto. ¿Cuál es la estructura correcta?">You want events with at least three high-pT jets. What is the correct structure?</legend><div class="rq-options">
+        <label><input type="radio" name="d2-transfer-choice" value="select-objects-then-count" required><span data-es="Crear máscara jet_pt > corte, seleccionar jets y luego exigir selectedJets.size() >= 3">Build jet_pt > threshold mask, select jets, then require selectedJets.size() >= 3</span></label>
+        <label><input type="radio" name="d2-transfer-choice" value="event-first"><span data-es="Filtrar primero el evento y después averiguar qué jets pasan">Filter the event first and only afterward determine which jets pass</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Selecciona objetos y luego eventos — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende a separar máscaras a nivel de objeto de requisitos a nivel de evento usando colecciones RVec de ROOT.');
+  }
+</script>
+<script>import '../../lessons/object-event-selection/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.selection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}.selection-grid>div{display:grid;gap:.35rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.selection-grid output{font-weight:800;font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
