@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Work with collections — ROOT Quest"
+  description="Filter and summarize variable-length particle collections with ROOT RVec without manual bookkeeping."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D3">Unit D · Lesson D3</p>
+    <h1 data-es="Trabaja con colecciones">Work with collections</h1>
+    <p class="lede" data-es="Una RVec puede tener distinta longitud en cada evento. Selecciona elementos con una máscara y resume la colección resultante directamente, sin escribir bookkeeping por objeto.">An RVec can have a different length in each event. Select elements with a mask and summarize the resulting collection directly, without writing per-object bookkeeping.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d3-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d3-context-heading" data-es="La misma rama, distinta multiplicidad">Same branch, different multiplicity</h2>
+      <p data-es="Estos eventos sintéticos continúan el contexto de fotones de B3 y D2. Cambia de evento o de corte; la operación sigue siendo la misma aunque cambie la longitud de photon_pt.">These synthetic events continue the photon context from B3 and D2. Change the event or threshold; the operation stays the same even when photon_pt changes length.</p>
+      <div class="control-grid">
+        <fieldset><legend data-es="Elige el evento">Choose the event</legend><div class="rq-options">
+          <label><input type="radio" name="d3-event" value="0" checked><span>Event A · [52, 34, 22] GeV</span></label>
+          <label><input type="radio" name="d3-event" value="1"><span>Event B · [41, 27] GeV</span></label>
+          <label><input type="radio" name="d3-event" value="2"><span>Event C · [65, 44, 31, 18] GeV</span></label>
+        </div></fieldset>
+        <fieldset><legend data-es="Corte de pT">pT threshold</legend><div class="rq-options">
+          <label><input type="radio" name="d3-threshold" value="30" checked><span>pT &gt; 30 GeV</span></label>
+          <label><input type="radio" name="d3-threshold" value="40"><span>pT &gt; 40 GeV</span></label>
+        </div></fieldset>
+      </div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d3-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="d3-observe-heading" data-es="Selecciona una colección; resume esa colección">Select a collection; summarize that collection</h2>
+      <div class="collection-grid" aria-describedby="d3-summary">
+        <div><strong data-es="photon_pt original">Source photon_pt</strong><output id="d3-source">[52, 34, 22] GeV</output></div>
+        <div><strong data-es="Máscara">Mask</strong><output id="d3-mask">[true, true, false]</output></div>
+        <div><strong data-es="pT seleccionado">Selected pT</strong><output id="d3-selected">[52, 34] GeV</output></div>
+        <div><strong data-es="Cantidad seleccionada">Selected count</strong><output id="d3-count">2</output></div>
+        <div><strong data-es="Suma de pT">Summed pT</strong><output id="d3-sum">86 GeV</output></div>
+      </div>
+      <p id="d3-summary" class="technical-note">Event A contains 3 photons. With pT &gt; 30 GeV, RVec keeps 2 and their summed pT is 86 GeV.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d3-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d3-predict-heading" data-es="¿Qué pasa con una colección más larga?">What happens with a longer collection?</h2>
+      <rq-predict id="d3-predict" answer-name="d3-prediction"><form><fieldset><legend data-es="Para [65, 44, 31, 18] GeV y pT > 40 GeV, ¿qué resumen obtienes?">For [65, 44, 31, 18] GeV and pT &gt; 40 GeV, what summary do you get?</legend><div class="rq-options">
+        <label><input type="radio" name="d3-prediction" value="two-values-109" required><span data-es="Quedan [65, 44], size() = 2 y Sum() = 109 GeV">[65, 44] remain, size() = 2 and Sum() = 109 GeV</span></label>
+        <label><input type="radio" name="d3-prediction" value="four-values"><span data-es="size() sigue siendo 4 porque la entrada tenía cuatro fotones">size() stays 4 because the entry had four photons</span></label>
+        <label><input type="radio" name="d3-prediction" value="two-entries"><span data-es="Los dos fotones seleccionados se convierten en dos entradas nuevas">The two selected photons become two new entries</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d3-code-heading">
+      <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+      <h2 id="d3-code-heading" data-es="El mismo patrón trabaja con cualquier longitud">The same pattern works at any length</h2>
+      <p data-es="La comparación produce una máscara RVec. Indexar con ella devuelve otra RVec; size() cuenta sus elementos y ROOT::VecOps::Sum la reduce a un escalar por evento.">The comparison produces an RVec mask. Indexing with it returns another RVec; size() counts its elements and ROOT::VecOps::Sum reduces it to one scalar per event.</p>
+      <div class="code-card"><pre><code>auto selected = df
+  .Define("selectedPhotonPt", "photon_pt[photon_pt > 30.f]")
+  .Define("nSelected", "selectedPhotonPt.size()")
+  .Define("selectedPtSum", "ROOT::VecOps::Sum(selectedPhotonPt)");</code></pre></div>
+      <p class="technical-note"><a href="https://root.cern/doc/master/group__vecops.html" data-es="Documentación oficial de ROOT sobre RVec y VecOps">Official ROOT RVec and VecOps documentation</a></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d3-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d3-transfer-heading" data-es="Transfiérelo a una colección de jets">Transfer it to a jet collection</h2>
+      <rq-predict id="d3-transfer" answer-name="d3-transfer-choice"><form><fieldset><legend data-es="Ya tienes selectedJetPt. ¿Cómo obtienes el pT total de los jets seleccionados sin un loop manual?">You already have selectedJetPt. How do you get the total pT of the selected jets without a manual loop?</legend><div class="rq-options">
+        <label><input type="radio" name="d3-transfer-choice" value="sum-selected" required><span>ROOT::VecOps::Sum(selectedJetPt)</span></label>
+        <label><input type="radio" name="d3-transfer-choice" value="count-only"><span>selectedJetPt.size()</span></label>
+        <label><input type="radio" name="d3-transfer-choice" value="filter-event"><span>df.Filter("selectedJetPt")</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Trabaja con colecciones — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Filtra y resume colecciones de partículas de longitud variable con RVec de ROOT sin bookkeeping manual.');
+  }
+</script>
+<script>import '../../lessons/work-with-collections/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.control-grid,.collection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem}.collection-grid>div{display:grid;gap:.35rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.collection-grid output{font-weight:800;font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
