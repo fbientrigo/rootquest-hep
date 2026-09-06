@@ -29,8 +29,8 @@ export const courseUnits: CourseUnit[] = [
   { id: 'D', title: 'Events contain physics objects', goal: 'Connect particle collections to the kinematics used in introductory HEP analysis.', lessons: [
     { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'live', href: 'learn/object-coordinates/' },
     { id: 'D2', title: 'Select objects, then events', status: 'live', href: 'learn/object-event-selection/' },
-    { id: 'D3', title: 'Work with collections', status: 'next' },
-    { id: 'D4', title: 'Angular separation', status: 'planned' },
+    { id: 'D3', title: 'Work with collections', status: 'live', href: 'learn/work-with-collections/' },
+    { id: 'D4', title: 'Angular separation', status: 'next' },
     { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' },
     { id: 'D6', title: 'Build a candidate', status: 'planned' },
   ]},
