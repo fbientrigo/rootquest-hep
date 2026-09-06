@@ -25,14 +25,19 @@ test('D3 filters and summarizes variable-length collections', async ({ page }) =
   await expect(page.locator('#d3-transfer rq-feedback')).toContainText('Pattern transferred');
 });
 
-test('D3 Spanish interaction preserves the same collection reasoning', async ({ page }) => {
+test('D3 Spanish interaction preserves the same collection reasoning and language preference', async ({ page }) => {
   await page.evaluate(() => localStorage.setItem('rootquest-language', 'es'));
   await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page.locator('h1')).toHaveText('Trabaja con colecciones');
   await page.getByLabel('Quedan [65, 44], size() = 2 y Sum() = 109 GeV').check();
   await page.locator('#d3-predict').getByRole('button', { name: 'Confirmar predicción' }).click();
   await expect(page.locator('#d3-predict rq-feedback')).toContainText('La colección se resume directamente');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Filtra y resume colecciones de partículas de longitud variable con RVec de ROOT sin bookkeeping manual.');
+  await page.goto('course/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await page.goto(lessonPath);
+  await expect(page.locator('h1')).toHaveText('Trabaja con colecciones');
 });
 
 test('D3 has no automated WCAG A or AA violations', async ({ page }) => {
