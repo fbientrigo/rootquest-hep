@@ -128,8 +128,8 @@ Goal: connect vector-like data structures to the physical quantities used in int
 | --- | --- | --- | --- | --- |
 | D1 | **Coordinates of a reconstructed object** | Interpret `pT`, `eta` and `phi` geometrically and identify which quantity answers a stated detector/kinematic question. | common HEP columns | **LIVE** — learner-facing lesson reuses the Higgs Hunt photon context, lets the learner vary one coordinate at a time, and links `pT` to transverse momentum magnitude, `eta` to central/forward beam direction, and `phi` to azimuth around the beam before transfer. |
 | D2 | **Select objects, then events** | Separate an object-level mask from an event-level requirement. | `ROOT::VecOps::RVec`, boolean masks | **LIVE** — learner-facing lesson reuses photon collections and coordinates to build an element-wise mask, select the passing objects, and only then apply a scalar multiplicity requirement to the whole event. |
-| D3 | **Work with collections** | Filter and summarize variable-length particle collections without manual per-event bookkeeping. | `RVec`, masks, `size`, common VecOps patterns | **NEXT** |
-| D4 | **Angular separation** | Predict and compute when two objects are close/far in detector coordinates. | `DeltaR` concept / appropriate ROOT VecOps or math helper | PLANNED |
+| D3 | **Work with collections** | Filter and summarize variable-length particle collections without manual per-event bookkeeping. | `RVec`, masks, `size`, common VecOps patterns | **LIVE** — learner-facing lesson extends D2 from object masks to variable-length collections, then summarizes the selected RVec with `size()` and `ROOT::VecOps::Sum` without manual per-object bookkeeping. |
+| D4 | **Angular separation** | Predict and compute when two objects are close/far in detector coordinates. | `DeltaR` concept / appropriate ROOT VecOps or math helper | **NEXT** |
 | D5 | **Four-vectors and invariant mass** | Manipulate two object momenta, predict qualitative mass changes, then compute the candidate mass. | modern `ROOT::Math` Lorentz-vector types; avoid teaching `TLorentzVector` as the default | PLANNED — Higgs Hunt already visualizes `m_gg`. |
 | D6 | **Build a candidate** | Combine object selection, ordering and kinematics into a derived event-level candidate. | `RVec` + `Define` + four-vectors | PLANNED |
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **D3 — Work with collections**.
+The default next lesson on this roadmap is **D4 — Angular separation**.
