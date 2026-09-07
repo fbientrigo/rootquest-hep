@@ -30,8 +30,8 @@ export const courseUnits: CourseUnit[] = [
     { id: 'D1', title: 'Coordinates of a reconstructed object', status: 'live', href: 'learn/object-coordinates/' },
     { id: 'D2', title: 'Select objects, then events', status: 'live', href: 'learn/object-event-selection/' },
     { id: 'D3', title: 'Work with collections', status: 'live', href: 'learn/work-with-collections/' },
-    { id: 'D4', title: 'Angular separation', status: 'next' },
-    { id: 'D5', title: 'Four-vectors and invariant mass', status: 'planned' },
+    { id: 'D4', title: 'Angular separation', status: 'live', href: 'learn/angular-separation/' },
+    { id: 'D5', title: 'Four-vectors and invariant mass', status: 'next' },
     { id: 'D6', title: 'Build a candidate', status: 'planned' },
   ]},
   { id: 'E', title: 'From plots to evidence', goal: 'Add the minimum normalization and fitting machinery needed for responsible interpretation.', lessons: [

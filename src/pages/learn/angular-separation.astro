@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Angular separation — ROOT Quest"
+  description="Build geometric intuition for angular separation in eta-phi and compute DeltaR with ROOT VecOps."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D4">Unit D · Lesson D4</p>
+    <h1 data-es="Separación angular">Angular separation</h1>
+    <p class="lede" data-es="Dos objetos pueden estar cerca o lejos en el plano eta-phi. Primero razona la geometría; después deja que ROOT calcule la distancia.">Two objects can be close or far in the eta-phi plane. Reason about the geometry first; then let ROOT compute the distance.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d4-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d4-context-heading" data-es="Compara dos pares de objetos">Compare two object pairs</h2>
+      <p data-es="Estos pares sintéticos continúan las coordenadas de D1. Cambia de par y observa cómo una distancia usa simultáneamente eta y phi.">These synthetic pairs continue the coordinates from D1. Change pair and observe how one distance uses eta and phi together.</p>
+      <fieldset><legend data-es="Elige un par">Choose a pair</legend><div class="rq-options">
+        <label><input type="radio" name="d4-pair" value="0" checked><span data-es="Par A · pequeñas diferencias en eta y phi">Pair A · small differences in eta and phi</span></label>
+        <label><input type="radio" name="d4-pair" value="1"><span data-es="Par B · diferencias mayores en eta y phi">Pair B · larger differences in eta and phi</span></label>
+      </div></fieldset>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d4-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="d4-observe-heading" data-es="DeltaR resume distancia en el plano eta-phi">DeltaR summarizes distance in the eta-phi plane</h2>
+      <div class="metric-grid" aria-describedby="d4-summary">
+        <div><strong>Δη</strong><output id="d4-deta">0.20</output></div>
+        <div><strong>Δφ</strong><output id="d4-dphi">0.15</output></div>
+        <div><strong>ΔR</strong><output id="d4-dr">0.25</output></div>
+      </div>
+      <p id="d4-summary" class="technical-note">Pair A: Δη = 0.20, Δφ = 0.15 rad and ΔR = 0.25.</p>
+      <p><code>ΔR = √(Δη² + Δφ²)</code></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d4-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d4-predict-heading" data-es="¿Qué ocurre en el borde de phi?">What happens at the phi boundary?</h2>
+      <p data-es="Ahora considera un par con eta = 0.30, phi = 3.05 y eta = 0.35, phi = -3.05. Compromete una predicción antes de ver el cálculo.">Now consider a pair at eta = 0.30, phi = 3.05 and eta = 0.35, phi = -3.05. Commit a prediction before seeing the calculation.</p>
+      <rq-predict id="d4-boundary" answer-name="d4-boundary-choice"><form><fieldset><legend data-es="¿Están cerca o lejos en eta-phi?">Are they close or far in eta-phi?</legend><div class="rq-options">
+        <label><input type="radio" name="d4-boundary-choice" value="close-across-boundary" required><span data-es="Cerca: phi es periódico y la separación corta cruza ±π">Close: phi is periodic and the short separation crosses ±π</span></label>
+        <label><input type="radio" name="d4-boundary-choice" value="far-raw-subtraction"><span data-es="Lejos: |3.05 - (-3.05)| ≈ 6.10 rad">Far: |3.05 - (-3.05)| ≈ 6.10 rad</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d4-code-heading">
+      <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+      <h2 id="d4-code-heading" data-es="ROOT aplica la diferencia angular envuelta">ROOT applies the wrapped angular difference</h2>
+      <p data-es="ROOT::VecOps::DeltaR calcula la distancia en el plano eta-phi y usa la periodicidad angular de phi. Para escalares, entrega un escalar; también existen overloads para RVec.">ROOT::VecOps::DeltaR computes distance in the eta-phi plane and uses phi's angular periodicity. For scalars it returns one scalar; RVec overloads are available too.</p>
+      <div class="code-card"><pre><code>auto withDR = df.Define(
+  "photonDR",
+  "ROOT::VecOps::DeltaR(eta1, eta2, phi1, phi2)"
+);</code></pre></div>
+      <p class="technical-note"><a href="https://root.cern/doc/master/group__vecops.html" data-es="Documentación oficial de ROOT sobre DeltaR y DeltaPhi">Official ROOT documentation for DeltaR and DeltaPhi</a></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d4-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d4-transfer-heading" data-es="Decide qué par está más cerca">Decide which pair is closer</h2>
+      <rq-predict id="d4-transfer" answer-name="d4-transfer-choice"><form><fieldset><legend data-es="¿Qué par tiene menor DeltaR?">Which pair has smaller DeltaR?</legend><div class="rq-options">
+        <label><input type="radio" name="d4-transfer-choice" value="pair-one" required><span data-es="Par 1: Δη = 0.3, Δφ = 0.4">Pair 1: Δη = 0.3, Δφ = 0.4</span></label>
+        <label><input type="radio" name="d4-transfer-choice" value="pair-two"><span data-es="Par 2: Δη = 0.1, Δφ = 0.8">Pair 2: Δη = 0.1, Δφ = 0.8</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Separación angular — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Construye intuición geométrica para la separación angular en eta-phi y calcula DeltaR con VecOps de ROOT.');
+  }
+</script>
+<script>import '../../lessons/angular-separation/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:.75rem}.metric-grid>div{display:grid;gap:.35rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.metric-grid output{font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}
+</style>
