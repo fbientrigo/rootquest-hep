@@ -18,7 +18,7 @@ const spanishRoutes = [
   { path: 'learn/cutflow/', heading: 'Cutflow: ¿adónde fueron los eventos?' },
   { path: 'learn/derived-sample/', heading: 'Conserva una muestra derivada útil' },
   { path: 'learn/object-coordinates/', heading: 'Coordenadas de un objeto reconstruido' },
-  { path: 'learn/object-event-selection/', heading: 'Selecciona objetos, luego eventos' },
+  { path: 'learn/object-event-selection/', heading: 'Selecciona objetos y luego eventos' },
   { path: 'learn/work-with-collections/', heading: 'Trabaja con colecciones' },
   { path: 'learn/angular-separation/', heading: 'Separación angular' },
   { path: 'learn/four-vectors/', heading: 'Cuatro-vectores y masa invariante' },
