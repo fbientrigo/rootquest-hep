@@ -18,6 +18,10 @@ const spanishRoutes = [
   { path: 'learn/cutflow/', heading: 'Cutflow: ¿adónde fueron los eventos?' },
   { path: 'learn/derived-sample/', heading: 'Conserva una muestra derivada útil' },
   { path: 'learn/object-coordinates/', heading: 'Coordenadas de un objeto reconstruido' },
+  { path: 'learn/object-event-selection/', heading: 'Selecciona objetos, luego eventos' },
+  { path: 'learn/work-with-collections/', heading: 'Trabaja con colecciones' },
+  { path: 'learn/angular-separation/', heading: 'Separación angular' },
+  { path: 'learn/four-vectors/', heading: 'Cuatro-vectores y masa invariante' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -73,6 +77,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/object-coordinates/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Interpreta momento transversal, pseudorapidez y azimut para un objeto reconstruido y elige la coordenada que responde una pregunta geométrica o cinemática.');
+
+  await page.goto('learn/four-vectors/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Construye un cuatro-vector de dos fotones, predice cómo la cinemática cambia la masa candidata y calcula masa invariante con ROOT Math.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -157,6 +164,11 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.locator('#d1-transfer').getByLabel('eta', { exact: true }).check();
   await page.locator('#d1-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
   await expect(page.locator('#d1-transfer rq-feedback')).toContainText('Coordenada correcta');
+
+  await page.goto('learn/four-vectors/');
+  await page.getByLabel('Par B: los fotones opuestos producen una masa mayor').check();
+  await page.locator('#d5-opening').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#d5-opening rq-feedback')).toContainText('La geometría cambia la masa');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
