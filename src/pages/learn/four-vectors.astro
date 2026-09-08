@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Four-vectors and invariant mass — ROOT Quest"
+  description="Build a two-photon four-vector, predict how kinematics change the candidate mass, and compute invariant mass with ROOT Math."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D5">Unit D · Lesson D5</p>
+    <h1 data-es="Cuatro-vectores y masa invariante">Four-vectors and invariant mass</h1>
+    <p class="lede" data-es="La masa de un candidato no se obtiene mirando una coordenada aislada. Suma primero los cuatro-momentos de sus objetos; la masa pertenece al sistema combinado.">A candidate mass does not come from one coordinate in isolation. Add the objects' four-momenta first; the mass belongs to the combined system.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d5-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d5-context-heading" data-es="Dos fotones forman un sistema">Two photons form one system</h2>
+      <p data-es="Estos pares son sintéticos y tratan los fotones como partículas sin masa. Cambia de par: los números pT, eta y phi describen cada fotón, mientras mγγ describe el par después de sumar sus cuatro-momentos.">These pairs are synthetic and treat photons as massless particles. Change pair: pT, eta and phi describe each photon, while mγγ describes the pair after their four-momenta are added.</p>
+      <fieldset><legend data-es="Elige un par de fotones">Choose a photon pair</legend><div class="rq-options">
+        <label><input type="radio" name="d5-scenario" value="0" checked><span data-es="Par A · 50 + 50 GeV, casi alineados en phi">Pair A · 50 + 50 GeV, nearly aligned in phi</span></label>
+        <label><input type="radio" name="d5-scenario" value="1"><span data-es="Par B · 50 + 50 GeV, opuestos en phi">Pair B · 50 + 50 GeV, opposite in phi</span></label>
+        <label><input type="radio" name="d5-scenario" value="2"><span data-es="Par C · pT y direcciones asimétricas">Pair C · asymmetric pT and directions</span></label>
+      </div></fieldset>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d5-observe-heading">
+      <p class="stage-kicker" data-es="Observa">Observe</p>
+      <h2 id="d5-observe-heading" data-es="La masa aparece después de combinar">Mass appears after combining</h2>
+      <div class="kinematics-table" role="group" aria-describedby="d5-summary">
+        <div class="kinematics-row kinematics-head"><span></span><strong data-es="Fotón 1">Photon 1</strong><strong data-es="Fotón 2">Photon 2</strong></div>
+        <div class="kinematics-row"><strong>pT [GeV]</strong><output id="d5-pt1">50</output><output id="d5-pt2">50</output></div>
+        <div class="kinematics-row"><strong>eta</strong><output id="d5-eta1">0.00</output><output id="d5-eta2">0.00</output></div>
+        <div class="kinematics-row"><strong>phi [rad]</strong><output id="d5-phi1">0.00</output><output id="d5-phi2">0.40</output></div>
+      </div>
+      <div class="mass-result"><span data-es="Masa del sistema">System mass</span><strong><output id="d5-mass">19.9</output> GeV</strong></div>
+      <p id="d5-summary" class="technical-note">Pair A: after adding the two four-momenta, the candidate invariant mass is 19.9 GeV.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d5-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d5-predict-heading" data-es="Mismo pT, distinta geometría">Same pT, different geometry</h2>
+      <p data-es="Los pares A y B tienen 50 GeV por fotón y eta = 0. Sólo cambia la apertura en phi. ¿Qué masa debe ser mayor?">Pairs A and B both have 50 GeV per photon and eta = 0. Only their opening in phi changes. Which mass should be larger?</p>
+      <rq-predict id="d5-opening" answer-name="d5-opening-choice"><form><fieldset><legend data-es="Predice antes de revelar el cálculo">Predict before revealing the calculation</legend><div class="rq-options">
+        <label><input type="radio" name="d5-opening-choice" value="back-to-back-larger" required><span data-es="Par B: los fotones opuestos producen una masa mayor">Pair B: the opposite photons produce a larger mass</span></label>
+        <label><input type="radio" name="d5-opening-choice" value="same-mass"><span data-es="La misma: ambos pares tienen los mismos pT">The same: both pairs have the same pT</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d5-code-heading">
+      <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+      <h2 id="d5-code-heading" data-es="ROOT suma los cuatro-vectores y luego pregunta por M">ROOT adds the four-vectors, then asks for M</h2>
+      <p data-es="ROOT::Math::PtEtaPhiMVector representa un cuatro-vector usando pT, eta, phi y masa. En este ejemplo didáctico cada fotón usa masa 0; el candidato es p1 + p2 y su masa es (p1 + p2).M().">ROOT::Math::PtEtaPhiMVector represents a four-vector with pT, eta, phi and mass. In this teaching example each photon uses mass 0; the candidate is p1 + p2 and its mass is (p1 + p2).M().</p>
+      <div class="code-card"><pre><code>ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, 0.0);
+ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, 0.0);
+
+auto candidate = p1 + p2;
+auto m_gg = candidate.M();</code></pre></div>
+      <p class="technical-note" data-es="El tutorial oficial de análisis NanoAOD de ROOT usa el mismo patrón: construye PtEtaPhiMVector, suma los vectores y obtiene la masa con M().">ROOT's official NanoAOD analysis tutorial uses the same pattern: construct PtEtaPhiMVector objects, add them, and obtain the mass with M().</p>
+      <p class="technical-note"><a href="https://root.cern/doc/master/df103__NanoAODHiggsAnalysis_8C.html" data-es="Tutorial oficial ROOT: análisis NanoAOD de Higgs">Official ROOT tutorial: NanoAOD Higgs analysis</a></p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d5-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d5-transfer-heading" data-es="Escala el mismo sistema">Scale the same system</h2>
+      <p data-es="Un par idealizado back-to-back con pT = 50 GeV para cada fotón tiene mγγ = 100 GeV. Mantén eta y phi iguales, pero duplica ambos pT a 100 GeV.">An idealized back-to-back pair with pT = 50 GeV for each photon has mγγ = 100 GeV. Keep eta and phi unchanged, but double both pT values to 100 GeV.</p>
+      <rq-predict id="d5-transfer" answer-name="d5-transfer-choice"><form><fieldset><legend data-es="¿Qué ocurre con la masa del sistema?">What happens to the system mass?</legend><div class="rq-options">
+        <label><input type="radio" name="d5-transfer-choice" value="mass-doubles" required><span data-es="Se duplica a 200 GeV">It doubles to 200 GeV</span></label>
+        <label><input type="radio" name="d5-transfer-choice" value="mass-stays"><span data-es="Permanece en 100 GeV porque la geometría no cambió">It stays at 100 GeV because the geometry did not change</span></label>
+        <label><input type="radio" name="d5-transfer-choice" value="mass-zero"><span data-es="Es cero porque cada fotón individual no tiene masa">It is zero because each individual photon is massless</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Cuatro-vectores y masa invariante — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Construye un cuatro-vector de dos fotones, predice cómo la cinemática cambia la masa candidata y calcula masa invariante con ROOT Math.');
+  }
+</script>
+<script>import '../../lessons/four-vectors/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.kinematics-table{display:grid;gap:.35rem}.kinematics-row{display:grid;grid-template-columns:minmax(5rem,1.2fr) repeat(2,minmax(4.5rem,1fr));gap:.5rem;align-items:center;padding:.55rem .7rem;border-bottom:1px solid var(--border)}.kinematics-row output{text-align:right;font-variant-numeric:tabular-nums}.kinematics-head{border-bottom:2px solid var(--border)}.mass-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.mass-result strong{font-size:1.35rem}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:420px){.kinematics-row{grid-template-columns:minmax(4.5rem,1fr) repeat(2,minmax(3.7rem,.8fr));font-size:.92rem}}
+</style>

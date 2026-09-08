@@ -130,8 +130,8 @@ Goal: connect vector-like data structures to the physical quantities used in int
 | D2 | **Select objects, then events** | Separate an object-level mask from an event-level requirement. | `ROOT::VecOps::RVec`, boolean masks | **LIVE** — learner-facing lesson reuses photon collections and coordinates to build an element-wise mask, select the passing objects, and only then apply a scalar multiplicity requirement to the whole event. |
 | D3 | **Work with collections** | Filter and summarize variable-length particle collections without manual per-event bookkeeping. | `RVec`, masks, `size`, common VecOps patterns | **LIVE** — learner-facing lesson extends D2 from object masks to variable-length collections, then summarizes the selected RVec with `size()` and `ROOT::VecOps::Sum` without manual per-object bookkeeping. |
 | D4 | **Angular separation** | Predict and compute when two objects are close/far in detector coordinates. | `DeltaR` concept / appropriate ROOT VecOps or math helper | **LIVE** — learner-facing lesson compares prepared eta-phi pairs, makes the learner predict the ±π boundary case before reveal, and bridges the wrapped angular distance to `ROOT::VecOps::DeltaR`. |
-| D5 | **Four-vectors and invariant mass** | Manipulate two object momenta, predict qualitative mass changes, then compute the candidate mass. | modern `ROOT::Math` Lorentz-vector types; avoid teaching `TLorentzVector` as the default | **NEXT** — Higgs Hunt already visualizes `m_gg`. |
-| D6 | **Build a candidate** | Combine object selection, ordering and kinematics into a derived event-level candidate. | `RVec` + `Define` + four-vectors | PLANNED |
+| D5 | **Four-vectors and invariant mass** | Manipulate two object momenta, predict qualitative mass changes, then compute the candidate mass. | modern `ROOT::Math` Lorentz-vector types; avoid teaching `TLorentzVector` as the default | **LIVE** — learner-facing lesson reuses the diphoton context, compares synthetic photon pairs with controlled kinematics, predicts the effect of opening angle before reveal, and bridges four-vector addition to `ROOT::Math::PtEtaPhiMVector` plus `M()`. |
+| D6 | **Build a candidate** | Combine object selection, ordering and kinematics into a derived event-level candidate. | `RVec` + `Define` + four-vectors | **NEXT** |
 
 Observable unit proof: the learner can construct a physically meaningful two-object candidate from event collections and explain each selection and derived quantity.
 
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **D5 — Four-vectors and invariant mass**.
+The default next lesson on this roadmap is **D6 — Build a candidate**.
