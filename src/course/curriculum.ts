@@ -31,8 +31,8 @@ export const courseUnits: CourseUnit[] = [
     { id: 'D2', title: 'Select objects, then events', status: 'live', href: 'learn/object-event-selection/' },
     { id: 'D3', title: 'Work with collections', status: 'live', href: 'learn/work-with-collections/' },
     { id: 'D4', title: 'Angular separation', status: 'live', href: 'learn/angular-separation/' },
-    { id: 'D5', title: 'Four-vectors and invariant mass', status: 'next' },
-    { id: 'D6', title: 'Build a candidate', status: 'planned' },
+    { id: 'D5', title: 'Four-vectors and invariant mass', status: 'live', href: 'learn/four-vectors/' },
+    { id: 'D6', title: 'Build a candidate', status: 'next' },
   ]},
   { id: 'E', title: 'From plots to evidence', goal: 'Add the minimum normalization and fitting machinery needed for responsible interpretation.', lessons: [
     { id: 'E1', title: 'Signal and background trade-offs', status: 'planned' }, { id: 'E2', title: 'Event weights and normalization', status: 'planned' }, { id: 'E3', title: 'Data vs simulation', status: 'planned' }, { id: 'E4', title: 'Fit a simple model', status: 'planned' }, { id: 'E5', title: 'Read a fit critically', status: 'planned' }, { id: 'E6', title: 'Signal and control regions', status: 'planned' },
