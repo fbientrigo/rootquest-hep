@@ -131,7 +131,7 @@ Goal: connect vector-like data structures to the physical quantities used in int
 | D3 | **Work with collections** | Filter and summarize variable-length particle collections without manual per-event bookkeeping. | `RVec`, masks, `size`, common VecOps patterns | **LIVE** — learner-facing lesson extends D2 from object masks to variable-length collections, then summarizes the selected RVec with `size()` and `ROOT::VecOps::Sum` without manual per-object bookkeeping. |
 | D4 | **Angular separation** | Predict and compute when two objects are close/far in detector coordinates. | `DeltaR` concept / appropriate ROOT VecOps or math helper | **LIVE** — learner-facing lesson compares prepared eta-phi pairs, makes the learner predict the ±π boundary case before reveal, and bridges the wrapped angular distance to `ROOT::VecOps::DeltaR`. |
 | D5 | **Four-vectors and invariant mass** | Manipulate two object momenta, predict qualitative mass changes, then compute the candidate mass. | modern `ROOT::Math` Lorentz-vector types; avoid teaching `TLorentzVector` as the default | **LIVE** — learner-facing lesson reuses the diphoton context, compares synthetic photon pairs with controlled kinematics, predicts the effect of opening angle before reveal, and bridges four-vector addition to `ROOT::Math::PtEtaPhiMVector` plus `M()`. |
-| D6 | **Build a candidate** | Combine object selection, ordering and kinematics into a derived event-level candidate. | `RVec` + `Define` + four-vectors | **NEXT** |
+| D6 | **Build a candidate** | Combine object selection, ordering and kinematics into a derived event-level candidate. | `RVec` + `Define` + four-vectors | **LIVE** — learner-facing lesson uses one synthetic unsorted photon collection, requires selection before pT ordering, builds the two-leading-photon four-vector candidate, and rejects events with fewer than two selected photons before indexing. |
 
 Observable unit proof: the learner can construct a physically meaningful two-object candidate from event collections and explain each selection and derived quantity.
 
@@ -143,7 +143,7 @@ Goal: stop treating a histogram as the answer; introduce the minimum statistical
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **DRILL** — `practice/manipulate` and Higgs Hunt already teach this causally. |
+| E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **NEXT** — promote the existing `practice/manipulate` and Higgs Hunt causal drill rather than rebuilding the threshold mechanic. |
 | E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | PLANNED — `event_weight` already appears in the tree probe. |
 | E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | PLANNED |
 | E4 | **Fit a simple model** | Connect a visible model shape to parameters and fit a simple function over a justified range. | `TF1`, `Fit` | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **D6 — Build a candidate**.
+The default next lesson on this roadmap is **E1 — Signal and background trade-offs**.
