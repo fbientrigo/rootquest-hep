@@ -66,13 +66,13 @@ import '../../learning/styles/learning.css';
   .Define("pt",  "ROOT::VecOps::Take(sel_pt, order)")
   .Define("eta", "ROOT::VecOps::Take(sel_eta, order)")
   .Define("phi", "ROOT::VecOps::Take(sel_phi, order)")
-  .Define("m_gg", [](const ROOT::RVecF &pt,
-                     const ROOT::RVecF &eta,
-                     const ROOT::RVecF &phi) {
+  .Define("m_gg", [](const ROOT::RVecF &amp;pt,
+                     const ROOT::RVecF &amp;eta,
+                     const ROOT::RVecF &amp;phi) &#123;
     ROOT::Math::PtEtaPhiMVector p1(pt[0], eta[0], phi[0], 0.0);
     ROOT::Math::PtEtaPhiMVector p2(pt[1], eta[1], phi[1], 0.0);
     return (p1 + p2).M();
-  }, {"pt", "eta", "phi"});</code></pre></div>
+  &#125;, &#123;"pt", "eta", "phi"&#125;);</code></pre></div>
         <p class="technical-note"><a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame y selección de colecciones">Official ROOT reference: RDataFrame and collection selections</a> · <a href="https://root.cern/doc/master/vo004__SortAndSelect_8py.html" data-es="Tutorial oficial ROOT: ordenar y seleccionar RVec">Official ROOT tutorial: sort and select RVec</a></p>
       </section>
     </div>
@@ -102,5 +102,5 @@ import '../../learning/styles/learning.css';
 <script>import '../../lessons/build-candidate/controller.ts';</script>
 
 <style is:global>
-  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.candidate-table{display:grid;border:1px solid var(--border);border-radius:.65rem;overflow:hidden}.candidate-row{display:grid;grid-template-columns:minmax(3.5rem,.7fr) repeat(3,minmax(4rem,1fr));gap:.5rem;padding:.55rem .7rem;border-bottom:1px solid var(--border)}.candidate-row:last-child{border-bottom:0}.candidate-head{background:var(--surface-strong)}.candidate-flow{display:grid;gap:.6rem;padding-left:1.25rem}.candidate-flow output{font-variant-numeric:tabular-nums}.mass-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.mass-result strong{font-size:1.35rem}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:420px){.candidate-row{grid-template-columns:minmax(3rem,.65fr) repeat(3,minmax(3.5rem,.9fr));font-size:.9rem}}
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#d6-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.candidate-table{display:grid;border:1px solid var(--border);border-radius:.65rem;overflow:hidden}.candidate-row{display:grid;grid-template-columns:minmax(3.5rem,.7fr) repeat(3,minmax(4rem,1fr));gap:.5rem;padding:.55rem .7rem;border-bottom:1px solid var(--border)}.candidate-row:last-child{border-bottom:0}.candidate-head{background:var(--surface-strong)}.candidate-flow{display:grid;gap:.6rem;padding-left:1.25rem}.candidate-flow output{font-variant-numeric:tabular-nums}.mass-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.mass-result strong{font-size:1.35rem}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:420px){.candidate-row{grid-template-columns:minmax(3rem,.65fr) repeat(3,minmax(3.5rem,.9fr));font-size:.9rem}}
 </style>
