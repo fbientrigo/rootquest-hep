@@ -32,10 +32,10 @@ export const courseUnits: CourseUnit[] = [
     { id: 'D3', title: 'Work with collections', status: 'live', href: 'learn/work-with-collections/' },
     { id: 'D4', title: 'Angular separation', status: 'live', href: 'learn/angular-separation/' },
     { id: 'D5', title: 'Four-vectors and invariant mass', status: 'live', href: 'learn/four-vectors/' },
-    { id: 'D6', title: 'Build a candidate', status: 'next' },
+    { id: 'D6', title: 'Build a candidate', status: 'live', href: 'learn/build-candidate/' },
   ]},
   { id: 'E', title: 'From plots to evidence', goal: 'Add the minimum normalization and fitting machinery needed for responsible interpretation.', lessons: [
-    { id: 'E1', title: 'Signal and background trade-offs', status: 'planned' }, { id: 'E2', title: 'Event weights and normalization', status: 'planned' }, { id: 'E3', title: 'Data vs simulation', status: 'planned' }, { id: 'E4', title: 'Fit a simple model', status: 'planned' }, { id: 'E5', title: 'Read a fit critically', status: 'planned' }, { id: 'E6', title: 'Signal and control regions', status: 'planned' },
+    { id: 'E1', title: 'Signal and background trade-offs', status: 'next' }, { id: 'E2', title: 'Event weights and normalization', status: 'planned' }, { id: 'E3', title: 'Data vs simulation', status: 'planned' }, { id: 'E4', title: 'Fit a simple model', status: 'planned' }, { id: 'E5', title: 'Read a fit critically', status: 'planned' }, { id: 'E6', title: 'Signal and control regions', status: 'planned' },
   ]},
   { id: 'F', title: 'Work independently', goal: 'Fade support until a learner can transfer the workflow to an unfamiliar small analysis.', lessons: [
     { id: 'F1', title: 'Assemble an analysis from a question', status: 'planned' }, { id: 'F2', title: 'Higgs Hunt — discovery revisit', status: 'planned' }, { id: 'F3', title: 'Independent mini-analysis', status: 'planned' }, { id: 'F4', title: 'Leave ROOT Quest', status: 'planned' },

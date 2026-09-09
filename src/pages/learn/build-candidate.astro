@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Build a candidate — ROOT Quest"
+  description="Combine object selection, pT ordering and four-vectors to build a two-photon event-level candidate with RVec and RDataFrame."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad D · Lección D6">Unit D · Lesson D6</p>
+    <h1 data-es="Construye un candidato">Build a candidate</h1>
+    <p class="lede" data-es="Un candidato de dos objetos no aparece sólo porque un evento tenga fotones. Primero decide cuáles son válidos, luego ordénalos con una regla explícita y recién entonces combina sus cuatro-momentos.">A two-object candidate does not appear merely because an event contains photons. First decide which photons qualify, then order them with an explicit rule, and only then combine their four-momenta.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="d6-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="d6-context-heading" data-es="Una colección no viene con un candidato incorporado">A collection does not come with a candidate built in</h2>
+      <p data-es="Este evento es sintético. Para este ejercicio definimos una regla de análisis concreta: conserva fotones con pT > 30 GeV, ordénalos por pT de mayor a menor y usa los dos líderes para construir el candidato diphotón.">This event is synthetic. For this exercise we define one explicit analysis rule: keep photons with pT > 30 GeV, order them from highest to lowest pT, and use the two leaders to build the diphoton candidate.</p>
+      <div class="candidate-table" role="table" aria-label="Synthetic photon collection" data-es-aria="Colección sintética de fotones">
+        <div class="candidate-row candidate-head" role="row"><strong role="columnheader" data-es="Fotón">Photon</strong><strong role="columnheader">pT [GeV]</strong><strong role="columnheader">eta</strong><strong role="columnheader">phi</strong></div>
+        <div class="candidate-row" role="row"><span role="cell">D</span><span role="cell">35</span><span role="cell">0.8</span><span role="cell">−2.1</span></div>
+        <div class="candidate-row" role="row"><span role="cell">C</span><span role="cell">44</span><span role="cell">−0.5</span><span role="cell">2.8</span></div>
+        <div class="candidate-row" role="row"><span role="cell">A</span><span role="cell">62</span><span role="cell">0.2</span><span role="cell">0.1</span></div>
+        <div class="candidate-row" role="row"><span role="cell">B</span><span role="cell">28</span><span role="cell">1.1</span><span role="cell">−0.4</span></div>
+      </div>
+      <p class="technical-note" data-es="El orden D, C, A, B es deliberadamente el orden de entrada, no un ranking físico.">The D, C, A, B sequence is deliberately input order, not a physics ranking.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="d6-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="d6-predict-heading" data-es="¿Qué dos fotones forman el candidato?">Which two photons form the candidate?</h2>
+      <rq-predict id="d6-pair" answer-name="d6-pair-choice"><form><fieldset><legend data-es="Aplica selección y ordenamiento antes de responder">Apply selection and ordering before answering</legend><div class="rq-options">
+        <label><input type="radio" name="d6-pair-choice" value="D-C" required><span data-es="D + C, porque son los dos primeros que pasan el corte">D + C, because they are the first two that pass the cut</span></label>
+        <label><input type="radio" name="d6-pair-choice" value="A-C"><span data-es="A + C, porque son los dos pT más altos entre los seleccionados">A + C, because they have the two highest pT values among selected photons</span></label>
+        <label><input type="radio" name="d6-pair-choice" value="A-D"><span data-es="A + D, porque están más separados en el orden de entrada">A + D, because they are farther apart in the input order</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar candidato">Commit candidate</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="d6-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="d6-observe-heading">
+        <p class="stage-kicker" data-es="Observa">Observe</p>
+        <h2 id="d6-observe-heading" data-es="La construcción tiene un orden causal">Candidate building has a causal order</h2>
+        <ol class="candidate-flow">
+          <li><strong data-es="Máscara pT > 30:">pT > 30 mask:</strong> <output id="d6-mask">✓ ✓ ✓ ×</output></li>
+          <li><strong data-es="Seleccionados:">Selected:</strong> <output id="d6-selected">D (35 GeV) · C (44 GeV) · A (62 GeV)</output></li>
+          <li><strong data-es="Ordenados por pT:">Ordered by pT:</strong> <output id="d6-ordered">A (62 GeV) → C (44 GeV) → D (35 GeV)</output></li>
+          <li><strong data-es="Candidato:">Candidate:</strong> <output id="d6-candidate">A + C</output></li>
+        </ol>
+        <div class="mass-result"><span data-es="Masa del candidato">Candidate mass</span><strong><output id="d6-mass">108.5 GeV</output></strong></div>
+        <p class="technical-note" data-es="La masa usa exactamente la construcción de cuatro-vectores de D5; D6 añade la decisión previa de cuáles dos objetos llegan a esa suma.">The mass uses exactly the four-vector construction from D5; D6 adds the earlier decision about which two objects reach that sum.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="d6-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="d6-code-heading" data-es="RDataFrame expresa la misma secuencia">RDataFrame expresses the same sequence</h2>
+        <p data-es="RVec permite crear la máscara y conservar sólo los elementos que pasan. Argsort entrega los índices de ordenamiento; Reverse los pone de mayor a menor y Take aplica esos mismos índices a pT, eta y phi para mantener los objetos alineados.">RVec lets you create the mask and keep only passing elements. Argsort returns sorting indices; Reverse makes them descending and Take applies the same indices to pT, eta and phi so object coordinates stay aligned.</p>
+        <div class="code-card"><pre><code>auto selected = df
+  .Define("good", "photon_pt > 30.f")
+  .Define("sel_pt",  "photon_pt[good]")
+  .Define("sel_eta", "photon_eta[good]")
+  .Define("sel_phi", "photon_phi[good]")
+  .Filter("sel_pt.size() >= 2")
+  .Define("order", "ROOT::VecOps::Reverse(ROOT::VecOps::Argsort(sel_pt))")
+  .Define("pt",  "ROOT::VecOps::Take(sel_pt, order)")
+  .Define("eta", "ROOT::VecOps::Take(sel_eta, order)")
+  .Define("phi", "ROOT::VecOps::Take(sel_phi, order)")
+  .Define("m_gg", [](const ROOT::RVecF &amp;pt,
+                     const ROOT::RVecF &amp;eta,
+                     const ROOT::RVecF &amp;phi) &#123;
+    ROOT::Math::PtEtaPhiMVector p1(pt[0], eta[0], phi[0], 0.0);
+    ROOT::Math::PtEtaPhiMVector p2(pt[1], eta[1], phi[1], 0.0);
+    return (p1 + p2).M();
+  &#125;, &#123;"pt", "eta", "phi"&#125;);</code></pre></div>
+        <p class="technical-note"><a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame y selección de colecciones">Official ROOT reference: RDataFrame and collection selections</a> · <a href="https://root.cern/doc/master/vo004__SortAndSelect_8py.html" data-es="Tutorial oficial ROOT: ordenar y seleccionar RVec">Official ROOT tutorial: sort and select RVec</a></p>
+      </section>
+    </div>
+
+    <section class="lesson-card" aria-labelledby="d6-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="d6-transfer-heading" data-es="¿Qué ocurre si el corte deja un solo fotón?">What if the cut leaves only one photon?</h2>
+      <p data-es="En el mismo evento sube el requisito a pT > 50 GeV. Sólo A sobrevive. ¿Qué debe hacer el pipeline antes de acceder a los índices 0 y 1?">In the same event, raise the requirement to pT > 50 GeV. Only A survives. What should the pipeline do before accessing indices 0 and 1?</p>
+      <rq-predict id="d6-transfer" answer-name="d6-transfer-choice"><form><fieldset><legend data-es="Elige la acción científicamente y computacionalmente correcta">Choose the scientifically and computationally correct action</legend><div class="rq-options">
+        <label><input type="radio" name="d6-transfer-choice" value="filter-before-indexing" required><span data-es="Exigir al menos dos fotones seleccionados y descartar este evento antes de construir el candidato">Require at least two selected photons and reject this event before building the candidate</span></label>
+        <label><input type="radio" name="d6-transfer-choice" value="reuse-rejected"><span data-es="Volver a usar el fotón de 44 GeV aunque ya no pase el corte">Reuse the 44 GeV photon even though it no longer passes the cut</span></label>
+        <label><input type="radio" name="d6-transfer-choice" value="duplicate-leading"><span data-es="Usar A dos veces para completar el par">Use A twice to complete the pair</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria')); });
+    document.title = 'Construye un candidato — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Combina selección de objetos, ordenamiento por pT y cuatro-vectores para construir un candidato event-level de dos fotones con RVec y RDataFrame.');
+  }
+</script>
+<script>import '../../lessons/build-candidate/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#d6-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.candidate-table{display:grid;border:1px solid var(--border);border-radius:.65rem;overflow:hidden}.candidate-row{display:grid;grid-template-columns:minmax(3.5rem,.7fr) repeat(3,minmax(4rem,1fr));gap:.5rem;padding:.55rem .7rem;border-bottom:1px solid var(--border)}.candidate-row:last-child{border-bottom:0}.candidate-head{background:var(--surface-strong)}.candidate-flow{display:grid;gap:.6rem;padding-left:1.25rem}.candidate-flow output{font-variant-numeric:tabular-nums}.mass-result{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;margin-top:1rem;padding:1rem;border:1px solid var(--border);border-radius:.65rem}.mass-result strong{font-size:1.35rem}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:420px){.candidate-row{grid-template-columns:minmax(3rem,.65fr) repeat(3,minmax(3.5rem,.9fr));font-size:.9rem}}
+</style>

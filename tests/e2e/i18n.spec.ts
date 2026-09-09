@@ -22,6 +22,7 @@ const spanishRoutes = [
   { path: 'learn/work-with-collections/', heading: 'Trabaja con colecciones' },
   { path: 'learn/angular-separation/', heading: 'Separación angular' },
   { path: 'learn/four-vectors/', heading: 'Cuatro-vectores y masa invariante' },
+  { path: 'learn/build-candidate/', heading: 'Construye un candidato' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -80,6 +81,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/four-vectors/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Construye un cuatro-vector de dos fotones, predice cómo la cinemática cambia la masa candidata y calcula masa invariante con ROOT Math.');
+
+  await page.goto('learn/build-candidate/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Combina selección de objetos, ordenamiento por pT y cuatro-vectores para construir un candidato event-level de dos fotones con RVec y RDataFrame.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -169,6 +173,11 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('Par B: los fotones opuestos producen una masa mayor').check();
   await page.locator('#d5-opening').getByRole('button', { name: 'Confirmar predicción' }).click();
   await expect(page.locator('#d5-opening rq-feedback')).toContainText('La geometría cambia la masa');
+
+  await page.goto('learn/build-candidate/');
+  await page.getByLabel('A + C, porque son los dos pT más altos entre los seleccionados').check();
+  await page.locator('#d6-pair').getByRole('button', { name: 'Confirmar candidato' }).click();
+  await expect(page.locator('#d6-pair rq-feedback')).toContainText('Selecciona primero; ordena después.');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
