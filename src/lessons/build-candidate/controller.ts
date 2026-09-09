@@ -3,7 +3,7 @@ import { D6_EVENT, buildCandidate, evaluatePairPrediction, evaluateTransfer } fr
 
 const spanish = () => document.documentElement.dataset.language === 'es';
 const snapshot = buildCandidate(D6_EVENT, 30);
-const reveal = document.getElementById('d6-reveal')!;
+const reveal = document.getElementById('d6-after-prediction')!;
 const maskOutput = document.getElementById('d6-mask')!;
 const selectedOutput = document.getElementById('d6-selected')!;
 const orderedOutput = document.getElementById('d6-ordered')!;
