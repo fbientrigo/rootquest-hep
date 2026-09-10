@@ -23,6 +23,7 @@ const spanishRoutes = [
   { path: 'learn/angular-separation/', heading: 'Separación angular' },
   { path: 'learn/four-vectors/', heading: 'Cuatro-vectores y masa invariante' },
   { path: 'learn/build-candidate/', heading: 'Construye un candidato' },
+  { path: 'learn/signal-background-tradeoffs/', heading: 'Compromisos entre señal y fondo' },
   { path: 'learn/higgs-hunt/', heading: 'Higgs Hunt', secondary: 'Encuentra los dos fotones' },
   { path: 'lab/learning-engine/', heading: 'Tres formas de aprender con un motor pequeño' },
   { path: 'practice/manipulate/', heading: 'Laboratorio de selección' },
@@ -84,6 +85,9 @@ test('language choice persists across every current learner-facing route', async
 
   await page.goto('learn/build-candidate/');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Combina selección de objetos, ordenamiento por pT y cuatro-vectores para construir un candidato event-level de dos fotones con RVec y RDataFrame.');
+
+  await page.goto('learn/signal-background-tradeoffs/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por rechazo de fondo usando una muestra HEP sintética y filtros de RDataFrame.');
 
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -178,6 +182,14 @@ test('Spanish copy stays natural across inline code and dynamic lesson feedback'
   await page.getByLabel('A + C, porque son los dos pT más altos entre los seleccionados').check();
   await page.locator('#d6-pair').getByRole('button', { name: 'Confirmar candidato' }).click();
   await expect(page.locator('#d6-pair rq-feedback')).toContainText('Selecciona primero; ordena después.');
+
+  await page.goto('learn/signal-background-tradeoffs/');
+  await page.getByLabel('Baja la eficiencia de señal y sube el rechazo de fondo').check();
+  await page.locator('#e1-direction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#e1-direction rq-feedback')).toContainText('El corte compra rechazo con eficiencia.');
+  await page.locator('#e1-transfer').getByLabel('40 GeV').check();
+  await page.locator('#e1-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#e1-transfer rq-feedback')).toContainText('Compromiso identificado.');
 
   await page.goto('learn/higgs-hunt/');
   await expect(page.locator('#hunt-stage-label')).toHaveText('1 de 5 · Observa');
