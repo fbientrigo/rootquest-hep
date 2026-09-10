@@ -36,11 +36,11 @@ prediction.addEventListener('rq-prediction-commit', (rawEvent) => {
   prediction.reveal({
     kind: correct ? 'success' : 'misconception',
     heading: correct
-      ? (spanish() ? 'El corte compra rechazo con eficiencia.' : 'The cut buys rejection with efficiency.')
+      ? (spanish() ? 'El corte intercambia eficiencia por una mayor fracción rechazada.' : 'The cut trades efficiency for a larger rejected fraction.')
       : (spanish() ? 'Un corte más estricto no mejora ambas cosas a la vez.' : 'A tighter cut does not improve both quantities at once.'),
     message: spanish()
-      ? `Al subir de 30 a 40 GeV, la eficiencia de señal baja de ${pct(loose.signalEfficiency)} a ${pct(tight.signalEfficiency)}, mientras el rechazo de fondo sube de ${pct(loose.backgroundRejection)} a ${pct(tight.backgroundRejection)}.`
-      : `Raising the threshold from 30 to 40 GeV lowers signal efficiency from ${pct(loose.signalEfficiency)} to ${pct(tight.signalEfficiency)}, while background rejection rises from ${pct(loose.backgroundRejection)} to ${pct(tight.backgroundRejection)}.`,
+      ? `Al subir de 30 a 40 GeV, la eficiencia de señal baja de ${pct(loose.signalEfficiency)} a ${pct(tight.signalEfficiency)}, mientras la fracción de fondo rechazada sube de ${pct(loose.backgroundRejection)} a ${pct(tight.backgroundRejection)}.`
+      : `Raising the threshold from 30 to 40 GeV lowers signal efficiency from ${pct(loose.signalEfficiency)} to ${pct(tight.signalEfficiency)}, while the rejected-background fraction rises from ${pct(loose.backgroundRejection)} to ${pct(tight.backgroundRejection)}.`,
   });
   document.getElementById('e1-after-prediction')?.removeAttribute('hidden');
 });
