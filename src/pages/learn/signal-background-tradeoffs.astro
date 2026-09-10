@@ -5,7 +5,7 @@ import '../../learning/styles/learning.css';
 
 <BaseLayout
   title="Signal and background trade-offs — ROOT Quest"
-  description="Learn how tightening a selection trades signal efficiency against background rejection using a synthetic HEP sample and RDataFrame filters."
+  description="Learn how tightening a selection trades signal efficiency against the rejected-background fraction using a synthetic HEP sample and RDataFrame filters."
 >
   <header class="lesson-header">
     <p class="eyebrow" data-es="Unidad E · Lección E1">Unit E · Lesson E1</p>
@@ -22,7 +22,8 @@ import '../../learning/styles/learning.css';
         <div><span data-es="Señal inicial">Initial signal</span><strong>5</strong></div>
         <div><span data-es="Fondo inicial">Initial background</span><strong>7</strong></div>
       </div>
-      <p class="technical-note" data-es="Eficiencia de señal = señal conservada / señal inicial. Rechazo de fondo = 1 − fondo conservado / fondo inicial.">Signal efficiency = signal kept / initial signal. Background rejection = 1 − background kept / initial background.</p>
+      <p class="technical-note" data-es="Eficiencia de señal = señal conservada / señal inicial. En esta lección, fracción de fondo rechazada = 1 − fondo conservado / fondo inicial.">Signal efficiency = signal kept / initial signal. In this lesson, rejected-background fraction = 1 − background kept / initial background.</p>
+      <p class="technical-note" data-es="Convención: algunos gráficos de rendimiento de ATLAS llaman «background rejection» a 1/εb, no a 1−εb. Aquí mostramos explícitamente la fracción rechazada; en un análisis real siempre hay que leer la definición del eje.">Convention note: some ATLAS performance plots use “background rejection” to mean 1/εb rather than 1−εb. Here we explicitly show the rejected fraction; in a real analysis, always read the axis definition.</p>
     </section>
 
     <section class="lesson-card" aria-labelledby="e1-predict-heading">
@@ -30,8 +31,8 @@ import '../../learning/styles/learning.css';
       <h2 id="e1-predict-heading" data-es="Si aprietas el corte, ¿qué dirección esperas?">If you tighten the cut, which direction do you expect?</h2>
       <p data-es="El umbral de pT subirá de 30 a 40 GeV. Comprométete antes de ver las métricas.">The pT threshold will rise from 30 to 40 GeV. Commit before seeing the metrics.</p>
       <rq-predict id="e1-direction" answer-name="e1-direction-choice"><form><fieldset><legend data-es="Elige el cambio conjunto">Choose the joint change</legend><div class="rq-options">
-        <label><input type="radio" name="e1-direction-choice" value="both-up" required><span data-es="Suben eficiencia de señal y rechazo de fondo">Signal efficiency and background rejection both rise</span></label>
-        <label><input type="radio" name="e1-direction-choice" value="signal-down-background-rejection-up"><span data-es="Baja la eficiencia de señal y sube el rechazo de fondo">Signal efficiency falls and background rejection rises</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="both-up" required><span data-es="Suben eficiencia de señal y fracción de fondo rechazada">Signal efficiency and rejected-background fraction both rise</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="signal-down-background-rejection-up"><span data-es="Baja la eficiencia de señal y sube la fracción de fondo rechazada">Signal efficiency falls and rejected-background fraction rises</span></label>
         <label><input type="radio" name="e1-direction-choice" value="both-down"><span data-es="Bajan ambas métricas">Both metrics fall</span></label>
       </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
     </section>
@@ -44,7 +45,7 @@ import '../../learning/styles/learning.css';
         <input id="e1-threshold" type="range" min="20" max="65" step="5" value="40" aria-label="Photon pT threshold" data-es-aria="Umbral de pT del fotón">
         <div class="metric-grid metric-grid--results">
           <div><span data-es="Eficiencia de señal">Signal efficiency</span><strong><output id="e1-signal-efficiency">60%</output></strong><small><output id="e1-signal-count">3/5</output> <span data-es="conservada">kept</span></small></div>
-          <div><span data-es="Rechazo de fondo">Background rejection</span><strong><output id="e1-background-rejection">57%</output></strong><small><output id="e1-background-count">3/7</output> <span data-es="conservado">kept</span></small></div>
+          <div><span data-es="Fracción de fondo rechazada">Rejected-background fraction</span><strong><output id="e1-background-rejection">57%</output></strong><small><output id="e1-background-count">3/7</output> <span data-es="conservado">kept</span></small></div>
         </div>
         <p id="e1-summary" class="technical-note" aria-live="off">At pT ≥ 40 GeV, 3 of 5 signal examples survive and 4 of 7 background examples are rejected.</p>
         <p data-es="Un corte no es «mejor» sólo porque rechaza más fondo: la eficiencia de señal que sacrificas forma parte de la misma decisión.">A cut is not “better” merely because it rejects more background: the signal efficiency you sacrifice is part of the same decision.</p>
@@ -60,8 +61,8 @@ auto bkgAfter = background.Filter("photon_pt >= 40.f");
 auto nSigAfter = sigAfter.Count();
 auto nBkgAfter = bkgAfter.Count();
 
-// efficiency = nSigAfter / nSigBefore
-// rejection  = 1 - nBkgAfter / nBkgBefore</code></pre></div>
+// signal efficiency    = nSigAfter / nSigBefore
+// rejected-background = 1 - nBkgAfter / nBkgBefore</code></pre></div>
         <p class="technical-note"><a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame Filter y Count">Official ROOT reference: RDataFrame Filter and Count</a> · <a href="https://atlas.cern/updates/blog/0-60-10-million-seconds-part-2" data-es="ATLAS/CERN: compromiso entre eficiencia de señal y reducción de fondo">ATLAS/CERN: signal-efficiency versus background trade-off</a></p>
       </section>
     </div>
@@ -85,7 +86,7 @@ auto nBkgAfter = bkgAfter.Count();
     document.querySelectorAll('[data-es-aria]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria')); });
     document.title = 'Compromisos entre señal y fondo — ROOT Quest';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por rechazo de fondo usando una muestra HEP sintética y filtros de RDataFrame.');
+    if (meta) meta.setAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por fracción de fondo rechazada usando una muestra HEP sintética y filtros de RDataFrame.');
   }
 </script>
 <script>import '../../lessons/signal-background/controller.ts';</script>
