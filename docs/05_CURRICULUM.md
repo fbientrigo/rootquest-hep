@@ -143,8 +143,8 @@ Goal: stop treating a histogram as the answer; introduce the minimum statistical
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **NEXT** — promote the existing `practice/manipulate` and Higgs Hunt causal drill rather than rebuilding the threshold mechanic. |
-| E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | PLANNED — `event_weight` already appears in the tree probe. |
+| E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **LIVE** — learner-facing lesson reuses the `practice/manipulate` synthetic threshold sample, makes the learner predict the joint direction of signal efficiency and background rejection before reveal, then manipulates the same cut and transfers the trade-off to a constrained threshold choice. |
+| E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | **NEXT** — `event_weight` already appears in the tree probe. |
 | E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | PLANNED |
 | E4 | **Fit a simple model** | Connect a visible model shape to parameters and fit a simple function over a justified range. | `TF1`, `Fit` | PLANNED |
 | E5 | **Read a fit critically** | Inspect residuals/parameter uncertainties/goodness-of-fit cues and recognize an obviously inadequate model. | fit result essentials, chi-square vocabulary where appropriate | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **E1 — Signal and background trade-offs**.
+The default next lesson on this roadmap is **E2 — Event weights and normalization**.
