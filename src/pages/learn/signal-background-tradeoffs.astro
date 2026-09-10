@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Signal and background trade-offs — ROOT Quest"
+  description="Learn how tightening a selection trades signal efficiency against background rejection using a synthetic HEP sample and RDataFrame filters."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E1">Unit E · Lesson E1</p>
+    <h1 data-es="Compromisos entre señal y fondo">Signal and background trade-offs</h1>
+    <p class="lede" data-es="Un corte más estricto puede limpiar una muestra, pero también puede borrar parte de la señal que querías conservar. La pregunta útil no es «¿cuánto fondo queda?», sino qué ganaste y qué pagaste.">A tighter cut can clean up a sample, but it can also erase some of the signal you wanted to keep. The useful question is not only “how much background remains?”, but what you gained and what you paid.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e1-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e1-context-heading" data-es="La misma muestra sintética, ahora medida">The same synthetic sample, now measured</h2>
+      <p data-es="Reutilizamos la muestra educativa del Laboratorio de selección: 5 ejemplos etiquetados como señal y 7 como fondo, cada uno con un pT preparado. Las etiquetas existen sólo para enseñar el compromiso; en datos reales de colisiones no conoces la verdad evento por evento.">We reuse the Selection Lab teaching sample: 5 examples labeled as signal and 7 as background, each with a prepared pT value. The labels exist only to teach the trade-off; in real collision data you do not know event-by-event truth.</p>
+      <div class="metric-grid" aria-label="Starting synthetic sample" data-es-aria="Muestra sintética inicial">
+        <div><span data-es="Señal inicial">Initial signal</span><strong>5</strong></div>
+        <div><span data-es="Fondo inicial">Initial background</span><strong>7</strong></div>
+      </div>
+      <p class="technical-note" data-es="Eficiencia de señal = señal conservada / señal inicial. Rechazo de fondo = 1 − fondo conservado / fondo inicial.">Signal efficiency = signal kept / initial signal. Background rejection = 1 − background kept / initial background.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e1-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e1-predict-heading" data-es="Si aprietas el corte, ¿qué dirección esperas?">If you tighten the cut, which direction do you expect?</h2>
+      <p data-es="El umbral de pT subirá de 30 a 40 GeV. Comprométete antes de ver las métricas.">The pT threshold will rise from 30 to 40 GeV. Commit before seeing the metrics.</p>
+      <rq-predict id="e1-direction" answer-name="e1-direction-choice"><form><fieldset><legend data-es="Elige el cambio conjunto">Choose the joint change</legend><div class="rq-options">
+        <label><input type="radio" name="e1-direction-choice" value="both-up" required><span data-es="Suben eficiencia de señal y rechazo de fondo">Signal efficiency and background rejection both rise</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="signal-down-background-rejection-up"><span data-es="Baja la eficiencia de señal y sube el rechazo de fondo">Signal efficiency falls and background rejection rises</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="both-down"><span data-es="Bajan ambas métricas">Both metrics fall</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="e1-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e1-manipulate-heading">
+        <p class="stage-kicker" data-es="Manipula y observa">Manipulate and observe</p>
+        <h2 id="e1-manipulate-heading" data-es="Mueve el umbral y mira ambas cuentas">Move the threshold and watch both ledgers</h2>
+        <label class="threshold-control" for="e1-threshold"><span data-es="Umbral de pT">pT threshold</span><strong><output id="e1-threshold-value" for="e1-threshold">40 GeV</output></strong></label>
+        <input id="e1-threshold" type="range" min="20" max="65" step="5" value="40" aria-label="Photon pT threshold" data-es-aria="Umbral de pT del fotón">
+        <div class="metric-grid metric-grid--results">
+          <div><span data-es="Eficiencia de señal">Signal efficiency</span><strong><output id="e1-signal-efficiency">60%</output></strong><small><output id="e1-signal-count">3/5</output> <span data-es="conservada">kept</span></small></div>
+          <div><span data-es="Rechazo de fondo">Background rejection</span><strong><output id="e1-background-rejection">57%</output></strong><small><output id="e1-background-count">3/7</output> <span data-es="conservado">kept</span></small></div>
+        </div>
+        <p id="e1-summary" class="technical-note" aria-live="off">At pT ≥ 40 GeV, 3 of 5 signal examples survive and 4 of 7 background examples are rejected.</p>
+        <p data-es="Un corte no es «mejor» sólo porque rechaza más fondo: la eficiencia de señal que sacrificas forma parte de la misma decisión.">A cut is not “better” merely because it rejects more background: the signal efficiency you sacrifice is part of the same decision.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e1-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e1-code-heading" data-es="ROOT aplica la misma regla a las dos muestras">ROOT applies the same rule to both samples</h2>
+        <p data-es="Si tienes muestras simuladas separadas de señal y fondo, RDataFrame puede aplicar el mismo Filter y Count permite medir cuántos eventos sobreviven. La física está en comparar las fracciones, no en memorizar una API nueva.">If you have separate simulated signal and background samples, RDataFrame can apply the same Filter and Count measures how many events survive. The physics is in comparing the fractions, not memorizing a new API.</p>
+        <div class="code-card"><pre><code>auto sigAfter = signal.Filter("photon_pt >= 40.f");
+auto bkgAfter = background.Filter("photon_pt >= 40.f");
+
+auto nSigAfter = sigAfter.Count();
+auto nBkgAfter = bkgAfter.Count();
+
+// efficiency = nSigAfter / nSigBefore
+// rejection  = 1 - nBkgAfter / nBkgBefore</code></pre></div>
+        <p class="technical-note"><a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame Filter y Count">Official ROOT reference: RDataFrame Filter and Count</a> · <a href="https://atlas.cern/updates/blog/0-60-10-million-seconds-part-2" data-es="ATLAS/CERN: compromiso entre eficiencia de señal y reducción de fondo">ATLAS/CERN: signal-efficiency versus background trade-off</a></p>
+      </section>
+    </div>
+
+    <section class="lesson-card" aria-labelledby="e1-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="e1-transfer-heading" data-es="Elige un corte que satisfaga dos restricciones">Choose a cut that satisfies two constraints</h2>
+      <p data-es="En esta misma muestra necesitas conservar al menos 60% de la señal y rechazar al menos 50% del fondo. ¿Qué umbral de los siguientes cumple ambas condiciones?">In this same sample you need to keep at least 60% of the signal and reject at least 50% of the background. Which threshold below satisfies both conditions?</p>
+      <rq-predict id="e1-transfer" answer-name="e1-transfer-choice"><form><fieldset><legend data-es="Elige el compromiso">Choose the trade-off</legend><div class="rq-options">
+        <label><input type="radio" name="e1-transfer-choice" value="30" required><span>30 GeV</span></label>
+        <label><input type="radio" name="e1-transfer-choice" value="40"><span>40 GeV</span></label>
+        <label><input type="radio" name="e1-transfer-choice" value="50"><span>50 GeV</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria')); });
+    document.title = 'Compromisos entre señal y fondo — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por rechazo de fondo usando una muestra HEP sintética y filtros de RDataFrame.');
+  }
+</script>
+<script>import '../../lessons/signal-background/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e1-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin-block:1rem}.metric-grid>div{display:grid;gap:.2rem;padding:1rem;border:1px solid var(--border);border-radius:.7rem}.metric-grid strong{font-size:clamp(1.35rem,4vw,2rem);font-variant-numeric:tabular-nums}.metric-grid small{color:var(--muted)}.threshold-control{display:flex;justify-content:space-between;gap:1rem;align-items:center}.threshold-control+input{width:100%;min-height:44px}.technical-note{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--border);border-radius:.65rem}.code-card pre{max-width:100%;overflow-x:auto;margin:0;padding:1rem}@media(max-width:520px){.metric-grid{grid-template-columns:1fr}}
+</style>
