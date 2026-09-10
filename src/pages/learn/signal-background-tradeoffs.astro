@@ -5,7 +5,7 @@ import '../../learning/styles/learning.css';
 
 <BaseLayout
   title="Signal and background trade-offs — ROOT Quest"
-  description="Learn how tightening a selection trades signal efficiency against the rejected-background fraction using a synthetic HEP sample and RDataFrame filters."
+  description="Learn how tightening a selection trades signal efficiency against background rejection using a synthetic HEP sample and RDataFrame filters."
 >
   <header class="lesson-header">
     <p class="eyebrow" data-es="Unidad E · Lección E1">Unit E · Lesson E1</p>
@@ -31,8 +31,8 @@ import '../../learning/styles/learning.css';
       <h2 id="e1-predict-heading" data-es="Si aprietas el corte, ¿qué dirección esperas?">If you tighten the cut, which direction do you expect?</h2>
       <p data-es="El umbral de pT subirá de 30 a 40 GeV. Comprométete antes de ver las métricas.">The pT threshold will rise from 30 to 40 GeV. Commit before seeing the metrics.</p>
       <rq-predict id="e1-direction" answer-name="e1-direction-choice"><form><fieldset><legend data-es="Elige el cambio conjunto">Choose the joint change</legend><div class="rq-options">
-        <label><input type="radio" name="e1-direction-choice" value="both-up" required><span data-es="Suben eficiencia de señal y fracción de fondo rechazada">Signal efficiency and rejected-background fraction both rise</span></label>
-        <label><input type="radio" name="e1-direction-choice" value="signal-down-background-rejection-up"><span data-es="Baja la eficiencia de señal y sube la fracción de fondo rechazada">Signal efficiency falls and rejected-background fraction rises</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="both-up" required><span data-es="Suben eficiencia de señal y rechazo de fondo">Signal efficiency and background rejection both rise</span></label>
+        <label><input type="radio" name="e1-direction-choice" value="signal-down-background-rejection-up"><span data-es="Baja la eficiencia de señal y sube el rechazo de fondo">Signal efficiency falls and background rejection rises</span></label>
         <label><input type="radio" name="e1-direction-choice" value="both-down"><span data-es="Bajan ambas métricas">Both metrics fall</span></label>
       </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
     </section>
@@ -86,7 +86,7 @@ auto nBkgAfter = bkgAfter.Count();
     document.querySelectorAll('[data-es-aria]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria')); });
     document.title = 'Compromisos entre señal y fondo — ROOT Quest';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por fracción de fondo rechazada usando una muestra HEP sintética y filtros de RDataFrame.');
+    if (meta) meta.setAttribute('content', 'Aprende cómo endurecer una selección intercambia eficiencia de señal por rechazo de fondo usando una muestra HEP sintética y filtros de RDataFrame.');
   }
 </script>
 <script>import '../../lessons/signal-background/controller.ts';</script>
