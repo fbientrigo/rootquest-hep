@@ -29,8 +29,9 @@ test('course exposes available lessons and the next curriculum step', async ({ p
   await expect(page.locator('a[href$="learn/angular-separation/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/four-vectors/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/build-candidate/"]')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'E1 · Signal and background trade-offs' })).toBeVisible();
-  await expect(page.getByText('20 / 30')).toBeVisible();
+  await expect(page.locator('a[href$="learn/signal-background-tradeoffs/"]')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'E2 · Event weights and normalization' })).toBeVisible();
+  await expect(page.getByText('21 / 30')).toBeVisible();
 });
 
 test('course has no automated WCAG A or AA violations', async ({ page }) => {
@@ -41,7 +42,7 @@ test('course has no automated WCAG A or AA violations', async ({ page }) => {
 test('course remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
-  await expect(page.locator('a[href$="learn/build-candidate/"]')).toHaveCount(1);
+  await expect(page.locator('a[href$="learn/signal-background-tradeoffs/"]')).toHaveCount(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -50,6 +51,6 @@ test('home exposes the current curriculum unit without requiring hidden URLs', a
   await page.goto('');
   await expect(page.getByRole('link', { name: 'View the course →' })).toBeVisible();
   await expect(page.getByText('Unit E')).toBeVisible();
-  await expect(page.getByText('Next:')).toContainText('E1 · Signal and background trade-offs');
+  await expect(page.getByText('Next:')).toContainText('E2 · Event weights and normalization');
   await expect(page.getByRole('link', { name: 'Course', exact: true })).toBeVisible();
 });
