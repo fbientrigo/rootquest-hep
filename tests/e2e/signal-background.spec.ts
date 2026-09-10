@@ -11,7 +11,7 @@ test('E1 requires prediction before revealing the tradeoff manipulator', async (
   await expect(page.getByRole('heading', { name: 'Signal and background trade-offs' })).toBeVisible();
   await expect(page.locator('#e1-after-prediction')).toBeHidden();
 
-  await page.getByLabel('Signal efficiency falls and background rejection rises').check();
+  await page.getByLabel('Signal efficiency falls and rejected-background fraction rises').check();
   await page.locator('#e1-direction').getByRole('button', { name: 'Commit prediction' }).click();
 
   await expect(page.locator('#e1-direction rq-feedback')).toContainText('The cut buys rejection with efficiency.');
@@ -20,8 +20,8 @@ test('E1 requires prediction before revealing the tradeoff manipulator', async (
   await expect(page.locator('#e1-background-rejection')).toHaveText('57%');
 });
 
-test('E1 threshold changes signal efficiency and background rejection from one source of truth', async ({ page }) => {
-  await page.getByLabel('Signal efficiency falls and background rejection rises').check();
+test('E1 threshold changes signal efficiency and rejected-background fraction from one source of truth', async ({ page }) => {
+  await page.getByLabel('Signal efficiency falls and rejected-background fraction rises').check();
   await page.locator('#e1-direction').getByRole('button', { name: 'Commit prediction' }).click();
 
   await page.locator('#e1-threshold').fill('30');
