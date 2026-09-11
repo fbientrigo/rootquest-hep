@@ -40,6 +40,21 @@ test('E2 transfer distinguishes a weighted sum from the number of events', async
   await expect(page.locator('#e2-transfer rq-feedback')).toContainText('0.4 and 1.6');
 });
 
+test('E2 critical interaction is complete in Spanish', async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem('rootquest-language', 'es'));
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await expect(page.getByRole('heading', { name: 'Pesos de eventos y normalización' })).toBeVisible();
+  await page.getByLabel('140–160 GeV').check();
+  await page.locator('#e2-prediction').getByRole('button', { name: 'Confirmar predicción' }).click();
+  await expect(page.locator('#e2-prediction rq-feedback')).toContainText('Los pesos cambian la contribución, no las filas.');
+  await page.getByLabel('Sumar event_weight').check();
+  await expect(page.locator('#e2-summary')).toContainText('La suma ponderada da 8.0');
+  await page.locator('#e2-transfer').getByLabel('2.0').check();
+  await page.locator('#e2-transfer').getByRole('button', { name: 'Comprobar comprensión' }).click();
+  await expect(page.locator('#e2-transfer rq-feedback')).toContainText('Sumaste contribuciones, no eventos.');
+});
+
 test('E2 has no automated WCAG A or AA violations', async ({ page }) => {
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   expect(results.violations).toEqual([]);
