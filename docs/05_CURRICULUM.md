@@ -144,8 +144,8 @@ Goal: stop treating a histogram as the answer; introduce the minimum statistical
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
 | E1 | **Signal and background trade-offs** | Explain efficiency/rejection and why tightening a cut can help one metric while hurting another. | selections + histogram comparison | **LIVE** — learner-facing lesson reuses the `practice/manipulate` synthetic threshold sample, makes the learner predict the joint direction of signal efficiency and background rejection before reveal, then manipulates the same cut and transfers the trade-off to a constrained threshold choice. |
-| E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | **NEXT** — `event_weight` already appears in the tree probe. |
-| E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | PLANNED |
+| E2 | **Event weights and normalization** | Explain why simulated events may contribute unequal weight and compute a weighted distribution. | weight column, weighted `Histo1D`, `Sum` | **LIVE** — learner-facing lesson reuses the existing `event_weight` vocabulary, contrasts raw entry counts with summed event contributions on one prepared six-event MC sample, then builds the same distinction with `Sum` and weighted `Histo1D` and transfers it to a new bin calculation. |
+| E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | **NEXT** |
 | E4 | **Fit a simple model** | Connect a visible model shape to parameters and fit a simple function over a justified range. | `TF1`, `Fit` | PLANNED |
 | E5 | **Read a fit critically** | Inspect residuals/parameter uncertainties/goodness-of-fit cues and recognize an obviously inadequate model. | fit result essentials, chi-square vocabulary where appropriate | PLANNED |
 | E6 | **Signal and control regions** | Distinguish selecting a region to test a hypothesis from tuning a cut until a desired answer appears. | selections, regions, blinded/discovery framing | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **E2 — Event weights and normalization**.
+The default next lesson on this roadmap is **E3 — Data vs simulation**.

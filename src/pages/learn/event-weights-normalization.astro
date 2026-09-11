@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Event weights and normalization — ROOT Quest"
+  description="Learn why simulated events can contribute unequal weight and build a weighted distribution with RDataFrame Sum and Histo1D."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E2">Unit E · Lesson E2</p>
+    <h1 data-es="Pesos de eventos y normalización">Event weights and normalization</h1>
+    <p class="lede" data-es="Seis filas simuladas no siempre significan seis unidades de contribución. Si cada evento trae un peso, la pregunta cambia de «¿cuántas filas hay?» a «¿cuánto aporta cada fila?». ">Six simulated rows do not always mean six units of contribution. When each event carries a weight, the question changes from “how many rows are there?” to “how much does each row contribute?”</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e2-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e2-context-heading" data-es="Una muestra sintética, dos formas de resumirla">One synthetic sample, two ways to summarize it</h2>
+      <p data-es="Esta muestra educativa contiene seis eventos MC preparados. mass decide en qué bin cae cada evento y event_weight indica cuánto aporta ese evento cuando construimos una predicción ponderada. Los pesos se eligieron sólo para exponer la diferencia entre contar y ponderar.">This teaching sample contains six prepared MC events. mass decides which bin receives each event, while event_weight says how much that event contributes when we build a weighted prediction. The weights were chosen only to expose the difference between counting and weighting.</p>
+      <div class="table-wrap"><table><caption data-es="Eventos simulados preparados">Prepared simulated events</caption><thead><tr><th scope="col">ID</th><th scope="col">mass [GeV]</th><th scope="col">event_weight</th></tr></thead><tbody>
+        <tr><th scope="row">M1</th><td>112</td><td>0.5</td></tr><tr><th scope="row">M2</th><td>118</td><td>1.5</td></tr><tr><th scope="row">M3</th><td>124</td><td>2.0</td></tr><tr><th scope="row">M4</th><td>128</td><td>0.5</td></tr><tr><th scope="row">M5</th><td>136</td><td>1.0</td></tr><tr><th scope="row">M6</th><td>145</td><td>2.5</td></tr>
+      </tbody></table></div>
+      <p class="technical-note" data-es="Aquí todos los pesos son positivos para mantener una sola idea activa. En análisis reales, la definición y el signo de los pesos dependen de la muestra y del generador; hay que usar la receta del análisis, no asumir que un peso es una probabilidad.">All weights are positive here to keep one idea active. In real analyses, weight definitions and signs depend on the sample and generator; use the analysis prescription rather than assuming a weight is a probability.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e2-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e2-predict-heading" data-es="¿Qué bin cambia más al usar los pesos?">Which bin changes most when weights are used?</h2>
+      <p data-es="Primero imagina un histograma bruto: cada fila aporta 1. Después sustituimos ese 1 por event_weight. Comprométete antes de ver el resultado ponderado.">First imagine a raw histogram: every row contributes 1. Then replace that 1 with event_weight. Commit before seeing the weighted result.</p>
+      <rq-predict id="e2-prediction" answer-name="e2-prediction-choice"><form><fieldset><legend data-es="Elige el mayor aumento de altura">Choose the largest increase in height</legend><div class="rq-options">
+        <label><input type="radio" name="e2-prediction-choice" value="first-grows-most" required><span>100–120 GeV</span></label>
+        <label><input type="radio" name="e2-prediction-choice" value="second-grows-most"><span>120–140 GeV</span></label>
+        <label><input type="radio" name="e2-prediction-choice" value="third-grows-most"><span>140–160 GeV</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="e2-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e2-manipulate-heading">
+        <p class="stage-kicker" data-es="Manipula y observa">Manipulate and observe</p>
+        <h2 id="e2-manipulate-heading" data-es="Cambia qué significa la altura del bin">Change what bin height means</h2>
+        <fieldset><legend data-es="Resumen del histograma">Histogram summary</legend><div class="rq-options rq-options--inline">
+          <label><input type="radio" name="e2-mode" value="entries" checked><span data-es="Contar entradas">Count entries</span></label>
+          <label><input type="radio" name="e2-mode" value="weighted"><span data-es="Sumar event_weight">Sum event_weight</span></label>
+        </div></fieldset>
+        <div class="metric-grid" aria-label="Three histogram bins" data-es-aria="Tres bins del histograma">
+          <div><span>100–120 GeV</span><strong data-e2-bin-value>2</strong></div>
+          <div><span>120–140 GeV</span><strong data-e2-bin-value>3</strong></div>
+          <div><span>140–160 GeV</span><strong data-e2-bin-value>1</strong></div>
+        </div>
+        <p><span data-es="Total mostrado:">Displayed total:</span> <strong><output id="e2-total">6</output></strong></p>
+        <p id="e2-summary" class="technical-note" aria-live="polite">The raw count is 6 entries. Every row contributes exactly one unit.</p>
+        <p data-es="La selección y el número de filas no cambiaron. Sólo cambió la contribución usada para construir la distribución.">The selection and number of rows did not change. Only the contribution used to build the distribution changed.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e2-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e2-code-heading" data-es="Count responde una pregunta; Sum y Histo1D ponderado responden otra">Count answers one question; Sum and weighted Histo1D answer another</h2>
+        <p data-es="RDataFrame puede sumar una columna de pesos con Sum. Para una distribución ponderada, Histo1D recibe la columna del observable y una columna separada de pesos.">RDataFrame can sum a weight column with Sum. For a weighted distribution, Histo1D takes the observable column and a separate weight column.</p>
+        <div class="code-card"><pre><code>auto nRows = df.Count();
+auto sumW = df.Sum("event_weight");
+
+auto massWeighted = df.Histo1D(
+    {"m", "Weighted mass", 3, 100., 160.},
+    "mass",
+    "event_weight"
+);</code></pre></div>
+        <p class="technical-note" data-es="En esta muestra: Count = 6, mientras Sum(event_weight) = 8.0. Ninguno reemplaza universalmente al otro: responden preguntas distintas.">In this sample: Count = 6, while Sum(event_weight) = 8.0. Neither universally replaces the other: they answer different questions.</p>
+        <p class="technical-note"><a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: acciones RDataFrame">Official ROOT reference: RDataFrame actions</a></p>
+      </section>
+    </div>
+
+    <section class="lesson-card" aria-labelledby="e2-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="e2-transfer-heading" data-es="Calcula el contenido ponderado de un bin nuevo">Compute a new weighted bin content</h2>
+      <p data-es="Un bin contiene exactamente dos eventos con pesos 0.4 y 1.6. ¿Cuál es su contenido si el histograma usa event_weight?">A bin contains exactly two events with weights 0.4 and 1.6. What is its content when the histogram uses event_weight?</p>
+      <rq-predict id="e2-transfer" answer-name="e2-transfer-choice"><form><fieldset><legend data-es="Contenido ponderado">Weighted content</legend><div class="rq-options">
+        <label><input type="radio" name="e2-transfer-choice" value="zero-point-eight" required><span>0.8</span></label>
+        <label><input type="radio" name="e2-transfer-choice" value="two-point-zero"><span>2.0</span></label>
+        <label><input type="radio" name="e2-transfer-choice" value="two"><span data-es="2, porque hay dos eventos">2, because there are two events</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria')); });
+    document.title = 'Pesos de eventos y normalización — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Aprende por qué los eventos simulados pueden contribuir con pesos distintos y construye una distribución ponderada con Sum y Histo1D de RDataFrame.');
+  }
+</script>
+<script>import '../../lessons/event-weights/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e2-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-wrap,.code-card{max-width:100%;overflow-x:auto}.table-wrap table{width:100%;border-collapse:collapse}.table-wrap th,.table-wrap td{padding:.55rem;border-bottom:1px solid var(--border);text-align:left}.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-block:1rem}.metric-grid>div{display:grid;gap:.2rem;padding:1rem;border:1px solid var(--border);border-radius:.7rem}.metric-grid strong{font-size:clamp(1.35rem,4vw,2rem);font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}@media(max-width:620px){.metric-grid{grid-template-columns:1fr}}
+</style>
