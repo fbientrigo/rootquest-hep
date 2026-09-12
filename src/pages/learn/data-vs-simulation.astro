@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Data vs simulation — ROOT Quest"
+  description="Compare observed Data with simulated predictions without normalizing away the quantity the analysis question is testing."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E3">Unit E · Lesson E3</p>
+    <h1 data-es="Datos frente a simulación">Data vs simulation</h1>
+    <p class="lede" data-es="Antes de escalar histogramas, decide qué estás comparando: rendimiento absoluto o forma. La misma operación de normalización puede ser correcta para una pregunta y destruir la respuesta para otra.">Before scaling histograms, decide what you are comparing: absolute yield or shape. The same normalization can be correct for one question and destroy the answer to another.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e3-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e3-context-heading" data-es="Una predicción MC puede tener varias contribuciones">An MC prediction can have several contributions</h2>
+      <p data-es="Esta muestra educativa usa contenidos de bins preparados. Data representa conteos observados. El MC total es la suma de dos contribuciones simuladas ya ponderadas; los números son sintéticos y sólo exponen la diferencia entre comparar rendimiento y comparar forma.">This teaching sample uses prepared bin contents. Data represents observed counts. The total MC prediction is the sum of two already-weighted simulated contributions; the numbers are synthetic and only expose the difference between comparing yield and comparing shape.</p>
+      <div class="table-wrap"><table><caption data-es="Contenidos preparados antes de cualquier normalización de forma">Prepared contents before any shape normalization</caption><thead><tr><th scope="col" data-es="Bin">Bin</th><th scope="col">Data</th><th scope="col">MC A</th><th scope="col">MC B</th><th scope="col" data-es="MC total">Total MC</th></tr></thead><tbody>
+        <tr><th scope="row">100–120 GeV</th><td>6</td><td>2</td><td>1</td><td>3</td></tr>
+        <tr><th scope="row">120–140 GeV</th><td>9</td><td>3</td><td>1.5</td><td>4.5</td></tr>
+        <tr><th scope="row">140–160 GeV</th><td>6</td><td>2</td><td>1</td><td>3</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e3-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e3-predict-heading" data-es="¿Qué ocurre si normalizas ambos histogramas a área unitaria?">What happens if both histograms are normalized to unit area?</h2>
+      <p data-es="Data tiene exactamente la misma forma relativa que el MC total, pero el doble de rendimiento en cada bin. Comprométete antes de ver la comparación normalizada.">Data has exactly the same relative shape as the total MC, but twice the yield in every bin. Commit before seeing the normalized comparison.</p>
+      <rq-predict id="e3-prediction" answer-name="e3-prediction-choice"><form><fieldset><legend data-es="Efecto de normalizar a integral 1">Effect of scaling to integral 1</legend><div class="rq-options">
+        <label><input type="radio" name="e3-prediction-choice" value="yield-disappears" required><span data-es="Desaparece la diferencia de rendimiento y quedan sólo las formas">The yield difference disappears and only the shapes remain</span></label>
+        <label><input type="radio" name="e3-prediction-choice" value="yield-remains"><span data-es="La diferencia de rendimiento permanece igual">The yield difference stays unchanged</span></label>
+        <label><input type="radio" name="e3-prediction-choice" value="data-doubles"><span data-es="Data se duplica otra vez">Data doubles again</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="e3-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e3-manipulate-heading">
+        <p class="stage-kicker" data-es="Manipula y observa">Manipulate and observe</p>
+        <h2 id="e3-manipulate-heading" data-es="Elige qué pregunta quieres responder">Choose which question you want to answer</h2>
+        <fieldset><legend data-es="Modo de comparación">Comparison mode</legend><div class="rq-options rq-options--inline">
+          <label><input type="radio" name="e3-mode" value="yield" checked><span data-es="Rendimiento absoluto">Absolute yield</span></label>
+          <label><input type="radio" name="e3-mode" value="shape"><span data-es="Sólo forma · área unitaria">Shape only · unit area</span></label>
+        </div></fieldset>
+        <div class="table-wrap"><table><caption data-es="Data, predicción MC total y razón Data/MC">Data, total MC prediction, and Data/MC ratio</caption><thead><tr><th scope="col" data-es="Bin">Bin</th><th scope="col">Data</th><th scope="col" data-es="MC total">Total MC</th><th scope="col">Data/MC</th></tr></thead><tbody>
+          <tr><th scope="row">100–120 GeV</th><td data-e3-data>6</td><td data-e3-mc>3</td><td data-e3-ratio>2.00</td></tr>
+          <tr><th scope="row">120–140 GeV</th><td data-e3-data>9</td><td data-e3-mc>4.5</td><td data-e3-ratio>2.00</td></tr>
+          <tr><th scope="row">140–160 GeV</th><td data-e3-data>6</td><td data-e3-mc>3</td><td data-e3-ratio>2.00</td></tr>
+        </tbody><tfoot><tr><th scope="row" data-es="Total">Total</th><td><output id="e3-data-total">21</output></td><td><output id="e3-mc-total">10.5</output></td><td>—</td></tr></tfoot></table></div>
+        <p id="e3-summary" class="technical-note" aria-live="polite">In absolute yield, Data contains twice the total MC in every bin: Data/MC = 2.00. The normalization mismatch is part of the comparison.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e3-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e3-code-heading" data-es="Suma primero la predicción; normaliza sólo si la pregunta lo pide">Add the prediction first; normalize only if the question asks for it</h2>
+        <p data-es="TH1::Add combina contribuciones compatibles bin a bin. TH1::Scale multiplica contenidos y errores por un factor y puede usarse para llevar una integral a 1. TH1::Divide permite construir una razón bin a bin, como Data/MC.">TH1::Add combines compatible contributions bin by bin. TH1::Scale multiplies contents and errors by a factor and can scale an integral to 1. TH1::Divide can build a bin-by-bin ratio such as Data/MC.</p>
+        <div class="code-card"><pre><code>auto mcTotal = static_cast&lt;TH1D*&gt;(hMcA-&gt;Clone("mc_total"));
+mcTotal-&gt;Add(hMcB);
+
+auto ratio = static_cast&lt;TH1D*&gt;(hData-&gt;Clone("data_over_mc"));
+ratio-&gt;Divide(mcTotal);
+
+// Only for a shape-only question:
+auto dataShape = static_cast&lt;TH1D*&gt;(hData-&gt;Clone("data_shape"));
+auto mcShape = static_cast&lt;TH1D*&gt;(mcTotal-&gt;Clone("mc_shape"));
+dataShape-&gt;Scale(1.0 / dataShape-&gt;Integral());
+mcShape-&gt;Scale(1.0 / mcShape-&gt;Integral());</code></pre></div>
+        <p class="technical-note" data-es="ROOT documenta Add, Divide y Scale como operaciones de histogramas. Scale(1/Integral()) es una elección de normalización: no es un paso obligatorio de una comparación Data/MC.">ROOT documents Add, Divide, and Scale as histogram operations. Scale(1/Integral()) is a normalization choice; it is not a mandatory step in a Data/MC comparison.</p>
+        <p class="technical-note"><a href="https://root.cern.ch/doc/master/classTH1.html" data-es="Referencia oficial ROOT: operaciones TH1">Official ROOT reference: TH1 operations</a></p>
+      </section>
+    </div>
+
+    <section class="lesson-card" aria-labelledby="e3-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="e3-transfer-heading" data-es="Conserva la cantidad que responde la pregunta">Preserve the quantity that answers the question</h2>
+      <p data-es="Quieres probar si la simulación predice correctamente cuántos eventos observas después de una selección. ¿Qué comparación debes usar primero?">You want to test whether simulation correctly predicts how many events you observe after a selection. Which comparison should you use first?</p>
+      <rq-predict id="e3-transfer" answer-name="e3-transfer-choice"><form><fieldset><legend data-es="Elección de normalización">Normalization choice</legend><div class="rq-options">
+        <label><input type="radio" name="e3-transfer-choice" value="keep-yield" required><span data-es="Conservar la normalización esperada y comparar rendimientos">Keep the expected normalization and compare yields</span></label>
+        <label><input type="radio" name="e3-transfer-choice" value="unit-area"><span data-es="Normalizar Data y MC por separado a área unitaria">Normalize Data and MC separately to unit area</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Datos frente a simulación — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Compara Data con predicciones simuladas sin normalizar silenciosamente la cantidad que la pregunta del análisis intenta probar.');
+  }
+</script>
+<script>import '../../lessons/data-simulation/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e3-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-wrap,.code-card{max-width:100%;overflow-x:auto}.table-wrap table{width:100%;border-collapse:collapse}.table-wrap th,.table-wrap td{padding:.55rem;border-bottom:1px solid var(--border);text-align:left;font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}
+</style>
