@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Fit a simple model — ROOT Quest"
+  description="Connect a visible model shape to its parameters, fit a simple function over a justified range, and express the same operation with ROOT TF1 and TH1::Fit."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E4">Unit E · Lesson E4</p>
+    <h1 data-es="Ajusta un modelo simple">Fit a simple model</h1>
+    <p class="lede" data-es="Un ajuste no es sólo una curva dibujada sobre datos. Primero debes saber qué hacen sus parámetros y en qué intervalo tiene sentido usar ese modelo; después de eso ROOT puede estimar los parámetros a partir de los datos.">A fit is not just a curve drawn over data. First know what its parameters do and over which interval the model makes sense; then ROOT can estimate those parameters from the data.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e4-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e4-context-heading" data-es="Una recta tiene dos parámetros visibles">A straight line has two visible parameters</h2>
+      <p data-es="Esta muestra educativa es sintética. En el intervalo 0 ≤ x ≤ 4 los puntos siguen aproximadamente y = [0] + [1]x. Los dos puntos de x alto contienen deliberadamente otra estructura para que el rango del ajuste tenga una consecuencia visible.">This teaching sample is synthetic. Over 0 ≤ x ≤ 4 the points approximately follow y = [0] + [1]x. The two high-x points deliberately contain additional structure so the fit range has a visible consequence.</p>
+      <div class="table-wrap"><table><caption data-es="Puntos sintéticos preparados">Prepared synthetic points</caption><thead><tr><th scope="col">x</th><th scope="col">y</th></tr></thead><tbody>
+        <tr><td>0</td><td>2.1</td></tr><tr><td>1</td><td>3.4</td></tr><tr><td>2</td><td>5.2</td></tr><tr><td>3</td><td>6.4</td></tr><tr><td>4</td><td>8.1</td></tr><tr><td>5</td><td>15.5</td></tr><tr><td>6</td><td>18.0</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e4-manipulate-heading">
+      <p class="stage-kicker" data-es="Manipula y observa">Manipulate and observe</p>
+      <h2 id="e4-manipulate-heading" data-es="Mueve la pendiente antes de ajustar">Move the slope before fitting</h2>
+      <p data-es="Mantén el intercepto [0] = 2.0 fijo y cambia [1]. Observa que [1] controla la inclinación de la recta: el modelo ya tiene significado antes de pedirle a un algoritmo que encuentre sus parámetros.">Keep intercept [0] = 2.0 fixed and change [1]. Notice that [1] controls the line's tilt: the model already has meaning before asking an algorithm to find its parameters.</p>
+      <label for="e4-slope"><span data-es="Pendiente [1]">Slope [1]</span>: <output id="e4-slope-output" for="e4-slope">1.0</output></label>
+      <input id="e4-slope" type="range" min="0.5" max="2.5" step="0.5" value="1.0" />
+      <figure class="fit-figure">
+        <svg viewBox="0 0 560 250" role="img" aria-labelledby="e4-chart-title e4-chart-description">
+          <title id="e4-chart-title">Synthetic data and linear model</title>
+          <desc id="e4-chart-description">Seven synthetic points and a model line with intercept 2.0 and slope 1.0.</desc>
+          <line class="axis" x1="50" y1="220" x2="520" y2="220"/><line class="axis" x1="50" y1="220" x2="50" y2="20"/>
+          <g class="points" aria-hidden="true">
+            <circle cx="50" cy="199" r="5"/><circle cx="125" cy="186" r="5"/><circle cx="200" cy="168" r="5"/><circle cx="275" cy="156" r="5"/><circle cx="350" cy="139" r="5"/><circle cx="425" cy="65" r="5"/><circle cx="500" cy="40" r="5"/>
+          </g>
+          <line id="e4-model-line" class="model-line" x1="50" y1="200" x2="500" y2="140" aria-hidden="true"/>
+          <text x="505" y="238" aria-hidden="true">x</text><text x="30" y="25" aria-hidden="true">y</text>
+        </svg>
+        <figcaption id="e4-preview-summary" class="technical-note">With [0] = 2.0 fixed, [1] = 1.0 gives y(4) = 6.0. Increasing [1] tilts the line upward for x &gt; 0.</figcaption>
+      </figure>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e4-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e4-predict-heading" data-es="¿Qué harán los dos puntos externos a una recta ajustada a todo el rango?">What will the two outer points do to a line fitted over the full range?</h2>
+      <p data-es="Compara primero la tendencia de 0–4 con los puntos de x = 5 y 6. Comprométete antes de ejecutar el ajuste educativo.">First compare the 0–4 trend with the x = 5 and 6 points. Commit before running the teaching fit.</p>
+      <rq-predict id="e4-prediction" answer-name="e4-prediction-choice"><form><fieldset><legend data-es="Efecto de incluir x = 5 y 6">Effect of including x = 5 and 6</legend><div class="rq-options">
+        <label><input type="radio" name="e4-prediction-choice" value="slope-increases" required><span data-es="La pendiente ajustada aumenta">The fitted slope increases</span></label>
+        <label><input type="radio" name="e4-prediction-choice" value="slope-unchanged"><span data-es="La pendiente queda igual">The slope stays unchanged</span></label>
+        <label><input type="radio" name="e4-prediction-choice" value="slope-decreases"><span data-es="La pendiente ajustada disminuye">The fitted slope decreases</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar predicción">Commit prediction</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="e4-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e4-fit-heading">
+        <p class="stage-kicker" data-es="Ajusta y observa">Fit and observe</p>
+        <h2 id="e4-fit-heading" data-es="El rango pertenece al problema, no al optimizador">The range belongs to the problem, not the optimizer</h2>
+        <p data-es="Elige el intervalo que entregarás al mismo modelo lineal. El ajuste educativo minimiza residuos cuadrados para hacer visible la consecuencia; abajo, ROOT expresa la misma idea mediante TF1 y TH1::Fit.">Choose the interval you will give to the same linear model. The teaching fit minimizes squared residuals to make the consequence visible; below, ROOT expresses the same idea with TF1 and TH1::Fit.</p>
+        <fieldset><legend data-es="Rango del ajuste">Fit range</legend><div class="rq-options rq-options--inline">
+          <label><input type="radio" name="e4-fit-range" value="model-window" checked><span>0 ≤ x ≤ 4 · <span data-es="intervalo donde se justifica el modelo">model-justified window</span></span></label>
+          <label><input type="radio" name="e4-fit-range" value="full"><span>0 ≤ x ≤ 6 · <span data-es="todo el histograma">whole histogram</span></span></label>
+        </div></fieldset>
+        <button id="e4-run-fit" class="rq-button rq-button--primary" type="button" data-es="Ejecutar ajuste educativo">Run teaching fit</button>
+        <div class="fit-results" aria-live="polite"><p><strong>[0]</strong> = <output id="e4-fit-intercept">—</output></p><p><strong>[1]</strong> = <output id="e4-fit-slope">—</output></p></div>
+        <p id="e4-fit-summary" class="technical-note" data-es="Ejecuta el ajuste para comparar los parámetros.">Run the fit to compare the parameters.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e4-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e4-code-heading" data-es="TF1 define la función; TH1::Fit estima sus parámetros">TF1 defines the function; TH1::Fit estimates its parameters</h2>
+        <p data-es="En ROOT, [0] y [1] son parámetros ajustables de TF1. La opción R de TH1::Fit restringe el ajuste al rango definido en la función. Aquí ese rango es 0–4 porque ése es el dominio declarado para el modelo lineal de esta muestra sintética.">In ROOT, [0] and [1] are fit parameters of TF1. TH1::Fit option R restricts the fit to the range defined by the function. Here that range is 0–4 because that is the declared domain for the linear model of this synthetic sample.</p>
+        <div class="code-card"><pre><code>TF1 model("trend", "[0] + [1]*x", 0.0, 4.0);
+hist-&gt;Fit(&amp;model, "R");
+
+double intercept = model.GetParameter(0);
+double slope = model.GetParameter(1);</code></pre></div>
+        <p class="technical-note" data-es="La documentación oficial de ROOT especifica que la opción R usa el rango de la función para el ajuste. La elección física/analítica de ese rango sigue siendo responsabilidad del análisis.">The official ROOT documentation specifies that option R uses the function range for the fit. The physics/analysis choice of that range remains the analyst's responsibility.</p>
+        <p class="technical-note"><a href="https://root.cern.ch/doc/master/classTH1.html" data-es="Referencia oficial ROOT: TH1::Fit">Official ROOT reference: TH1::Fit</a></p>
+      </section>
+    </div>
+
+    <section class="lesson-card" aria-labelledby="e4-transfer-heading">
+      <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+      <h2 id="e4-transfer-heading" data-es="Haz que ROOT respete el dominio del modelo">Make ROOT respect the model domain</h2>
+      <p data-es="Un modelo está justificado sólo para 1 ≤ x ≤ 3. ¿Qué opción expresa ese contrato directamente?">A model is justified only for 1 ≤ x ≤ 3. Which choice expresses that contract directly?</p>
+      <rq-predict id="e4-transfer" answer-name="e4-transfer-choice"><form><fieldset><legend data-es="Elección de código">Code choice</legend><div class="rq-options">
+        <label><input type="radio" name="e4-transfer-choice" value="tf1-range-r" required><span>TF1("model", "...", 1, 3); hist-&gt;Fit(&amp;model, "R");</span></label>
+        <label><input type="radio" name="e4-transfer-choice" value="full-no-range"><span>TF1("model", "...", 0, 6); hist-&gt;Fit(&amp;model);</span></label>
+        <label><input type="radio" name="e4-transfer-choice" value="draw-only"><span data-es="Dibujar sólo 1 ≤ x ≤ 3 después de ajustar todo">Draw only 1 ≤ x ≤ 3 after fitting everything</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Ajusta un modelo simple — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Conecta la forma visible de un modelo con sus parámetros, ajusta una función simple en un rango justificado y expresa la misma operación con ROOT TF1 y TH1::Fit.');
+    const title = document.getElementById('e4-chart-title');
+    if (title) title.textContent = 'Datos sintéticos y modelo lineal';
+  }
+</script>
+<script>import '../../lessons/simple-fit/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e4-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.table-wrap,.code-card{max-width:100%;overflow-x:auto}.table-wrap table{width:100%;border-collapse:collapse}.table-wrap th,.table-wrap td{padding:.5rem;border-bottom:1px solid var(--border);text-align:left;font-variant-numeric:tabular-nums}.technical-note{color:var(--muted)}.code-card{border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}#e4-slope{width:min(100%,32rem);min-height:2.75rem}.fit-figure{margin:1rem 0 0}.fit-figure svg{display:block;width:min(100%,35rem);height:auto;border:1px solid var(--border);border-radius:.65rem;background:var(--surface-raised)}.fit-figure .axis{stroke:currentColor;stroke-width:1}.fit-figure .points circle{fill:currentColor}.fit-figure .model-line{stroke:var(--accent-strong);stroke-width:4;stroke-linecap:round}.fit-results{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem}.fit-results p{margin:0;padding:.65rem .85rem;border:1px solid var(--border);border-radius:.6rem}.rq-options--inline{display:flex;gap:.75rem;flex-wrap:wrap}
+</style>

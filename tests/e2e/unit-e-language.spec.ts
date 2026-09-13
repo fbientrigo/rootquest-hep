@@ -16,8 +16,12 @@ test('Unit E learner routes share the persisted global language preference', asy
   await expect(page.getByRole('heading', { name: 'Datos frente a simulación' })).toBeVisible();
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Compara Data con predicciones simuladas sin normalizar silenciosamente la cantidad que la pregunta del análisis intenta probar.');
 
+  await page.goto('learn/simple-fit/');
+  await expect(page.getByRole('heading', { name: 'Ajusta un modelo simple' })).toBeVisible();
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Conecta la forma visible de un modelo con sus parámetros, ajusta una función simple en un rango justificado y expresa la misma operación con ROOT TF1 y TH1::Fit.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
-  await page.goto('learn/data-vs-simulation/');
-  await expect(page.getByRole('heading', { name: 'Data vs simulation' })).toBeVisible();
+  await page.goto('learn/simple-fit/');
+  await expect(page.getByRole('heading', { name: 'Fit a simple model' })).toBeVisible();
 });
