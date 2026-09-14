@@ -20,8 +20,12 @@ test('Unit E learner routes share the persisted global language preference', asy
   await expect(page.getByRole('heading', { name: 'Ajusta un modelo simple' })).toBeVisible();
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Conecta la forma visible de un modelo con sus parámetros, ajusta una función simple en un rango justificado y expresa la misma operación con ROOT TF1 y TH1::Fit.');
 
+  await page.goto('learn/read-fit-critically/');
+  await expect(page.getByRole('heading', { name: 'Lee un ajuste críticamente' })).toBeVisible();
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Inspecciona residuos, incertidumbres de parámetros y pistas de bondad de ajuste en conjunto antes de decidir si un modelo ajustado describe adecuadamente los datos.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
-  await page.goto('learn/simple-fit/');
-  await expect(page.getByRole('heading', { name: 'Fit a simple model' })).toBeVisible();
+  await page.goto('learn/read-fit-critically/');
+  await expect(page.getByRole('heading', { name: 'Read a fit critically' })).toBeVisible();
 });

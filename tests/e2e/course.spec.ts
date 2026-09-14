@@ -33,8 +33,9 @@ test('course exposes available lessons and the next curriculum step', async ({ p
   await expect(page.locator('a[href$="learn/event-weights-normalization/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/data-vs-simulation/"]')).toHaveCount(1);
   await expect(page.locator('a[href$="learn/simple-fit/"]')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'E5 · Read a fit critically' })).toBeVisible();
-  await expect(page.getByText('24 / 30')).toBeVisible();
+  await expect(page.locator('a[href$="learn/read-fit-critically/"]')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'E6 · Signal and control regions' })).toBeVisible();
+  await expect(page.getByText('25 / 30')).toBeVisible();
 });
 
 test('course has no automated WCAG A or AA violations', async ({ page }) => {
@@ -45,7 +46,7 @@ test('course has no automated WCAG A or AA violations', async ({ page }) => {
 test('course remains usable on a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
-  await expect(page.locator('a[href$="learn/simple-fit/"]')).toHaveCount(1);
+  await expect(page.locator('a[href$="learn/read-fit-critically/"]')).toHaveCount(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -54,6 +55,6 @@ test('home exposes the current curriculum unit without requiring hidden URLs', a
   await page.goto('');
   await expect(page.getByRole('link', { name: 'View the course →' })).toBeVisible();
   await expect(page.getByText('Unit E')).toBeVisible();
-  await expect(page.getByText('Next:')).toContainText('E5 · Read a fit critically');
+  await expect(page.getByText('Next:')).toContainText('E6 · Signal and control regions');
   await expect(page.getByRole('link', { name: 'Course', exact: true })).toBeVisible();
 });
