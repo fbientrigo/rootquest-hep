@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Read a fit critically — ROOT Quest"
+  description="Inspect residuals, parameter uncertainties and goodness-of-fit cues together before deciding whether a fitted model adequately describes the data."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E5">Unit E · Lesson E5</p>
+    <h1 data-es="Lee un ajuste críticamente">Read a fit critically</h1>
+    <p class="lede" data-es="Un ajuste puede devolver parámetros muy precisos y aun así describir mal los datos. Lee los residuos, las incertidumbres de los parámetros y la bondad de ajuste como piezas distintas de evidencia.">A fit can return very precise parameters and still describe the data badly. Read residuals, parameter uncertainties and goodness-of-fit as different pieces of evidence.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e5-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e5-context-heading" data-es="El valor ajustado no te dice si el modelo funciona">A fitted value does not tell you whether the model works</h2>
+      <p data-es="Reutilizamos la muestra sintética de E4. Cada punto preparado tiene ahora una incertidumbre conocida σ = 0.2. Comparamos la misma recta en el intervalo para el que fue construida, 0 ≤ x ≤ 4, y en el rango completo 0 ≤ x ≤ 6, que contiene estructura deliberadamente no lineal.">We reuse E4's synthetic sample. Each prepared point now has a known uncertainty σ = 0.2. Compare the same straight-line model in the range it was built for, 0 ≤ x ≤ 4, and over the full 0 ≤ x ≤ 6 range, which contains deliberately non-linear structure.</p>
+      <p class="technical-note" data-es="Aquí χ² usa esas incertidumbres preparadas. Su interpretación depende de que el modelo, los errores y el estadístico elegido sean apropiados; χ²/ndf ≈ 1 es una pista contextual, no una regla universal de aprobación.">Here χ² uses those prepared uncertainties. Its interpretation depends on the model, errors and chosen statistic being appropriate; χ²/ndf ≈ 1 is a contextual cue, not a universal pass rule.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e5-inspect-heading">
+      <p class="stage-kicker" data-es="Inspecciona">Inspect</p>
+      <h2 id="e5-inspect-heading" data-es="Cambia qué puntos participan y lee todo el informe">Change which points participate and read the whole report</h2>
+      <fieldset>
+        <legend data-es="Informe de ajuste">Fit report</legend>
+        <div class="rq-options rq-options--inline">
+          <label><input type="radio" name="e5-fit-range" value="model-window" checked><span>0 ≤ x ≤ 4 · <span data-es="intervalo del modelo">model window</span></span></label>
+          <label><input type="radio" name="e5-fit-range" value="full"><span>0 ≤ x ≤ 6 · <span data-es="rango completo">full range</span></span></label>
+        </div>
+      </fieldset>
+
+      <div class="diagnostic-results" aria-live="polite">
+        <p><strong data-es="Pendiente">Slope</strong><br><output id="e5-slope">—</output> ± <output id="e5-slope-error">—</output></p>
+        <p><strong>χ² / ndf</strong><br><output id="e5-chi2">—</output> / <output id="e5-ndf">—</output> = <output id="e5-reduced-chi2">—</output></p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <caption id="e5-residual-caption">Residuals for the selected fit; each prepared point has uncertainty σ = 0.2.</caption>
+          <thead><tr><th scope="col">x</th><th scope="col" data-es="residuo y − f(x)">residual y − f(x)</th><th scope="col" data-es="residuo / σ">residual / σ</th></tr></thead>
+          <tbody id="e5-residual-body"></tbody>
+        </table>
+      </div>
+      <p id="e5-report-summary" class="technical-note">Choose a report to inspect its diagnostics.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e5-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e5-predict-heading" data-es="El ajuste completo tiene menor error en la pendiente. ¿Eso lo hace mejor?">The full-range fit has a smaller slope error. Does that make it better?</h2>
+      <p data-es="Comprométete usando el informe completo, no sólo el número después de ±.">Commit using the whole report, not only the number after ±.</p>
+      <rq-predict id="e5-prediction" answer-name="e5-prediction-choice"><form><fieldset><legend data-es="Diagnóstico del modelo">Model diagnosis</legend><div class="rq-options">
+        <label><input type="radio" name="e5-prediction-choice" value="full-range-inadequate" required><span data-es="No. El rango completo revela que la recta es inadecuada para esos puntos.">No. The full range reveals that the straight line is inadequate for those points.</span></label>
+        <label><input type="radio" name="e5-prediction-choice" value="full-range-better"><span data-es="Sí. Un error menor en la pendiente demuestra que el modelo es mejor.">Yes. A smaller slope error proves the model is better.</span></label>
+        <label><input type="radio" name="e5-prediction-choice" value="parameters-only"><span data-es="No se puede decir nada más allá de los valores de los parámetros.">Nothing can be said beyond the parameter values.</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Confirmar diagnóstico">Commit diagnosis</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="e5-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e5-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e5-code-heading" data-es="Pide a ROOT el resultado del ajuste, no sólo la curva">Ask ROOT for the fit result, not only the curve</h2>
+        <p data-es="La opción S de TH1::Fit conserva un TFitResult. Desde allí puedes leer χ², los grados de libertad y los errores de los parámetros. Los residuos siguen siendo una comparación entre cada observación y la predicción del modelo y conviene inspeccionarlos explícitamente.">TH1::Fit option S stores a TFitResult. From it you can read χ², the degrees of freedom and parameter errors. Residuals are still the comparison between each observation and the model prediction and should be inspected explicitly.</p>
+        <div class="code-card"><pre><code>TFitResultPtr result = hist-&gt;Fit(&amp;model, "RS");
+
+double slope = result-&gt;Parameter(1);
+double slopeError = result-&gt;ParError(1);
+double chi2 = result-&gt;Chi2();
+unsigned int ndf = result-&gt;Ndf();</code></pre></div>
+        <p class="technical-note" data-es="La documentación oficial de ROOT indica que S devuelve el resultado completo del ajuste; TFitResult expone Chi2(), Ndf(), Parameter() y ParError(). Para histogramas, el χ² concreto depende de los errores de bin y de las opciones de ajuste.">ROOT's official documentation specifies that S returns the full fit result; TFitResult exposes Chi2(), Ndf(), Parameter() and ParError(). For histograms, the exact χ² depends on bin errors and fit options.</p>
+        <p class="technical-note"><a href="https://root.cern.ch/doc/master/classTH1.html" data-es="Referencia oficial ROOT: TH1::Fit">Official ROOT reference: TH1::Fit</a> · <a href="https://root.cern.ch/doc/master/classTFitResult.html" data-es="Referencia oficial ROOT: TFitResult">Official ROOT reference: TFitResult</a></p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e5-transfer-heading">
+        <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+        <h2 id="e5-transfer-heading" data-es="Un segundo ajuste parece muy preciso">A second fit looks very precise</h2>
+        <p data-es="Otro modelo devuelve un parámetro con ±0.01, pero sus residuos forman una curva sistemática y su χ²/ndf es muy grande para las incertidumbres declaradas. ¿Qué evidencia debes priorizar para decidir si el modelo describe los datos?">Another model returns a parameter with ±0.01, but its residuals form a systematic curve and its χ²/ndf is very large for the stated uncertainties. What evidence should you prioritize when deciding whether the model describes the data?</p>
+        <rq-predict id="e5-transfer" answer-name="e5-transfer-choice"><form><fieldset><legend data-es="Lectura crítica">Critical reading</legend><div class="rq-options">
+          <label><input type="radio" name="e5-transfer-choice" value="residuals-and-gof" required><span data-es="El patrón de residuos y la bondad de ajuste, interpretados con los errores/modelo usados.">The residual pattern and goodness-of-fit, interpreted with the errors/model used.</span></label>
+          <label><input type="radio" name="e5-transfer-choice" value="small-error"><span data-es="Sólo el ±0.01; la mayor precisión implica mejor modelo.">Only ±0.01; higher precision implies a better model.</span></label>
+          <label><input type="radio" name="e5-transfer-choice" value="parameter-value"><span data-es="Sólo el valor central del parámetro.">Only the parameter's central value.</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar comprensión">Check understanding</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Lee un ajuste críticamente — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Inspecciona residuos, incertidumbres de parámetros y pistas de bondad de ajuste en conjunto antes de decidir si un modelo ajustado describe adecuadamente los datos.');
+  }
+</script>
+<script>import '../../lessons/read-fit-critically/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e5-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.technical-note{color:var(--muted)}.rq-options--inline{display:flex;gap:.75rem;flex-wrap:wrap}.diagnostic-results{display:flex;gap:1rem;flex-wrap:wrap;margin-block:1rem}.diagnostic-results p{margin:0;padding:.75rem 1rem;border:1px solid var(--border);border-radius:.65rem;min-width:10rem}.table-wrap,.code-card{max-width:100%;overflow-x:auto}.table-wrap table{width:100%;border-collapse:collapse}.table-wrap th,.table-wrap td{padding:.5rem;border-bottom:1px solid var(--border);text-align:left;font-variant-numeric:tabular-nums}.code-card{border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}
+</style>
