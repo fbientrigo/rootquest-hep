@@ -148,7 +148,7 @@ Goal: stop treating a histogram as the answer; introduce the minimum statistical
 | E3 | **Data vs simulation** | Compare Data and MC without silently normalizing away the question being asked. | `Add`, `Divide`, histogram arithmetic/normalization, stacked or overlaid comparison when pedagogically justified | **LIVE** — learner-facing lesson combines two prepared weighted MC contributions, compares their total with observed Data in absolute-yield and unit-area shape modes, and makes the learner preserve expected normalization when the question is event yield. |
 | E4 | **Fit a simple model** | Connect a visible model shape to parameters and fit a simple function over a justified range. | `TF1`, `Fit` | **LIVE** — learner-facing lesson uses a prepared synthetic linear trend with deliberate out-of-model structure, lets the learner manipulate the slope before fitting, predicts how widening the fit range biases the same linear model, and bridges the justified function range to `TF1` plus `TH1::Fit(..., "R")`. |
 | E5 | **Read a fit critically** | Inspect residuals/parameter uncertainties/goodness-of-fit cues and recognize an obviously inadequate model. | fit result essentials, chi-square vocabulary where appropriate | **LIVE** — learner-facing lesson reuses E4's synthetic linear sample, compares residuals, slope uncertainty and χ²/ndf for the justified and full ranges, and makes the learner reject the full-range straight-line model despite its smaller parameter error; ROOT bridge uses `TFitResult` diagnostics. |
-| E6 | **Signal and control regions** | Distinguish selecting a region to test a hypothesis from tuning a cut until a desired answer appears. | selections, regions, blinded/discovery framing | **NEXT** |
+| E6 | **Signal and control regions** | Distinguish selecting a region to test a hypothesis from tuning a cut until a desired answer appears. | selections, regions, blinded/discovery framing | **LIVE** — learner-facing lesson uses a prepared synthetic mass spectrum, requires the learner to freeze signal/control regions before revealing signal-region data, then transfers the distinction to using a low-signal control region to check background; ROOT bridge uses separate `RDataFrame::Filter` branches. |
 
 Observable unit proof: given signal/background or Data/MC distributions, the learner can explain normalization, make a defensible comparison and fit a simple model without overstating the result.
 
@@ -160,7 +160,7 @@ Goal: fade support until the learner can transfer the mental model to a new smal
 
 | ID | Lesson | Learner outcome | ROOT 80/20 surface | Status / reuse |
 | --- | --- | --- | --- | --- |
-| F1 | **Assemble an analysis from a question** | Decide which columns, derived observables, selections and outputs are needed before seeing a completed pipeline. | `TFile`/`TTree` + `RDataFrame` + histograms | PLANNED |
+| F1 | **Assemble an analysis from a question** | Decide which columns, derived observables, selections and outputs are needed before seeing a completed pipeline. | `TFile`/`TTree` + `RDataFrame` + histograms | **NEXT** |
 | F2 | **Higgs Hunt — discovery revisit** | Repeat the familiar analysis with truth labels and explanatory scaffolding reduced; justify choices from observables/distributions. | integrated core | PLANNED — reuse H0 mechanics and state, do not clone the experience. |
 | F3 | **Independent mini-analysis** | Analyze a second small dataset/problem with a different surface story and produce a defensible result. | integrated core | PLANNED |
 | F4 | **Leave ROOT Quest** | Use official ROOT documentation/tutorials to reproduce or extend an analysis operation not directly taught by ROOT Quest. | documentation literacy | PLANNED |
@@ -218,4 +218,4 @@ When a lesson becomes `LIVE`:
 3. preserve any `PROBE`/`DRILL` labels in the reuse notes if useful, but never implement the same mechanic twice;
 4. if implementation reveals that curriculum ordering is wrong, make the smallest evidence-based curriculum edit rather than silently skipping lessons.
 
-The default next lesson on this roadmap is **E6 — Signal and control regions**.
+The default next lesson on this roadmap is **F1 — Assemble an analysis from a question**.
