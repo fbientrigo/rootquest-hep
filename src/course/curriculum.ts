@@ -35,10 +35,10 @@ export const courseUnits: CourseUnit[] = [
     { id: 'D6', title: 'Build a candidate', status: 'live', href: 'learn/build-candidate/' },
   ]},
   { id: 'E', title: 'From plots to evidence', goal: 'Add the minimum normalization and fitting machinery needed for responsible interpretation.', lessons: [
-    { id: 'E1', title: 'Signal and background trade-offs', status: 'live', href: 'learn/signal-background-tradeoffs/' }, { id: 'E2', title: 'Event weights and normalization', status: 'live', href: 'learn/event-weights-normalization/' }, { id: 'E3', title: 'Data vs simulation', status: 'live', href: 'learn/data-vs-simulation/' }, { id: 'E4', title: 'Fit a simple model', status: 'live', href: 'learn/simple-fit/' }, { id: 'E5', title: 'Read a fit critically', status: 'live', href: 'learn/read-fit-critically/' }, { id: 'E6', title: 'Signal and control regions', status: 'next' },
+    { id: 'E1', title: 'Signal and background trade-offs', status: 'live', href: 'learn/signal-background-tradeoffs/' }, { id: 'E2', title: 'Event weights and normalization', status: 'live', href: 'learn/event-weights-normalization/' }, { id: 'E3', title: 'Data vs simulation', status: 'live', href: 'learn/data-vs-simulation/' }, { id: 'E4', title: 'Fit a simple model', status: 'live', href: 'learn/simple-fit/' }, { id: 'E5', title: 'Read a fit critically', status: 'live', href: 'learn/read-fit-critically/' }, { id: 'E6', title: 'Signal and control regions', status: 'live', href: 'learn/signal-control-regions/' },
   ]},
   { id: 'F', title: 'Work independently', goal: 'Fade support until a learner can transfer the workflow to an unfamiliar small analysis.', lessons: [
-    { id: 'F1', title: 'Assemble an analysis from a question', status: 'planned' }, { id: 'F2', title: 'Higgs Hunt — discovery revisit', status: 'planned' }, { id: 'F3', title: 'Independent mini-analysis', status: 'planned' }, { id: 'F4', title: 'Leave ROOT Quest', status: 'planned' },
+    { id: 'F1', title: 'Assemble an analysis from a question', status: 'next' }, { id: 'F2', title: 'Higgs Hunt — discovery revisit', status: 'planned' }, { id: 'F3', title: 'Independent mini-analysis', status: 'planned' }, { id: 'F4', title: 'Leave ROOT Quest', status: 'planned' },
   ]},
 ];
 
