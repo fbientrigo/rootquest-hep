@@ -24,8 +24,12 @@ test('Unit E learner routes share the persisted global language preference', asy
   await expect(page.getByRole('heading', { name: 'Lee un ajuste críticamente' })).toBeVisible();
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Inspecciona residuos, incertidumbres de parámetros y pistas de bondad de ajuste en conjunto antes de decidir si un modelo ajustado describe adecuadamente los datos.');
 
+  await page.goto('learn/signal-control-regions/');
+  await expect(page.getByRole('heading', { name: 'Regiones de señal y control' })).toBeVisible();
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Separa una región de señal usada para probar una hipótesis de regiones de control usadas para comprender el fondo, sin ajustar selecciones hacia el resultado observado.');
+
   await Promise.all([page.waitForNavigation(), page.locator('[data-language-option="en"]').click()]);
   expect(await page.evaluate(() => localStorage.getItem('rootquest-language'))).toBe('en');
-  await page.goto('learn/read-fit-critically/');
-  await expect(page.getByRole('heading', { name: 'Read a fit critically' })).toBeVisible();
+  await page.goto('learn/signal-control-regions/');
+  await expect(page.getByRole('heading', { name: 'Signal and control regions' })).toBeVisible();
 });
