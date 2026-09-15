@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout
+  title="Signal and control regions — ROOT Quest"
+  description="Separate a signal region used to test a hypothesis from control regions used to understand background, without tuning selections toward the observed answer."
+>
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad E · Lección E6">Unit E · Lesson E6</p>
+    <h1 data-es="Regiones de señal y control">Signal and control regions</h1>
+    <p class="lede" data-es="Una región no es sólo un corte. Su propósito determina qué información puedes usar para definirla y cuándo debes mirar los datos que contiene.">A region is not just a cut. Its purpose determines what information you can use to define it and when you should inspect the data inside it.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="e6-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="e6-context-heading" data-es="Prepara la prueba antes de mirar donde esperas la señal">Prepare the test before looking where you expect the signal</h2>
+      <p data-es="Usaremos un espectro de masa sintético preparado. La hipótesis fija una región de señal de 120–130 GeV. Las bandas laterales 105–115 y 135–145 GeV actúan aquí como regiones de control: están pensadas para comprobar el fondo con poca contribución de señal.">We use a prepared synthetic mass spectrum. The hypothesis fixes a 120–130 GeV signal region. The 105–115 and 135–145 GeV sidebands act here as control regions: they are designed to check background with little signal contribution.</p>
+      <p class="technical-note" data-es="Los números son sintéticos y sólo sirven para hacer visible la decisión causal. En un análisis real, la definición de regiones y el procedimiento de cegado dependen de la hipótesis y del análisis.">The numbers are synthetic and exist only to expose the causal decision. In a real analysis, region definitions and blinding procedures depend on the hypothesis and analysis.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="e6-predict-heading">
+      <p class="stage-kicker" data-es="Predice">Predict</p>
+      <h2 id="e6-predict-heading" data-es="La región de señal aún está cegada. ¿Qué plan preserva la prueba?">The signal region is still blinded. Which plan preserves the test?</h2>
+      <rq-predict id="e6-prediction" answer-name="e6-prediction-choice">
+        <form><fieldset><legend data-es="Plan de análisis">Analysis plan</legend><div class="rq-options">
+          <label><input type="radio" name="e6-prediction-choice" value="freeze-then-unblind" required><span data-es="Fijar regiones y selección usando hipótesis, simulación y controles; luego desbloquear la región de señal.">Freeze regions and selection using the hypothesis, simulation and controls; then unblind the signal region.</span></label>
+          <label><input type="radio" name="e6-prediction-choice" value="peek-and-shift"><span data-es="Mirar primero los datos de señal y desplazar la ventana hasta capturar el mayor exceso.">Look at signal-region data first and shift the window until it captures the largest excess.</span></label>
+          <label><input type="radio" name="e6-prediction-choice" value="reoptimize-after-peek"><span data-es="Mirar el resultado y volver a optimizar los cortes si no parece suficientemente interesante.">Inspect the result and re-optimize the cuts if it does not look interesting enough.</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Fijar el plan">Commit plan</button></form>
+        <rq-feedback data-prediction-feedback hidden></rq-feedback>
+      </rq-predict>
+    </section>
+
+    <div id="e6-after-prediction" hidden>
+      <section class="lesson-card" aria-labelledby="e6-observe-heading">
+        <p class="stage-kicker" data-es="Observa">Observe</p>
+        <h2 id="e6-observe-heading" data-es="Ahora revela los datos sin mover las fronteras">Now reveal the data without moving the boundaries</h2>
+        <div class="region-grid" aria-label="Prepared synthetic region yields" data-es-aria-label="Rendimientos sintéticos preparados por región">
+          <article><h3 data-es="Control bajo">Low control</h3><p>105–115 GeV</p><p><span data-es="Observado">Observed</span>: <strong id="e6-control-low-observed">—</strong><br><span data-es="Fondo esperado">Expected background</span>: <strong id="e6-control-low-expected">—</strong></p></article>
+          <article class="signal-region"><h3 data-es="Señal">Signal</h3><p>120–130 GeV</p><p><span data-es="Observado">Observed</span>: <strong id="e6-signal-observed">—</strong><br><span data-es="Fondo esperado">Expected background</span>: <strong id="e6-signal-expected">—</strong></p></article>
+          <article><h3 data-es="Control alto">High control</h3><p>135–145 GeV</p><p><span data-es="Observado">Observed</span>: <strong id="e6-control-high-observed">—</strong><br><span data-es="Fondo esperado">Expected background</span>: <strong id="e6-control-high-expected">—</strong></p></article>
+        </div>
+        <p class="technical-note" data-es="El contenido revelado puede motivar una interpretación o estudios posteriores, pero no convierte en válido redefinir retrospectivamente la región que produjo ese mismo contenido.">The revealed content can motivate interpretation or later studies, but it does not make it valid to retrospectively redefine the region that produced that same content.</p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e6-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="e6-code-heading" data-es="ROOT expresa las regiones como selecciones separadas">ROOT expresses the regions as separate selections</h2>
+        <p data-es="La idea estadística no requiere una API especial: en RDataFrame cada región puede ser una rama de Filter definida antes de inspeccionar los resultados.">The statistical idea does not require a special API: in RDataFrame each region can be a Filter branch defined before inspecting results.</p>
+        <div class="code-card"><pre><code>ROOT::RDataFrame df("Events", "sample.root");
+
+auto controlLow  = df.Filter("mass >= 105 && mass <= 115");
+auto signal      = df.Filter("mass >= 120 && mass <= 130");
+auto controlHigh = df.Filter("mass >= 135 && mass <= 145");
+
+auto nControlLow  = controlLow.Count();
+auto nSignal      = signal.Count();
+auto nControlHigh = controlHigh.Count();</code></pre></div>
+        <p class="technical-note"><a href="https://root.cern.ch/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame::Filter">Official ROOT reference: RDataFrame::Filter</a> · <a href="https://cms.cern/node/1378" data-es="CMS: cegado y desbloqueo de análisis">CMS: blinding and unblinding analyses</a></p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="e6-transfer-heading">
+        <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+        <h2 id="e6-transfer-heading" data-es="Necesitas comprobar la predicción de fondo antes de desbloquear la señal">You need to check the background prediction before unblinding signal</h2>
+        <p data-es="¿Qué región deberías usar como fuente principal de esa comprobación, si fue diseñada para ser informativa sobre el fondo y tener poca señal?">Which region should be your primary source for that check if it was designed to be informative about background and contain little signal?</p>
+        <rq-predict id="e6-transfer" answer-name="e6-transfer-choice"><form><fieldset><legend data-es="Elige la región">Choose the region</legend><div class="rq-options">
+          <label><input type="radio" name="e6-transfer-choice" value="control-region" required><span data-es="La región de control.">The control region.</span></label>
+          <label><input type="radio" name="e6-transfer-choice" value="signal-region"><span data-es="La región de señal observada, ajustando cortes hasta que concuerde.">The observed signal region, adjusting cuts until it agrees.</span></label>
+          <label><input type="radio" name="e6-transfer-choice" value="largest-fluctuation"><span data-es="La región con la fluctuación más grande, sin importar su propósito original.">Whichever region has the largest fluctuation, regardless of its original purpose.</span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar decisión">Check decision</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.querySelectorAll('[data-es-aria-label]').forEach((element) => { element.setAttribute('aria-label', element.getAttribute('data-es-aria-label')); });
+    document.title = 'Regiones de señal y control — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Separa una región de señal usada para probar una hipótesis de regiones de control usadas para comprender el fondo, sin ajustar selecciones hacia el resultado observado.');
+  }
+</script>
+<script>import '../../lessons/signal-control-regions/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#e6-after-prediction:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.technical-note{color:var(--muted)}.region-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-block:1rem}.region-grid article{padding:1rem;border:1px solid var(--border);border-radius:.65rem}.region-grid h3,.region-grid p{margin-block:.1rem .6rem}.signal-region{outline:2px solid var(--accent);outline-offset:2px}.code-card{max-width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}@media(max-width:680px){.region-grid{grid-template-columns:1fr}}
+</style>
