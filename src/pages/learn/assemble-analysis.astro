@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../learning/styles/learning.css';
+---
+
+<BaseLayout title="Assemble an analysis from a question — ROOT Quest" description="Plan the columns, derived quantities, selections and outputs an analysis needs before seeing the completed ROOT pipeline.">
+  <header class="lesson-header">
+    <p class="eyebrow" data-es="Unidad F · Lección F1">Unit F · Lesson F1</p>
+    <h1 data-es="Construye un análisis a partir de una pregunta">Assemble an analysis from a question</h1>
+    <p class="lede" data-es="Ahora el apoyo disminuye: antes de escribir ROOT, convierte una pregunta física en un plan de datos verificable.">Support now fades: before writing ROOT, turn a physics question into a testable data plan.</p>
+  </header>
+
+  <div class="lesson-flow">
+    <section class="lesson-card" aria-labelledby="f1-context-heading">
+      <p class="stage-kicker" data-es="Contexto">Context</p>
+      <h2 id="f1-context-heading" data-es="Empieza por lo que quieres medir">Start from what you want to measure</h2>
+      <p><strong data-es="Pregunta:">Question:</strong> <span data-es="¿Cuál es la distribución de masa invariante de dos fotones para eventos con al menos dos fotones por encima de 30 GeV?">What is the diphoton invariant-mass distribution for events with at least two photons above 30 GeV?</span></p>
+      <p data-es="El archivo preparado contiene un árbol Events con Photon_pt, Photon_eta, Photon_phi, además de otras ramas que no necesitas para responder esta pregunta.">The prepared file contains an Events tree with Photon_pt, Photon_eta and Photon_phi, plus other branches you do not need for this question.</p>
+      <p class="technical-note" data-es="El archivo y la pregunta son sintéticos. La tarea es decidir la estructura del análisis, no descubrir una señal real.">The file and question are synthetic. The task is to decide the analysis structure, not discover a real signal.</p>
+    </section>
+
+    <section class="lesson-card" aria-labelledby="f1-plan-heading">
+      <p class="stage-kicker" data-es="Decide">Decide</p>
+      <h2 id="f1-plan-heading" data-es="¿Qué plan responde directamente la pregunta?">Which plan directly answers the question?</h2>
+      <rq-predict id="f1-plan" answer-name="f1-plan-choice"><form><fieldset><legend data-es="Elige el plan antes de ver la pipeline">Choose the plan before seeing the pipeline</legend><div class="rq-options">
+        <label><input type="radio" name="f1-plan-choice" value="question-first" required><span data-es="Usar pt/eta/phi de fotones → seleccionar fotones con pt > 30 → exigir al menos dos → construir m_gg → hacer un histograma de m_gg.">Use photon pt/eta/phi → select photons with pt > 30 → require at least two → build m_gg → histogram m_gg.</span></label>
+        <label><input type="radio" name="f1-plan-choice" value="plot-first"><span data-es="Dibujar primero todas las ramas y decidir después qué selección parece producir la forma más interesante.">Plot every branch first and decide afterward which selection gives the most interesting shape.</span></label>
+        <label><input type="radio" name="f1-plan-choice" value="all-columns"><span data-es="Copiar todas las ramas a columnas derivadas y hacer un histograma de cada una antes de definir la pregunta operacional.">Copy every branch into derived columns and histogram all of them before defining the operational question.</span></label>
+      </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Fijar plan">Commit plan</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+    </section>
+
+    <div id="f1-after-plan" hidden>
+      <section class="lesson-card" aria-labelledby="f1-map-heading">
+        <p class="stage-kicker" data-es="Observa">Observe</p>
+        <h2 id="f1-map-heading" data-es="La pregunta se convierte en cinco decisiones">The question becomes five decisions</h2>
+        <dl class="analysis-map">
+          <div><dt data-es="Entrada">Input</dt><dd><code>Events</code> <span data-es="en">in</span> <code>photons.root</code></dd></div>
+          <div><dt data-es="Columnas">Columns</dt><dd><code>Photon_pt</code>, <code>Photon_eta</code>, <code>Photon_phi</code></dd></div>
+          <div><dt data-es="Derivar">Derive</dt><dd data-es="fotones seleccionados y m_gg">selected photons and m_gg</dd></div>
+          <div><dt data-es="Seleccionar">Select</dt><dd data-es="al menos dos fotones seleccionados">at least two selected photons</dd></div>
+          <div><dt data-es="Salida">Output</dt><dd data-es="histograma de m_gg">histogram of m_gg</dd></div>
+        </dl>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="f1-code-heading">
+        <p class="stage-kicker" data-es="Puente ROOT">ROOT bridge</p>
+        <h2 id="f1-code-heading" data-es="Ahora la pipeline es una traducción, no una adivinanza">Now the pipeline is a translation, not a guess</h2>
+        <div class="code-card"><pre><code>ROOT::RDataFrame df("Events", "photons.root");
+
+auto selected = df
+  .Define("good", "Photon_pt > 30")
+  .Define("good_pt",  "Photon_pt[good]")
+  .Define("good_eta", "Photon_eta[good]")
+  .Define("good_phi", "Photon_phi[good]")
+  .Filter("good_pt.size() >= 2")
+  .Define("m_gg", "diphoton_mass(good_pt, good_eta, good_phi)");
+
+auto mass = selected.Histo1D({"m_gg", "diphoton mass; m_{#gamma#gamma} [GeV]; events", 40, 100, 160}, "m_gg");</code></pre></div>
+        <p class="technical-note" data-es="diphoton_mass representa aquí una función auxiliar ya validada para construir los dos cuatro-vectores; F1 no vuelve a enseñar la cinemática de D5/D6."><code>diphoton_mass</code> stands here for an already validated helper that builds the two four-vectors; F1 does not reteach D5/D6 kinematics.</p>
+        <p class="technical-note"><a href="https://root.cern/manual/data_frame/" data-es="Manual oficial ROOT: Dataframes">Official ROOT manual: Dataframes</a> · <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html" data-es="Referencia oficial ROOT: RDataFrame">Official ROOT reference: RDataFrame</a></p>
+      </section>
+
+      <section class="lesson-card" aria-labelledby="f1-transfer-heading">
+        <p class="stage-kicker" data-es="Transferencia">Transfer</p>
+        <h2 id="f1-transfer-heading" data-es="Una pregunta nueva cambia las dependencias">A new question changes the dependencies</h2>
+        <p data-es="Quieres la distribución de una cantidad derivada x sólo para eventos con x > 10. ¿Qué orden causal necesitas?">You want the distribution of a derived quantity x only for events with x > 10. Which causal order do you need?</p>
+        <rq-predict id="f1-transfer" answer-name="f1-transfer-choice"><form><fieldset><legend data-es="Ordena el análisis">Order the analysis</legend><div class="rq-options">
+          <label><input type="radio" name="f1-transfer-choice" value="define-filter-histogram" required><span><code>Define(x)</code> → <code>Filter(x &gt; 10)</code> → <code>Histo1D(x)</code></span></label>
+          <label><input type="radio" name="f1-transfer-choice" value="filter-histogram-define"><span><code>Filter(x &gt; 10)</code> → <code>Histo1D(x)</code> → <code>Define(x)</code></span></label>
+          <label><input type="radio" name="f1-transfer-choice" value="histogram-only"><span><code>Histo1D(x)</code> <span data-es="sin definir ni seleccionar x">without defining or selecting x</span></span></label>
+        </div></fieldset><button class="rq-button rq-button--primary" type="submit" data-es="Comprobar plan">Check plan</button></form><rq-feedback data-prediction-feedback hidden></rq-feedback></rq-predict>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (document.documentElement.dataset.language === 'es') {
+    document.querySelectorAll('[data-es]').forEach((element) => { element.textContent = element.getAttribute('data-es'); });
+    document.title = 'Construye un análisis a partir de una pregunta — ROOT Quest';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', 'Planifica columnas, cantidades derivadas, selecciones y salidas antes de ver la pipeline ROOT completa.');
+  }
+</script>
+<script>import '../../lessons/assemble-analysis/controller.ts';</script>
+
+<style is:global>
+  .lesson-flow{display:grid;gap:1.25rem}.lesson-card{min-width:0;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}#f1-after-plan:not([hidden]){display:grid;gap:1.25rem}.stage-kicker{margin:0;color:var(--accent-strong);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-card h2{margin-block:.25rem .65rem}.technical-note{color:var(--muted)}.analysis-map{display:grid;gap:.65rem}.analysis-map div{display:grid;grid-template-columns:minmax(6rem,8rem) 1fr;gap:.75rem;padding:.65rem;border-bottom:1px solid var(--border)}.analysis-map dt{font-weight:800}.analysis-map dd{margin:0}.code-card{max-width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:.65rem}.code-card pre{margin:0;padding:1rem;overflow-x:auto}@media(max-width:560px){.analysis-map div{grid-template-columns:1fr;gap:.2rem}}
+</style>
