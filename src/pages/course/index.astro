@@ -96,6 +96,20 @@ const statusLabel = (lesson: CourseLesson) => {
   </p>
 </BaseLayout>
 
+<script is:inline>
+  (() => {
+    // Sidebar deep links should reveal a closed course unit on arrival.
+    const revealUnit = () => {
+      const id = location.hash.slice(1);
+      if (!/^unit-[A-F]$/.test(id)) return;
+      const details = document.getElementById(id);
+      if (details instanceof HTMLDetailsElement) details.open = true;
+    };
+    window.addEventListener('hashchange', revealUnit);
+    revealUnit();
+  })();
+</script>
+
 <style>
   .course-header {
     max-width: 52rem;
