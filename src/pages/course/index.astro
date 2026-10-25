@@ -58,7 +58,7 @@ const statusLabel = (lesson: CourseLesson) => {
 
   <div class="course-units">
     {courseUnits.map((unit, unitIndex) => (
-      <details class="course-unit" open={unitIndex === 0}>
+      <details id={`unit-${unit.id}`} class="course-unit" open={unitIndex === 0}>
         <summary>
           <span class="unit-marker">{unit.id}</span>
           <span>
