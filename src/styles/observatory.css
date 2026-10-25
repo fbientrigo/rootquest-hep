@@ -1,0 +1,418 @@
+/*
+ * ROOT Quest / Observatory visual language
+ *
+ * Based on the author's WIRED / OBSERVATORY reference:
+ * paper-white canvas, technical 1px rules, mono typography, sky-blue selection,
+ * restrained telemetry, and hard edges. No UI framework or runtime dependency.
+ */
+:root {
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --surface-soft: #eef8fc;
+  --text: #18181b;
+  --muted: #5d626d;
+  --border: #b8bbc1;
+  --accent: #0284c7;
+  --accent-strong: #0369a1;
+  --accent-contrast: #ffffff;
+  --radius: 0;
+  --max-width: 78rem;
+  --observatory-rule: #27272a;
+  --observatory-faint: #e4e4e7;
+}
+:root[data-theme='dark'] {
+  --bg: #0f1719;
+  --surface: #162124;
+  --surface-soft: #1b3038;
+  --text: #f0f3f4;
+  --muted: #b8c1c3;
+  --border: #536164;
+  --accent: #7dd3fc;
+  --accent-strong: #9bdaf8;
+  --accent-contrast: #0f1719;
+  --observatory-rule: #b6c3c6;
+  --observatory-faint: #344447;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0f1719;
+    --surface: #162124;
+    --surface-soft: #1b3038;
+    --text: #f0f3f4;
+    --muted: #b8c1c3;
+    --border: #536164;
+    --accent: #7dd3fc;
+    --accent-strong: #9bdaf8;
+    --accent-contrast: #0f1719;
+    --observatory-rule: #b6c3c6;
+    --observatory-faint: #344447;
+  }
+}
+
+html, body, button, input, select, textarea {
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  background: var(--bg);
+}
+::selection { background: #bae6fd; color: #18181b; }
+:where(button, input, textarea, select, progress, details, pre, code, .panel, .status, .button-link, .theme-toggle, .language-toggle, .hunt-shell, .learning-loop li) {
+  border-radius: 0;
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { text-underline-offset: 0.25em; }
+
+.site-header {
+  width: min(calc(100% - 2rem), var(--max-width));
+  min-height: 4.25rem;
+  gap: 1.35rem;
+  border-bottom: 1px solid var(--observatory-rule);
+  background: var(--bg);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: inherit;
+  font-weight: 750;
+  font-size: 0.95rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.brand::before {
+  content: '';
+  display: inline-block;
+  width: 1.05rem;
+  height: 1.25rem;
+  border: 1px solid var(--observatory-rule);
+  background: linear-gradient(var(--text),var(--text)) center / 0.45rem 0.75rem no-repeat;
+}
+.site-nav { gap: 0.3rem; }
+.site-nav a {
+  padding: 0.48rem 0.75rem;
+  border: 1px solid transparent;
+  font-size: 0.74rem;
+  font-weight: 650;
+  letter-spacing: 0.035em;
+}
+.site-nav a:hover, .site-nav a:focus-visible {
+  border-color: var(--border);
+  background: var(--surface-soft);
+}
+.theme-toggle,
+.language-toggle {
+  border-radius: 0;
+  border-color: var(--observatory-rule);
+}
+.theme-toggle {
+  font-size: 0.73rem;
+  font-weight: 650;
+}
+.site-controls .language-toggle button { font-weight: 650; }
+.site-footer {
+  width: min(calc(100% - 2rem), var(--max-width));
+  padding-block: 1.15rem 2rem;
+  border-top: 1px solid var(--observatory-rule);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+}
+.site-footer::before {
+  content: '□';
+  margin-right: 0.5rem;
+  color: var(--accent-strong);
+}
+main {
+  width: min(calc(100% - 2rem), var(--max-width));
+  padding-block: clamp(1.35rem, 3vw, 2.4rem) 3rem;
+}
+h1, h2, h3 {
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.25;
+}
+h1 { max-width: 24ch; font-size: clamp(2rem, 5.5vw, 4rem); }
+h2 { font-size: clamp(1.25rem, 2.6vw, 1.85rem); }
+h3 { font-size: clamp(1.05rem, 1.8vw, 1.35rem); }
+.eyebrow, .stage-kicker {
+  color: var(--accent-strong);
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+}
+.lede { font-size: clamp(0.88rem, 1.4vw, 1rem); line-height: 1.8; }
+.button-link {
+  border-radius: 0;
+  border-color: var(--observatory-rule);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+}
+.button-link:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.panel, .learning-loop li {
+  border-radius: 0;
+  border-color: var(--border);
+  box-shadow: none;
+}
+.status {
+  border-radius: 0;
+  font-size: 0.72rem;
+}
+.lesson-header { margin-bottom: 1.65rem; }
+
+/* The actual Higgs Hunt and reusable controls share the same instrument frame. */
+.hunt-intro h1, .hunt-shell h2, .hunt-shell h3 { font-family: inherit; font-weight: 700; }
+.hunt-shell {
+  --surface: #ffffff;
+  --surface-soft: #eef8fc;
+  --text: #18181b;
+  --muted: #5d626d;
+  --border: #b8bbc1;
+  --accent: #0284c7;
+  --accent-strong: #0369a1;
+  --radius: 0;
+  background: #fbfbfa;
+  border-color: var(--observatory-rule);
+  border-radius: 0;
+  box-shadow: none;
+}
+.hunt-progress { letter-spacing: 0.085em; }
+.hunt-progress progress { border-radius: 0; height: 0.45rem; }
+.hunt-progress progress::-webkit-progress-bar { border-radius: 0; }
+.hunt-progress progress::-webkit-progress-value { border-radius: 0; }
+.hunt-progress progress::-moz-progress-bar { border-radius: 0; }
+.event-display svg {
+  border-radius: 0;
+  background: var(--surface);
+}
+:root[data-theme='dark'] .hunt-shell {
+  --surface: #162124;
+  --surface-soft: #1b3038;
+  --text: #f0f3f4;
+  --muted: #b8c1c3;
+  --border: #536164;
+  --accent: #7dd3fc;
+  --accent-strong: #9bdaf8;
+  background: #0f1719;
+  box-shadow: none;
+}
+
+/* Home screen: a workbench, not an advertising landing page. */
+.observatory-home { display: grid; gap: 1rem; }
+body .observatory-home .hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  align-items: stretch;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--observatory-rule);
+  background: var(--surface);
+}
+.observatory-home .hero-copy {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.observatory-home .hero h1 {
+  max-width: 16ch;
+  font-size: clamp(2.15rem, 5vw, 4rem);
+  line-height: 1.1;
+}
+.observatory-home .hero .lede {
+  max-width: 57ch;
+  margin-block: 1.45rem 2rem;
+  font-size: 0.9rem;
+  line-height: 1.85;
+}
+.observatory-home .hero .eyebrow {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 1.15rem;
+}
+.observatory-home .hero .eyebrow::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  background: #10b981;
+}
+.observatory-home .hero-actions { gap: 0.8rem; }
+.observatory-home .course-link,
+.observatory-home .course-path-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.63rem 0.8rem;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.observatory-home .course-link:hover,
+.observatory-home .course-path-link:hover {
+  background: var(--surface-soft);
+  border-color: var(--accent);
+}
+.observatory-home .hero-signal {
+  min-width: 0;
+  padding: 1.1rem;
+  border-left: 1px solid var(--observatory-rule);
+  background-color: var(--bg);
+  background-image: linear-gradient(to right, var(--observatory-faint) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--observatory-faint) 1px, transparent 1px);
+  background-size: 24px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hero-signal-topline, .hero-signal-bottomline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.65rem;
+  border: 1px solid var(--observatory-rule);
+  background: var(--surface);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.hero-signal-topline span:last-child { color: var(--accent-strong); }
+.hero-signal-bottomline { border-color: var(--border); color: var(--muted); font-weight: 500; }
+.hero-signal svg {
+  width: 100%;
+  height: auto;
+  max-height: 20rem;
+  display: block;
+  margin-block: 1.25rem;
+  overflow: visible;
+}
+.hero-signal .signal-grid { stroke: var(--border); stroke-width: 1; stroke-dasharray: 2 5; }
+.hero-signal .signal-axis { stroke: var(--text); stroke-width: 1.5; }
+.hero-signal .signal-hist { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: miter; }
+.hero-signal .signal-peak { fill: none; stroke: #10b981; stroke-width: 1.7; stroke-dasharray: 5 5; }
+.hero-signal text { fill: var(--muted); font-size: 10px; font-family: inherit; }
+.hero-signal .signal-caption { fill: var(--text); font-size: 12px; font-weight: 700; }
+.observatory-home .home-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+body .observatory-home .course-preview,
+body .observatory-home .practice-section {
+  margin: 0;
+  padding: clamp(1.15rem, 2.5vw, 1.7rem);
+  background: var(--surface);
+  border: 1px solid var(--observatory-rule);
+  border-radius: 0;
+}
+body .observatory-home .course-preview > header {
+  align-items: start;
+  margin-bottom: 1.4rem;
+}
+.observatory-home .course-preview h2,
+.observatory-home .practice-section h2 { font-size: clamp(1.12rem, 2vw, 1.5rem); }
+.observatory-home .course-count {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  padding: 0.22rem 0.45rem;
+  font-size: 0.65rem;
+  white-space: normal;
+  text-align: right;
+}
+.observatory-home .unit-label { font-size: 0.67rem; }
+.observatory-home .current-unit h3 { font-size: 1rem; }
+.observatory-home .current-unit ol { border-top-color: var(--observatory-rule); }
+.observatory-home .current-unit li { border-bottom-color: var(--observatory-faint); }
+.observatory-home .current-unit a, .observatory-home .current-unit li > div {
+  min-height: 3.5rem;
+}
+.observatory-home .current-unit a:hover { background: var(--surface-soft); }
+body .observatory-home .practice-section header { margin-bottom: 1.4rem; }
+.observatory-home .learning-loop {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  margin: 0;
+  gap: 0.6rem;
+}
+.observatory-home .learning-loop li { border-color: var(--border); }
+.observatory-home .learning-door { min-height: 9rem; padding: 0.9rem; }
+.observatory-home .door-action,
+.observatory-home .door-name { font-size: 0.9rem; }
+.observatory-home .door-description { font-size: 0.74rem; line-height: 1.55; padding-right: 0; }
+.observatory-home .door-enter { font-size: 0.68rem; }
+body .observatory-home .research-basis {
+  margin: 0;
+  padding: clamp(1.15rem, 2.5vw, 1.7rem);
+  border: 1px solid var(--observatory-rule);
+  background: var(--surface);
+}
+.observatory-home .research-basis h2 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
+.observatory-home .research-next {
+  border-radius: 0;
+  border-color: var(--observatory-rule);
+  background: var(--surface);
+  font-weight: 600;
+}
+.observatory-home .research-next:hover { background: var(--surface-soft); }
+.observatory-home .research-item { max-width: none; }
+.observatory-home .research-item blockquote {
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--accent);
+  font-size: clamp(0.93rem, 1.6vw, 1.12rem);
+  letter-spacing: -0.02em;
+  line-height: 1.65;
+}
+
+/* Other routes retain their semantic structure and inherit the same technical surface. */
+.course-unit, .anchor-card, .next-card, .lesson-card,
+.rq-button, .hunt-shell button {
+  border-radius: 0;
+  box-shadow: none;
+}
+.course-unit, .anchor-card { border-color: var(--border); }
+.unit-marker { border-radius: 0; }
+.lesson-status { border-radius: 0; }
+.course-unit summary:hover { background: var(--surface-soft); }
+.course-progress progress { border-radius: 0; height: 0.65rem; }
+
+/* Compact on tablets and phones without sacrificing navigation or plot labels. */
+@media (max-width: 58rem) {
+  body .observatory-home .hero { grid-template-columns: minmax(0, 1fr); }
+  .observatory-home .hero-signal {
+    border-left: 0;
+    border-top: 1px solid var(--observatory-rule);
+  }
+  .observatory-home .hero-signal svg { max-height: 13rem; }
+  .observatory-home .home-grid { grid-template-columns: 1fr; }
+  .observatory-home .site-header { position: static; }
+}
+@media (max-width: 48rem) {
+  .site-header { gap: 0.65rem; }
+  .site-nav { gap: 0.15rem; }
+  .site-nav a { padding: 0.42rem 0.55rem; }
+  .brand { font-size: 0.82rem; }
+  .observatory-home .learning-loop { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 28rem) {
+  .observatory-home .learning-loop { grid-template-columns: 1fr; }
+  .observatory-home .hero-copy { padding: 1.25rem; }
+  .observatory-home .hero-signal { padding: 0.8rem; }
+  .observatory-home .course-preview > header { flex-direction: column; }
+  .observatory-home .research-basis-header { align-items: start; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
