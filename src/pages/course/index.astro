@@ -58,7 +58,7 @@ const statusLabel = (lesson: CourseLesson) => {
 
   <div class="course-units">
     {courseUnits.map((unit, unitIndex) => (
-      <details class="course-unit" open={unitIndex === 0}>
+      <details id={`unit-${unit.id}`} class="course-unit" open={unitIndex === 0}>
         <summary>
           <span class="unit-marker">{unit.id}</span>
           <span>
@@ -95,6 +95,20 @@ const statusLabel = (lesson: CourseLesson) => {
     build a small modern ROOT analysis, interpret it, and continue independently from official ROOT documentation.
   </p>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    // Sidebar deep links should reveal a closed course unit on arrival.
+    const revealUnit = () => {
+      const id = location.hash.slice(1);
+      if (!/^unit-[A-F]$/.test(id)) return;
+      const details = document.getElementById(id);
+      if (details instanceof HTMLDetailsElement) details.open = true;
+    };
+    window.addEventListener('hashchange', revealUnit);
+    revealUnit();
+  })();
+</script>
 
 <style>
   .course-header {
