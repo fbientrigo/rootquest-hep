@@ -12,8 +12,8 @@
   --text: #18181b;
   --muted: #5d626d;
   --border: #b8bbc1;
-  --accent: #0284c7;
-  --accent-strong: #0369a1;
+  --accent: #0369a1;
+  --accent-strong: #075985;
   --accent-contrast: #ffffff;
   --radius: 0;
   --max-width: 78rem;
@@ -170,15 +170,15 @@ h3 { font-size: clamp(1.05rem, 1.8vw, 1.35rem); }
 .lesson-header { margin-bottom: 1.65rem; }
 
 /* The actual Higgs Hunt and reusable controls share the same instrument frame. */
-.hunt-intro h1, .hunt-shell h2, .hunt-shell h3 { font-family: inherit; font-weight: 700; }
-.hunt-shell {
+:root .hunt-intro h1, :root .hunt-shell h2, :root .hunt-shell h3 { font-family: inherit; font-weight: 700; }
+:root .hunt-shell {
   --surface: #ffffff;
   --surface-soft: #eef8fc;
   --text: #18181b;
   --muted: #5d626d;
   --border: #b8bbc1;
-  --accent: #0284c7;
-  --accent-strong: #0369a1;
+  --accent: #0369a1;
+  --accent-strong: #075985;
   --radius: 0;
   background: #fbfbfa;
   border-color: var(--observatory-rule);
@@ -374,6 +374,17 @@ body .observatory-home .research-basis {
   font-size: clamp(0.93rem, 1.6vw, 1.12rem);
   letter-spacing: -0.02em;
   line-height: 1.65;
+}
+
+/* Square-off lesson-specific cards that still use literal radii. */
+:root .lesson-flow .lesson-card,
+:root .lesson-flow .histogram,
+:root .lesson-flow .histogram-readout,
+:root .lesson-flow .code-card,
+:root .lesson-flow .value-strip li,
+:root .practice .collision-stage,
+:root .practice .collision-reset {
+  border-radius: 0;
 }
 
 /* Other routes retain their semantic structure and inherit the same technical surface. */
