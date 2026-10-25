@@ -1,0 +1,663 @@
+/*
+ * WIRED / OBSERVATORY: sitewide continuation layer
+ * Reference: CPP_ROOT_SYLLABUS (hard 1px frames, node inspector, cyan selection,
+ * signal traces, mono microcopy, silent desktop navigation).
+ * Unifies the course, individual lessons, practice doors and experimental lab.
+ * No framework and no faux telemetry: only curriculum metadata is displayed.
+ */
+
+:root {
+  --max-width: 100rem;
+  --wired-deep-rule: #35363a;
+  --wired-deep-hairline: #d8dbe0;
+  --wired-deep-grid: #e8e9eb;
+  --wired-deep-active: #e0f2fe;
+  --wired-deep-active-border: #38bdf8;
+  --wired-deep-note: #f8fafc;
+}
+:root[data-theme='dark'] {
+  --wired-deep-rule: #a8b5b8;
+  --wired-deep-hairline: #3d4d52;
+  --wired-deep-grid: #263539;
+  --wired-deep-active: #153a4b;
+  --wired-deep-active-border: #52badf;
+  --wired-deep-note: #192a30;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --wired-deep-rule: #a8b5b8;
+    --wired-deep-hairline: #3d4d52;
+    --wired-deep-grid: #263539;
+    --wired-deep-active: #153a4b;
+    --wired-deep-active-border: #52badf;
+    --wired-deep-note: #192a30;
+  }
+}
+
+.site-shell {
+  display: block;
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+  min-height: 65vh;
+}
+.site-shell--with-rail {
+  display: grid;
+  grid-template-columns: clamp(13rem, 18vw, 15rem) minmax(0, 1fr);
+  border-left: 1px solid var(--wired-deep-hairline);
+  border-right: 1px solid var(--wired-deep-hairline);
+}
+:root .site-shell > main#main {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.15rem, 2.5vw, 2.15rem) clamp(1rem, 2.6vw, 2.5rem) 4rem;
+}
+:root .observatory-body--home .site-shell > main#main {
+  padding-inline: 0;
+}
+:root .site-shell #main > main.lesson-flow,
+:root .site-shell #main > .lesson-flow {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+}
+.observatory-rail {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  border-right: 1px solid var(--wired-deep-rule);
+  background: var(--bg);
+}
+.rail-upper {
+  position: sticky;
+  top: 1rem;
+  padding: 1.2rem 0.8rem 0.9rem;
+}
+.rail-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2rem;
+  padding: 0 0.55rem;
+  margin: 0 0 0.65rem;
+  color: var(--muted);
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.rail-kicker > span { color: var(--accent-strong); }
+.rail-kicker--units {
+  margin-top: 1.75rem;
+}
+.rail-primary,
+.rail-unit-links {
+  display: grid;
+  gap: 0.15rem;
+}
+.rail-primary a {
+  padding: 0.46rem 0.5rem;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: 0.72rem;
+  text-decoration: none;
+  letter-spacing: 0.025em;
+}
+.rail-primary a span { color: var(--accent-strong); }
+.rail-primary a:hover,
+.rail-primary a:focus-visible,
+.rail-primary a[aria-current='page'] {
+  border-color: var(--wired-deep-active-border);
+  background: var(--wired-deep-active);
+}
+.rail-unit-links {
+  grid-template-columns: 1fr;
+}
+.rail-unit-links a {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr) 0.6rem;
+  align-items: start;
+  gap: 0.45rem;
+  min-height: 2.45rem;
+  padding: 0.5rem 0.35rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--wired-deep-hairline);
+  text-decoration: none;
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+.rail-unit-links a:hover,
+.rail-unit-links a:focus-visible {
+  background: var(--wired-deep-active);
+  outline-offset: -2px;
+}
+.rail-unit-code {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 1px solid var(--wired-deep-rule);
+  color: var(--accent-strong);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+.rail-unit-name { font-size: 0.65rem; }
+.rail-unit-links a > span:last-child { color: var(--muted); }
+.rail-lower {
+  margin: 3rem 1rem 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--wired-deep-hairline);
+  color: var(--muted);
+  font-size: 0.65rem;
+  line-height: 1.6;
+}
+.rail-lower strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+}
+.rail-lower p { margin-block: 0.65rem; }
+.rail-jp {
+  font-family: 'Noto Sans JP', 'JetBrains Mono', sans-serif;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.rail-line {
+  display: flex;
+  align-items: center;
+  gap: 0.24rem;
+  height: 2rem;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.rail-line span {
+  width: 0.45rem;
+  background: var(--accent);
+  opacity: 0.75;
+}
+.rail-line span:nth-child(1) { height: 0.45rem; }
+.rail-line span:nth-child(2) { height: 1rem; }
+.rail-line span:nth-child(3) { height: 0.7rem; }
+.rail-line span:nth-child(4) { height: 1.5rem; }
+.rail-line span:nth-child(5) { height: 0.4rem; }
+.rail-line span:nth-child(6) { height: 1.25rem; }
+.rail-line span:nth-child(7) { height: 1.8rem; }
+.rail-line span:nth-child(8) { height: 0.9rem; }
+.rail-line span:nth-child(9) { height: 1.4rem; }
+
+/* Course is a node explorer, not the older rounded list of cards. */
+:root .site-shell .course-header {
+  position: relative;
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 17rem);
+  align-items: end;
+  gap: 1rem 2rem;
+  margin: 0 0 1.25rem;
+  padding: 1.7rem;
+  border: 1px solid var(--wired-deep-rule);
+  background: var(--surface);
+}
+:root .course-header > .eyebrow,
+:root .course-header > h1,
+:root .course-header > .lede { grid-column: 1; }
+:root .course-header > .eyebrow { margin: 0; }
+:root .site-shell .course-header h1 {
+  max-width: 23ch;
+  margin: 0;
+  font-size: clamp(1.85rem, 3vw, 3.2rem);
+  line-height: 1.18;
+}
+:root .site-shell .course-header > .lede {
+  max-width: 66ch;
+  margin: 0.15rem 0 0;
+  font-size: 0.79rem;
+  line-height: 1.75;
+}
+:root .site-shell .course-progress {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: stretch;
+  align-content: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  width: auto;
+  max-width: none;
+  padding: 1rem 0 1rem 1.45rem;
+  border-left: 1px solid var(--wired-deep-hairline);
+}
+:root .site-shell .course-progress::before {
+  content: 'CURRICULUM_STATUS';
+  color: var(--accent-strong);
+  font: 700 0.65rem/1.2 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+}
+:root .site-shell .course-progress strong {
+  color: var(--text);
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+:root .site-shell .course-progress span {
+  font-size: 0.66rem;
+  line-height: 1.6;
+}
+:root .site-shell .course-progress progress {
+  height: 0.5rem;
+  width: 100%;
+  border: 1px solid var(--wired-deep-rule);
+  background: var(--surface-soft);
+}
+:root .course-progress progress::-webkit-progress-bar { background: var(--surface-soft); }
+:root .course-progress progress::-webkit-progress-value { background: var(--accent); }
+:root .course-progress progress::-moz-progress-bar { background: var(--accent); }
+:root .site-shell .anchor-card,
+:root .site-shell .next-card {
+  position: relative;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  max-width: none;
+  margin: 0 0 0.85rem;
+  padding: 1.15rem 1.3rem;
+  border: 1px solid var(--wired-deep-rule);
+  border-radius: 0;
+  background: var(--surface);
+}
+:root .site-shell .anchor-card {
+  background: linear-gradient(90deg,var(--wired-deep-active),var(--surface) 75%);
+}
+:root .site-shell .next-card {
+  padding-left: 1.3rem;
+  border-left: 2px solid var(--accent);
+  background: var(--wired-deep-note);
+}
+:root .site-shell .anchor-card h2,
+:root .site-shell .next-card h2 {
+  font-size: clamp(1.03rem, 1.5vw, 1.3rem);
+  line-height: 1.3;
+}
+:root .site-shell .anchor-card p,
+:root .site-shell .next-card p { font-size: 0.77rem; line-height: 1.65; }
+:root .site-shell .course-id,
+:root .site-shell .lesson-id {
+  color: var(--accent-strong);
+  font: 700 0.69rem/1.4 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+}
+:root .site-shell .course-units {
+  gap: 0.95rem;
+  margin-block: 1.4rem 2.3rem;
+}
+:root .site-shell .course-unit {
+  border: 1px solid var(--wired-deep-rule);
+  border-radius: 0;
+  background: var(--surface);
+  overflow: visible;
+  scroll-margin-top: 1rem;
+}
+:root .site-shell .course-unit summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) 1.3rem;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 4.5rem;
+  padding: 0.8rem 1.1rem;
+  list-style: none;
+  cursor: pointer;
+}
+:root .site-shell .course-unit summary::-webkit-details-marker { display: none; }
+:root .site-shell .course-unit summary::after {
+  content: '+';
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font: 500 1rem/1 monospace;
+}
+:root .site-shell .course-unit[open] summary::after { content: '−'; }
+:root .site-shell .course-unit summary:hover,
+:root .site-shell .course-unit summary:focus-visible {
+  background: var(--wired-deep-active);
+}
+:root .site-shell .course-unit[open] summary {
+  border-bottom: 1px solid var(--wired-deep-rule);
+}
+:root .site-shell .unit-marker {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--wired-deep-rule);
+  border-radius: 0;
+  color: var(--accent-strong);
+  font: 700 0.88rem/1 monospace;
+}
+:root .site-shell .course-unit summary strong {
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+}
+:root .site-shell .course-unit summary small {
+  margin-top: 0.2rem;
+  font-size: 0.73rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+:root .site-shell .lesson-list {
+  border: 0;
+  background: var(--surface);
+}
+:root .site-shell .course-lesson + .course-lesson {
+  border-top: 1px solid var(--wired-deep-hairline);
+}
+:root .site-shell .course-lesson a,
+:root .site-shell .course-lesson > div {
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3.05rem;
+  padding: 0.66rem 1rem;
+  color: var(--text);
+  font-size: 0.77rem;
+  line-height: 1.5;
+}
+:root .site-shell .course-lesson a:hover,
+:root .site-shell .course-lesson a:focus-visible {
+  background: var(--wired-deep-active);
+  outline-offset: -2px;
+}
+:root .site-shell .course-lesson a:hover .lesson-title {
+  color: var(--accent-strong);
+}
+:root .site-shell .lesson-title {
+  min-width: 0;
+  font-weight: 650;
+}
+:root .site-shell .lesson-status {
+  margin: 0;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+:root .site-shell .course-lesson--live .lesson-status {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--wired-deep-active);
+}
+:root .site-shell .course-lesson--next > div {
+  background: var(--wired-deep-note);
+}
+:root .site-shell .course-lesson--next .lesson-status { border-style: dashed; }
+:root .site-shell .course-note {
+  padding: 1rem 1.25rem;
+  max-width: none;
+  border-left: 2px solid var(--accent);
+  background: var(--wired-deep-note);
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
+/* Every lesson route gets the same readable technical rhythm. */
+:root .site-shell .lesson-header,
+:root .site-shell .lab-header,
+:root .site-shell .practice-header {
+  max-width: none;
+  margin: 0 0 1.3rem;
+  padding: clamp(1.2rem, 2vw, 2rem);
+  border: 1px solid var(--wired-deep-rule);
+  background: var(--surface);
+}
+:root .site-shell .lesson-header::before,
+:root .site-shell .lab-header::before,
+:root .site-shell .practice-header::before {
+  content: 'OBSERVATORY / LESSON_INSPECTOR';
+  display: block;
+  padding-bottom: 0.65rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--wired-deep-hairline);
+  color: var(--accent-strong);
+  font: 600 0.65rem/1.4 'JetBrains Mono', monospace;
+  letter-spacing: 0.095em;
+}
+:root .site-shell .lab-header::before { content: 'OBSERVATORY / EXPERIMENTAL_LAB'; }
+:root .site-shell .practice-header::before { content: 'OBSERVATORY / PRACTICE_NODE'; }
+:root .site-shell .lesson-header h1,
+:root .site-shell .lab-header h1,
+:root .site-shell .practice-header h1 {
+  margin-top: 0.2rem;
+  max-width: 29ch;
+  font-size: clamp(1.9rem, 3.3vw, 3.15rem);
+  line-height: 1.22;
+}
+:root .site-shell .lesson-header .lede,
+:root .site-shell .lab-header .lede,
+:root .site-shell .practice-header .lede {
+  margin: 0.85rem 0 0;
+  max-width: 78ch;
+  font-size: 0.79rem;
+  line-height: 1.75;
+}
+:root .site-shell .lesson-flow {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 0.85rem;
+  counter-reset: lesson-node;
+}
+:root .site-shell .lesson-flow > .lesson-card {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 3.3rem clamp(1rem, 2vw, 1.7rem) clamp(1.1rem, 2vw, 1.7rem);
+  border: 1px solid var(--wired-deep-rule);
+  border-radius: 0;
+  background: var(--surface);
+  counter-increment: lesson-node;
+}
+:root .site-shell .lesson-flow > .lesson-card::before {
+  content: 'STAGE_' counter(lesson-node, decimal-leading-zero) '  //  ACTIVE_WORKSPACE';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 2.35rem;
+  padding: 0 1.2rem;
+  border-bottom: 1px solid var(--wired-deep-hairline);
+  background: var(--wired-deep-note);
+  color: var(--muted);
+  font: 600 0.63rem/1.2 'JetBrains Mono',monospace;
+  letter-spacing: 0.065em;
+}
+:root .site-shell .lesson-card h2,
+:root .site-shell .lab-probe h2,
+:root .site-shell .mechanics-note h2 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: clamp(1rem, 1.8vw, 1.38rem);
+  line-height: 1.4;
+  letter-spacing: -0.03em;
+}
+:root .site-shell .stage-kicker,
+:root .site-shell .probe-number,
+:root .site-shell .view-label,
+:root .site-shell .section-label {
+  color: var(--accent-strong);
+  font: 700 0.65rem/1.5 'JetBrains Mono',monospace;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+}
+:root .site-shell .lesson-card p,
+:root .site-shell .lab-probe p {
+  max-width: 84ch;
+  font-size: 0.79rem;
+  line-height: 1.75;
+}
+:root .site-shell .lesson-card .stage-copy p,
+:root .site-shell .lesson-card .stage-kicker { margin-top: 0; }
+:root .site-shell .lesson-card :is(.histogram,.histogram-readout,.readout,.code-card,
+ .value-strip li,.workspace-example,.intent-card,.evidence-grid > div,.technical-note,
+ .trace-stage,.branch-view,.tree-browser,.plot-frame,.chart-frame,
+ .comparison-card,.summary-card,.result-card,.data-table-wrap) {
+  border-radius: 0;
+  box-shadow: none;
+}
+:root .site-shell .lesson-flow :is(.histogram,.histogram-panel,.histogram-readout,.readout) {
+  border-color: var(--wired-deep-hairline);
+  background-color: var(--bg);
+}
+:root .site-shell .lesson-flow :is(.code-card,.code-block,.code-panel,pre) {
+  border-radius: 0;
+  background-color: var(--bg);
+}
+:root .site-shell .lesson-flow :is(.code-card,.code-block,.code-panel) {
+  border: 1px solid var(--wired-deep-rule);
+}
+:root .site-shell .lesson-flow .code-card > header {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--wired-deep-rule);
+  background: var(--wired-deep-note);
+  color: var(--accent-strong);
+  font: 600 0.7rem/1.3 'JetBrains Mono',monospace;
+}
+:root .site-shell .lesson-flow input[type='range'],
+:root .site-shell .practice input[type='range'],
+:root .site-shell .lab-probe input[type='range'] {
+  accent-color: var(--accent);
+}
+:root .site-shell :is(.lesson-flow,.lab-probe,.practice) :is(button,select,input:not([type='radio']):not([type='checkbox'])) {
+  border-radius: 0;
+}
+:root .site-shell .lesson-flow rq-predict,
+:root .site-shell .lesson-flow rq-feedback,
+:root .site-shell .lab-probe rq-predict,
+:root .site-shell .lab-probe rq-feedback,
+:root .site-shell .practice rq-predict,
+:root .site-shell .practice rq-feedback {
+  border-radius: 0;
+  background: var(--wired-deep-note);
+}
+:root .site-shell rq-predict { border-color: var(--wired-deep-rule); }
+:root .site-shell .rq-options label {
+  border: 1px solid var(--wired-deep-hairline);
+  border-radius: 0;
+  background: var(--surface);
+  padding: 0.65rem 0.75rem;
+}
+:root .site-shell .rq-options label:hover,
+:root .site-shell .rq-options label:has(input:checked) {
+  border-color: var(--wired-deep-active-border);
+  background: var(--wired-deep-active);
+}
+:root .site-shell .rq-button,
+:root .site-shell rq-stepper button {
+  border-radius: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+:root .site-shell rq-feedback {
+  border-inline-start-width: 2px;
+  font-size: 0.78rem;
+}
+:root .site-shell :is(.lab-probe,.mechanics-note,.evidence-panel,.visual-card,.practice-path li) {
+  border-radius: 0;
+  box-shadow: none;
+}
+:root .site-shell .lab-probe,
+:root .site-shell .mechanics-note,
+:root .site-shell .practice .evidence-panel {
+  border: 1px solid var(--wired-deep-rule);
+  background: var(--surface);
+}
+:root .site-shell .lab-probe :is(.histogram,.tree-browser,.branch-view,.trace-stage,.event-card,.branch-list button,.branch-metadata div),
+:root .site-shell .practice :is(.collision-stage,.collision-reset,.visual-card,.selection-histogram,.event-space,.event-selection-state) {
+  border-radius: 0;
+}
+:root .site-shell .lab-probe :is(.trace-stage,.branch-view,.tree-browser,.event-card) {
+  background: var(--wired-deep-note);
+  border-color: var(--wired-deep-hairline);
+}
+:root .site-shell .lab-probe :is(table,th,td),
+:root .site-shell .practice :is(table,th,td) {
+  border-color: var(--wired-deep-hairline);
+}
+:root .site-shell .practice .practice-path { border-color: var(--wired-deep-rule); }
+:root .site-shell .practice :is(.visual-card,.selection-visualization) { border-color: var(--wired-deep-hairline); }
+
+/* Navigation links and statuses use rectangular focus targets everywhere. */
+:root .site-shell :is(.button-link,.status,.lesson-status,.unit-marker,.rq-button,.pill,.badge,.chip) {
+  border-radius: 0;
+}
+:root .site-shell :is(.button-link,.rq-button,.lesson-card button, .practice button):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:root .site-shell :is(.lesson-flow,.lab-probe) pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+:root .site-shell :is(.lesson-flow,.lab-probe) code {
+  overflow-wrap: anywhere;
+}
+:root .site-shell .lesson-flow :is(.plot-axis,.histogram-axis) {
+  stroke: var(--text);
+}
+
+/* A desktop workbench; on smaller screens the rail becomes a compact map row. */
+@media (max-width: 72rem) {
+  :root .site-shell--with-rail { grid-template-columns: 12rem minmax(0,1fr); }
+  :root .site-shell .course-header {
+    grid-template-columns: 1fr;
+  }
+  :root .site-shell .course-progress {
+    grid-column: 1;
+    grid-row: auto;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.9rem 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--wired-deep-hairline);
+  }
+  :root .site-shell .course-progress progress { grid-column: 1 / -1; }
+}
+@media (max-width: 55rem) {
+  :root .site-shell--with-rail {
+    display: flex;
+    flex-direction: column;
+    border: 0;
+  }
+  .observatory-rail { border: 1px solid var(--wired-deep-hairline); border-top: 0; }
+  .rail-upper { position: static; padding: 0.75rem; }
+  .rail-kicker--units, .rail-unit-links, .rail-lower { display: none; }
+  .rail-primary { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .rail-primary a { padding: 0.35rem 0.6rem; }
+  .rail-kicker { margin-bottom: 0.4rem; font-size: 0.58rem; }
+  :root .site-shell > main#main { padding-inline: 0; }
+}
+@media (max-width: 40rem) {
+  :root .site-shell .course-header { padding: 1rem; }
+  :root .site-shell .course-unit summary { grid-template-columns: 2rem minmax(0,1fr) 1.3rem; gap: 0.6rem; padding: 0.75rem; }
+  :root .site-shell .unit-marker { width: 1.9rem; height: 1.9rem; }
+  :root .site-shell .course-lesson a,
+  :root .site-shell .course-lesson > div { grid-template-columns: 2.5rem minmax(0,1fr); padding: 0.65rem 0.75rem; }
+  :root .site-shell .lesson-status { grid-column: 2; justify-self: start; }
+  :root .site-shell .course-header h1 { font-size: clamp(1.7rem, 8vw, 2.35rem); }
+  :root .site-shell .anchor-card { flex-direction: column; align-items: stretch; }
+  :root .site-shell .lesson-header, :root .site-shell .practice-header { padding: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .site-shell * { scroll-behavior: auto; }
+}
