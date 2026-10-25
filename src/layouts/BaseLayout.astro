@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import '../styles/practice-doors.css';
 import '../styles/observatory.css';
+import '../styles/observatory-deep.css';
+import { courseUnits } from '../course/curriculum.ts';
 
 interface Props {
   title: string;
@@ -11,6 +13,9 @@ interface Props {
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '');
+const isHome = currentPath === base.replace(/\/+$/, '');
+const isCourse = currentPath === withBase('course/').replace(/\/+$/, '');
 ---
 
 <!doctype html>
@@ -71,7 +76,7 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
     </script>
     <title>{title}</title>
   </head>
-  <body>
+  <body class:list={['observatory-body', { 'observatory-body--home': isHome }]}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="brand" href={withBase('')}>ROOT Quest</a>
@@ -90,9 +95,39 @@ const withBase = (path: string) => `${base}${path.replace(/^\/+/, '')}`;
         </button>
       </div>
     </header>
-    <main id="main">
-      <slot />
-    </main>
+    <div class:list={['site-shell', { 'site-shell--with-rail': !isHome }]}>
+      {!isHome && (
+        <aside class="observatory-rail" aria-label="Course navigation">
+          <div class="rail-upper">
+            <p class="rail-kicker">NAVIGATION_TREE <span>// 01</span></p>
+            <nav class="rail-primary" aria-label="Quick navigation">
+              <a href={withBase('')}><span>▹</span> OVERVIEW</a>
+              <a href={withBase('course/')} aria-current={isCourse ? 'page' : undefined}><span>▹</span> COURSE_MAP</a>
+              <a href={withBase('learn/higgs-hunt/')}><span>▹</span> HIGGS_HUNT</a>
+            </nav>
+            <p class="rail-kicker rail-kicker--units">DIRECT_NODE_INSPECT</p>
+            <nav class="rail-unit-links" aria-label="Course units">
+              {courseUnits.map((unit) => (
+                <a href={`${withBase('course/')}#unit-${unit.id}`}>
+                  <span class="rail-unit-code">{unit.id}</span>
+                  <span class="rail-unit-name">{unit.title}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </nav>
+          </div>
+          <div class="rail-lower">
+            <div class="rail-line" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <strong>ROOT // OBSERVATORY</strong>
+            <p>The boundary between syntax and physics is getting thinner.</p>
+            <p lang="ja" class="rail-jp">構文と物理の境界は<br />もっと薄くなっていく。</p>
+          </div>
+        </aside>
+      )}
+      <main id="main">
+        <slot />
+      </main>
+    </div>
     <footer class="site-footer">
       Independent educational experiment. Not an official ROOT or CERN project.
     </footer>
