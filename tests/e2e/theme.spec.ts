@@ -29,7 +29,7 @@ test('Higgs Hunt switches palette without changing its layout', async ({ page })
   const toggle = page.getByRole('button', { name: 'Switch to dark theme' });
 
   await expect(root).toHaveAttribute('data-theme', 'light');
-  await expect(shell).toHaveCSS('background-color', 'rgb(244, 246, 244)');
+  await expect(shell).toHaveCSS('background-color', 'rgb(251, 251, 250)');
   const lightGeometry = await geometry(page);
 
   await toggle.click();
