@@ -67,7 +67,9 @@ const researchBasis = [
   title="ROOT Quest — Interactive ROOT and HEP learning"
   description="Learn ROOT and HEP analysis by manipulating events, making cuts, reading distributions, and connecting the result to real ROOT code."
 >
+  <div class="observatory-home">
   <section class="hero">
+    <div class="hero-copy">
     <p class="eyebrow">Interactive ROOT + HEP learning</p>
     <h1>See the event. Find the signal.</h1>
     <p class="lede">
@@ -79,8 +81,30 @@ const researchBasis = [
       <a class="button-link" href={higgsHref}>Enter Higgs Hunt</a>
       <a class="course-link" href={courseHref}>View the course →</a>
     </div>
+    </div>
+    <aside class="hero-signal" aria-hidden="true">
+      <div class="hero-signal-topline"><span>TH1D::m_γγ</span><span>SIM / 125 GeV</span></div>
+      <svg viewBox="0 0 420 270" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <g class="signal-grid">
+          <path d="M32 65H392 M32 115H392 M32 165H392 M32 215H392" />
+          <path d="M92 45V216 M152 45V216 M212 45V216 M272 45V216 M332 45V216" />
+        </g>
+        <path class="signal-axis" d="M32 43V216H395" fill="none" />
+        <path class="signal-peak" d="M202 50V216" />
+        <path class="signal-hist" d="M32 216 H32 V194 H42 V188 H52 V194 H62 V188 H72 V193 H82 V188 H92 V193 H102 V187 H112 V193 H122 V187 H132 V192 H142 V198 H152 V191 H162 V192 H172 V171 H182 V145 H192 V102 H202 V89 H212 V101 H222 V145 H232 V170 H242 V191 H252 V201 H262 V196 H272 V201 H282 V196 H292 V201 H302 V195 H312 V201 H322 V195 H332 V200 H342 V195 H352 V200 H362 V206 H372 V200 H382 V205 H392 V216" />
+        <text x="34" y="26" class="signal-caption">H → γγ</text>
+        <text x="202" y="43" text-anchor="middle">125</text>
+        <text x="32" y="236">100</text>
+        <text x="152" y="236" text-anchor="middle">115</text>
+        <text x="272" y="236" text-anchor="middle">135</text>
+        <text x="390" y="236" text-anchor="end">150</text>
+        <text x="212" y="257" text-anchor="middle">m_γγ [GeV]</text>
+      </svg>
+      <div class="hero-signal-bottomline"><span>MC / DEMO</span><span>ROOT::HIST</span></div>
+    </aside>
   </section>
 
+  <div class="home-grid">
   <section class="course-preview" aria-labelledby="course-preview-title">
     <header>
       <div>
@@ -136,6 +160,7 @@ const researchBasis = [
       ))}
     </ol>
   </section>
+  </div>
 
   <aside class="research-basis" aria-labelledby="research-basis-heading" data-research-basis>
     <div class="research-basis-header">
@@ -158,6 +183,7 @@ const researchBasis = [
       ))}
     </div>
   </aside>
+  </div>
 </BaseLayout>
 
 <script>
